@@ -1,12 +1,6 @@
 # RestfullAPI
 
-> Genel Kontrol Kodları 1.0.3
-```CMD
-curl localhost:3000
-curl localhost:3000/foo
-curl localhost:3000/foo/temp
-curl localhost:3000/foo?kelime=selam
-```
+
 
 ## Version 1.0.2
 

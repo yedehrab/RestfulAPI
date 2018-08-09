@@ -16,3 +16,4 @@ curl localhost:3000/foo?kelime=selam
 
 
 * Payloadların, headerların incelenmesi
+> HTTP isteklerinin HTTP sunucusuna dize (string) olarak gelmesi
