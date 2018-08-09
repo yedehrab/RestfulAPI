@@ -23,13 +23,12 @@ var sunucu = http.createServer(function (istek, yanıt) {
     // HTTP metodu alma
     var metod = istek.method.toLowerCase();
 
+    // Üst bilgileri (headersları) obje olarak almak
+    var üstBilgiler = istek.headers;
+
     yanıt.end("Selam\n");
 
-    console.log(
-        "İstek bu (kırpılmış) yoldan alındı: " + kırpılmışYol + 
-        "\nMetod: " + metod +
-        "\nSorgu kelimesi objesi: ", sorguKelimesiObjesi
-    );
+    console.log("İstek şu başlıkla alındı: ", üstBilgiler);
 });
 
 // Sunucu başlatıyoruz ve onu 3000 portundan dinliyoruz.

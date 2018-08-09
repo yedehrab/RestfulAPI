@@ -1,6 +1,6 @@
 ## Version 1.0.2
 
-* Sunucuya http isteği geldiği zaman, hangi http metodu istenildiğini anlama
+* Sunucuya http isteği geldiği zaman, hangi http metodunun istenildiğini anlama
   * Post
   * Get
   * Put
