@@ -13,14 +13,23 @@ var sunucu = http.createServer(function (istek, yanıt) {
     // URL'i alma ve inceleme
     var incelenmişUrl = url.parse(istek.url, true);
 
-    // Yolu almak
+    // Yolu alma
     var yol = incelenmişUrl.pathname; // Tam yoldur.
     var kırpılmışYol = yol.replace(/^\/+|\+$/g, '') // Solda verilen işaretler çıkartılarak alınan yol.
 
+    // Sorgu kelimesini (query string) obje olarak almak.
+    var sorguKelimesiObjesi = incelenmişUrl.query;
+
+    // HTTP metodu alma
+    var metod = istek.method.toLowerCase();
+
     yanıt.end("Selam\n");
 
-    console.log("İstek bu (tam) yoldan alındı " + yol);
-    console.log("İstek bu (kırpılmış) yoldan alındı: " + kırpılmışYol);
+    console.log(
+        "İstek bu (kırpılmış) yoldan alındı: " + kırpılmışYol + 
+        "\nMetod: " + metod +
+        "\nSorgu kelimesi objesi: ", sorguKelimesiObjesi
+    );
 });
 
 // Sunucu başlatıyoruz ve onu 3000 portundan dinliyoruz.
