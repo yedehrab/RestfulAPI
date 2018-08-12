@@ -7,7 +7,8 @@
 // Bağımlılıklar
 var http = require('http');
 var url = require('url');
-var DizeÇözücü = require('string_decoder').StringDecoder;
+var DizgiÇözücü = require('string_decoder').StringDecoder;
+var yapılandırma = require('./config');
 
 // Sunucu her isteğe string ile karşılık vermeli
 var sunucu = http.createServer(function (istek, yanıt) {
@@ -20,14 +21,14 @@ var sunucu = http.createServer(function (istek, yanıt) {
     /**
      * Sorgu kelimesini (query string) obje olarak almak.
      * Örnek: "curl localhost:3000/foo?test=testtir" ise { test : 'testtir' }
-     * Not: "?test=testtir" sorgu dizesidir.
+     * Not: "?test=testtir" sorgu dizgisidir.
      */
-    var sorguDizesiObjeleri = ayrıştırılmışUrl.query;
+    var sorguDizgisiObjeleri = ayrıştırılmışUrl.query;
 
     /**
      * Ayrıştırılan urldeki pathname değişkenindeki değeri yol'a alıyorz.
      * Örnek: 'curl localhost:3000/ornek/test/' => yolu '/ornek/test/'
-     * Not: sorgu dizeleri ele alınmaz ( 'curl localhost:3000/ornek?foo=bar' => yolu '/ornek' )
+     * Not: sorgu dizgileri ele alınmaz ( 'curl localhost:3000/ornek?foo=bar' => yolu '/ornek' )
      */
     var yol = ayrıştırılmışUrl.pathname;
 
@@ -55,7 +56,7 @@ var sunucu = http.createServer(function (istek, yanıt) {
      * ASCI kodlarını çözümlemek için kod çözücü tanımlama
      * Not: 'utf-8' çözümleme yöntemidir
      */
-    var kodÇözücü = new DizeÇözücü('utf-8');
+    var kodÇözücü = new DizgiÇözücü('utf-8');
     var tampon = '';
 
     /**
@@ -89,11 +90,11 @@ var sunucu = http.createServer(function (istek, yanıt) {
 
         /**
          * İşleyiciye gönderilen veri objesi oluşturma
-         * Örnek: { 'kırpılmışYol' = 'ornek', sorguDizesiObjeleri = {}, metot = 'post', vs.}
+         * Örnek: { 'kırpılmışYol' = 'ornek', sorguDizgisiObjeleri = {}, metot = 'post', vs.}
          */
         var veri = {
             'kırpılmışYol': kırpılmışYol,
-            'sorguDizesiObjeleri': sorguDizesiObjeleri,
+            'sorguDizgisiObjeleri': sorguDizgisiObjeleri,
             'metot': metot,
             'başlıklar': başlıklar,
             'yükler': tampon
@@ -106,17 +107,22 @@ var sunucu = http.createServer(function (istek, yanıt) {
             // Yükleri kullan yada varsayılanı ele al
             yükler = typeof (yükler) == 'object' ? yükler : {};
 
-            // Yükleri dize'ye çevirme
-            var yükDizesi = JSON.stringify(yükler);
+            // Yükleri dizgi'ye çevirme
+            var yükDizgisi = JSON.stringify(yükler);
+
+            /**
+             * Döndürülen sonucun içeriğinin JSON olduğunu belirliyoruz.
+             */
+            yanıt.setHeader('Content-type', 'application/json');
 
             /**
              * Sonucu döndürme
              */
             yanıt.writeHead(durumKodu);
-            yanıt.end(yükDizesi);
+            yanıt.end(yükDizgisi);
 
 
-            console.log("Yanıt: ", durumKodu, yükDizesi);
+            console.log("Yanıt: ", durumKodu, yükDizgisi);
         });
     });
 });
@@ -126,8 +132,8 @@ var sunucu = http.createServer(function (istek, yanıt) {
  * Örnek kullanım: curl localhost:3000 
  * Not: Eğer 3000 yerine 500 yazsaydık, locakhost:500 yapacaktık.
  */
-sunucu.listen(3000, function () {
-    console.log("Sunucu 3000 portundan dinleniyor.");
+sunucu.listen(yapılandırma.bağlantıNoktası, function () {
+    console.log("Sunucu " + yapılandırma.bağlantıNoktası + " portundan dinleniyor.");
 });
 
 /**
