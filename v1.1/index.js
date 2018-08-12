@@ -4,14 +4,71 @@
  * Yazar: YunusEmre
  */
 
-// Bağımlılıklar
+/**
+ * Bağımlılıklar
+ * -> http ve https; Sunucu oluşturmak için gereklidir.
+ * -> url; Sunucunun url'i için gereklidir.
+ * -> dizgiÇözücü; ASCI kodlarını çözümlemek için gereklidir.
+ * -> yapılandırma; Yapılandırma için gerekli olan, ortam değişkenlerini içerir. [ config.js dosyasındaki ]
+ * -> ds; FS, yani file system, dosya işlemleri için gereklidir.
+ */
 var http = require('http');
+var https = require('https')
 var url = require('url');
-var DizgiÇözücü = require('string_decoder').StringDecoder;
+var dizgiÇözücü = require('string_decoder').StringDecoder;
 var yapılandırma = require('./config');
+var ds = require('fs');
 
-// Sunucu her isteğe string ile karşılık vermeli
-var sunucu = http.createServer(function (istek, yanıt) {
+/**
+ * HTTP sunucusu oluşturma
+ * Not: Sunucu her isteğe string ile karşılık vermeli
+ */
+var httpSunucu = http.createServer(function (istek, yanıt) {
+    birleşikSunucu(istek, yanıt);
+});
+
+/**
+ * HTTPS sunucusu oluşturma
+ * Not: Sunucu her isteğe string ile karşılık vermeli
+ */
+var httpsSunucu = http.createServer(httpsSunucuAyarları, function (istek, yanıt) {
+    birleşikSunucu(istek, yanıt);
+});
+
+/**
+ * Güvenli sunucu için oluşturulan OpenSSL verilerini tanımlıyoruz.
+ * Not: Dosyaların önceden OpenSSl ile oluşturulmuş olması lazım.
+ */
+var httpsSunucuAyarları = {
+    // Dosya okuma [ readFileSync ]
+    'key': ds.readFileSync('./https/key.pem'),
+    'cert': ds.readFileSync('./https/cert.pem')
+};
+
+/**
+ * Sunucuyu (HTTP) yapılamdırma dosyasındaki bağlantı noktasından dinliyoruz.
+ * Örnek kullanım: curl localhost:3000 
+ * Not: Eğer 3000 yerine 500 yazsaydık, locakhost:500 yapacaktık.
+ */
+httpSunucu.listen(yapılandırma.httpağlantıNoktası, function () {
+    console.log("Sunucu " + yapılandırma.httpBağlantıNoktası + " portundan dinleniyor.");
+});
+
+/**
+ * Sunucuyu (HTTPS) yapılamdırma dosyasındaki bağlantı noktasından dinliyoruz.
+ * Örnek kullanım: curl localhost:3000 
+ * Not: Eğer 3000 yerine 500 yazsaydık, locakhost:500 yapacaktık.
+ */
+httpsSunucu.listen(yapılandırma.httpsBağlantıNoktası, function () {
+    console.log("Güvenli Sunucu " + yapılandırma.httpsBağlantıNoktası + " portundan dinleniyor.");
+});
+
+/**
+ * HTTP ve HTTPS için ortak işlemlerin olduğu metot
+ * @param {string} istek Sunucuya verilen istek
+ * @param {string} yanıt Sunucunun verdiği yanıt
+ */
+var birleşikSunucu = function (istek, yanıt) {
     /**
      * Url ayrıştırma işlemi
      * Örnek: {... query: {}, pathname: '/ornek' ... } şeklinde bir url classı
@@ -56,7 +113,7 @@ var sunucu = http.createServer(function (istek, yanıt) {
      * ASCI kodlarını çözümlemek için kod çözücü tanımlama
      * Not: 'utf-8' çözümleme yöntemidir
      */
-    var kodÇözücü = new DizgiÇözücü('utf-8');
+    var kodÇözücü = new dizgiÇözücü('utf-8');
     var tampon = '';
 
     /**
@@ -86,7 +143,7 @@ var sunucu = http.createServer(function (istek, yanıt) {
             typeof (yönlendirici[kırpılmışYol]) !== 'undefined' ?
                 yönlendirici[kırpılmışYol] : işleyiciler.bulunamadı;
 
-        
+
 
         /**
          * İşleyiciye gönderilen veri objesi oluşturma
@@ -125,16 +182,7 @@ var sunucu = http.createServer(function (istek, yanıt) {
             console.log("Yanıt: ", durumKodu, yükDizgisi);
         });
     });
-});
-
-/**
- * Sunucu başlatıyoruz ve onu 3000 portundan dinliyoruz.
- * Örnek kullanım: curl localhost:3000 
- * Not: Eğer 3000 yerine 500 yazsaydık, locakhost:500 yapacaktık.
- */
-sunucu.listen(yapılandırma.bağlantıNoktası, function () {
-    console.log("Sunucu " + yapılandırma.bağlantıNoktası + " portundan dinleniyor.");
-});
+}
 
 /**
  * İşleyicileri (handlers) tanımlama

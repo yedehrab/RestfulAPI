@@ -2,9 +2,13 @@
 
 ### Gelen Özellikler
 
+
+* Postman kullanımı
 * Yapılandırma dosyası, ortam değişkenleri
 * Yanıtın içerik tipinin ayarlanması
-* Postman kullanımı
+* HTTP / HTTPS sunucuları dinleme
+* OpenSSL ile sertifika oluşturma (HTTPS için)
+    * Nasıl oluşturulduğuna bakmak için [buraya](https://knowledge.digicert.com/solution/SO27347.html) tıklayabilirsin.
 
 ### Ek notlar
 

@@ -14,7 +14,8 @@ var ortamlar = {};
  * Örnek: "set NODE_ENV=iskelet (\n) node index.js" yazılırsa, 3000 bağlantı noktasından (port) çalışır.
  */
 ortamlar.iskelet = {
-    'bağlantıNoktası': 3000,
+    'httpBağlantıNoktası': 3000,
+    'httpsBağlantıNoktası': 3001,
     'ortamİsmi': 'iskelet'
 };
 
@@ -23,7 +24,8 @@ ortamlar.iskelet = {
  * Örnek: "set NODE_ENV=üretim (\n) node index.js" yazılırsa, 5000 portundan çalışır.
  */
 ortamlar.üretim = {
-    'bağlantıNoktası': 5000,
+    'httpBağlantıNoktası': 5000,
+    'httpsBağlantıNoktası': 5001,
     'ortamİsmi': 'üretim'
 }
 
