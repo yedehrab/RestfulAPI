@@ -4,6 +4,7 @@
 
 
 * Postman kullanımı
+* Sunucuyu dürtme işlevi (ping)
 * Yapılandırma dosyası, ortam değişkenleri
 * Yanıtın içerik tipinin ayarlanması
 * HTTP / HTTPS sunucuları dinleme
