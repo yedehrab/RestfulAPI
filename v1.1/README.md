@@ -1,11 +1,14 @@
 ## Version 1.1
 
+### Gelen Özellikler
+
 * Yapılandırma dosyası, ortam değişkenleri
 * Yanıtın içerik tipinin ayarlanması
 * Postman kullanımı
-> Post işleminin daha özel yapıyor. Debug işlemleri için oldukça kullanışlı. İndirmek için [buraya](https://www.getpostman.com/apps) tıklayabilirsin.
 
-![alt text](https://raw.githubusercontent.com/yedehrab/RestfullAPI/master/v1.1/postman.png "Postman")
+### Ek notlar
+
+> Post işleminin daha özel yapıyor. Debug işlemleri için oldukça kullanışlı. İndirmek için [buraya](https://www.getpostman.com/apps) tıklayabilirsin.
 
 > Curl kullanımının daha özelleştirilmiş hali
 
