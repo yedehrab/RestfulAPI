@@ -11,6 +11,7 @@
  * -> dizgiÇözücü; ASCI kodlarını çözümlemek için gereklidir.
  * -> yapılandırma; Yapılandırma için gerekli olan, ortam değişkenlerini içerir. [ config.js dosyasındaki ]
  * -> ds; FS, yani file system, dosya işlemleri için gereklidir.
+ * -> testler; Dosya işlemlerini test etmek için gereklidir.
  */
 var http = require('http');
 var https = require('https')
@@ -18,6 +19,9 @@ var url = require('url');
 var dizgiÇözücü = require('string_decoder').StringDecoder;
 var yapılandırma = require('./config');
 var ds = require('fs');
+var testler = require('./test');
+
+// testler.hepsiniTestEt();
 
 /**
  * HTTP sunucusu oluşturma
@@ -31,7 +35,7 @@ var httpSunucu = http.createServer(function (istek, yanıt) {
  * HTTPS sunucusu oluşturma
  * Not: Sunucu her isteğe string ile karşılık vermeli
  */
-var httpsSunucu = http.createServer(httpsSunucuAyarları, function (istek, yanıt) {
+var httpsSunucu = https.createServer(httpsSunucuAyarları, function (istek, yanıt) {
     birleşikSunucu(istek, yanıt);
 });
 
@@ -191,7 +195,7 @@ var birleşikSunucu = function (istek, yanıt) {
  */
 var işleyiciler = {};
 
-işleyiciler.dürt = function(veri, geriÇağırma) {
+işleyiciler.dürt = function (veri, geriÇağırma) {
     geriÇağırma(200);
 };
 
