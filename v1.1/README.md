@@ -9,8 +9,8 @@
 * Yapılandırma dosyası, ortam değişkenleri
 * Yanıtın içerik tipinin ayarlanması
 * HTTP / HTTPS sunucuları dinleme
-* OpenSSL ile sertifika oluşturma (HTTPS için)
-    * Nasıl oluşturulduğuna bakmak için [buraya](https://knowledge.digicert.com/solution/SO27347.html) tıklayabilirsin.
+* OpenSSL ile sertifika oluşturma (HTTPS için) [HATALI]
+    * Nasıl oluşturulduğuna bakmak için [buraya](https://www.cloudinsidr.com/content/how-to-install-the-most-recent-version-of-openssl-on-windows-10-in-64-bit/) tıklayabilirsin.
 
 ### Ek notlar
 

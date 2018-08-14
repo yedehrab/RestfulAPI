@@ -3,7 +3,7 @@
  * Açıklama: Test için kullanlan metotları içerir, debug için kullanılır.
  */
 
-var _veri = require('./lib/data');
+var _veri = require('./data');
 
 // Test metotları objesi
 var testler = {};

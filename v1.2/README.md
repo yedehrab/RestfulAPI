@@ -1,6 +1,11 @@
 ## Version 1.2
 ---------
 
+### Sorunlu özellikler 
+> HTTPS hala sıkıntılıdır.
+> Yükler object değil string olarak geliyor.
+> delete işlemi çalışmıyor.
+
 ### Gelen Özellikler
 
 * Dosya işlemleri
@@ -9,9 +14,16 @@
     * Güncelleme
     * Okuma
 
-
+* Fonksiyonların parametrelerindeki türkçe karakterler kaldırıldı.
+> Dökümantasyonlarda hata oluşuyordu. (Türkçe karakter algılama sorunu)
 
 * Dosya işlemlerini test eden **test.js** dosyası.
+
+* Kullanıcı işlemleri
+    * Kullanıcıların olduğu dosya
+        > .data/kullanıcılar
+    * Kullanıcı ekleme 
+        * Telefon no ile indeksleme (ID yerine)
 
 
 ## Ek notlar

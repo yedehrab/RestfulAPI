@@ -1,6 +1,6 @@
 /**
  * Kütüphane
- * Açıklama: Verileri inceleme ve düzenlemek için kütüphane
+ * Açıklama: Verileri inceleme ve düzenlemek için dosya
  */
 
 /**
@@ -10,30 +10,35 @@
  */
 var ds = require('fs');
 var yol = require('path');
+var yardımcılar = require('./helpers')
 
 
 
 /**
  * Aktarılacak modül için bu değişkeni oluşturuyoruz.
  */
-var kütüphane = {};
+var dosya = {};
 
 /**
  * Ana dosya yollarını tanımlama
+ * 
  * Not: __dirname evrensel objedir (global object) değiştirilemez (türkçeleştirilemez)
+ * 
  * Not: __dirname; Bulunduğum dizini verir.
+ * !ÖNEMLİ : ÇALIŞMIYOR.
  */
-kütüphane.anaDizin = yol.join(__dirname, '/../.data/');
+dosya.anaDizin = yol.join(__dirname, '/../.data/');
 
 /**
  * Dosyaya veri yazma
  * @param {string} dizin Dosya dizini
  * @param {string} dosya Dosya ismi
- * @param {function} geriÇağırma İşlemler yapıldıktan sonra çalışacak metot
+ * @param {object} veri İndex.js'teki veri objesi
+ * @param {function} geriCagirma İşlemler yapıldıktan sonra çalışacak metot
  */
-kütüphane.oluştur = function (dizin, dosya, veri, geriÇağırma) {
+dosya.oluştur = function (dizin, dosya, veri, geriCagirma) {
     // Dosyayı yazmak için açma
-    ds.open(kütüphane.anaDizin + dizin + '/' + dosya + '.json', 'wx', function (hata, dosyaTanımlayıcı) {
+    ds.open(yol.join(__dirname, '/../.data/') + dizin + '/' + dosya + '.json', 'wx', function (hata, dosyaTanımlayıcı) {
         if (!hata && dosyaTanımlayıcı) {
             // Veriyi dizgiye çeviriyoruz.
             var dizgiVerisi = JSON.stringify(veri);
@@ -42,18 +47,18 @@ kütüphane.oluştur = function (dizin, dosya, veri, geriÇağırma) {
                 if (!hata) {
                     ds.close(dosyaTanımlayıcı, function (hata) {
                         if (!hata) {
-                            geriÇağırma("Dosya oluşturma işleminde hata yok :)");
+                            geriCagirma(false, { 'bilgi': "Dosya oluşturma işleminde hata yok :)" });
                         } else {
-                            geriÇağırma('Dosyayı kapatırken hata meydana geldi :(');
+                            geriCagirma('Dosyayı kapatırken hata meydana geldi :(');
                         }
                     });
                 } else {
-                    geriÇağırma('Dosyaya yazarken hata meydana geldi :(');
+                    geriCagirma('Dosyaya yazarken hata meydana geldi :(');
                 }
             });
 
         } else {
-            geriÇağırma('Dosya oluşturulamadı, zaten oluşturulmuş olabilir ;)');
+            geriCagirma('Dosya oluşturulamadı, zaten oluşturulmuş olabilir ;)');
         }
     });
 };
@@ -62,11 +67,18 @@ kütüphane.oluştur = function (dizin, dosya, veri, geriÇağırma) {
  * 
  * @param {string} dizin Dosya dizini
  * @param {string} dosya Dosya
- * @param {function} geriÇağırma İşlemler yapıldıktan sonra çalışacak metot
+ * @param {function} geriCagirma İşlemler yapıldıktan sonra çalışacak metot
  */
-kütüphane.oku = function (dizin, dosya, geriÇağırma) {
-    ds.readFile(kütüphane.anaDizin + dizin + '/' + dosya + '.json', 'utf8', function (hata, veri) {
-        geriÇağırma(hata, veri);
+dosya.oku = function (dizin, dosya, geriCagirma) {
+    ds.readFile(yol.join(__dirname, '/../.data/') + dizin + '/' + dosya + '.json', 'utf8', function (hata, veri) {
+        if (!hata && veri) {
+            // Eğer hata yoksa obje olarak döndürüyoruz. (string değil) [ileride delete ile silme yapabilmek için]
+            var veriObjesi = yardımcılar.jsonuObjeyeDönüştür(veri);
+            geriCagirma(hata, veriObjesi);
+        } else {
+            geriCagirma(hata, veri);
+        }
+        
     });
 };
 
@@ -76,10 +88,10 @@ kütüphane.oku = function (dizin, dosya, geriÇağırma) {
  * @param {string} dizin Dosya dizini
  * @param {string} dosya Dosya
  * @param {string} veri Veri dizgisi
- * @param {function} geriÇağırma İşlemler bittikten sonra çalışacak metot
+ * @param {function} geriCagirma İşlemler bittikten sonra çalışacak metot
  */
-kütüphane.güncelle = function (dizin, dosya, veri, geriÇağırma) {
-    ds.open(kütüphane.anaDizin + dizin + '/' + dosya + '.json', 'r+', function (hata, dosyaTanımlayıcı) {
+dosya.güncelle = function (dizin, dosya, veri, geriCagirma) {
+    ds.open(yol.join(__dirname, '/../.data/') + dizin + '/' + dosya + '.json', 'r+', function (hata, dosyaTanımlayıcı) {
         if (!hata && dosyaTanımlayıcı) {
             var veriDizgisi = JSON.stringify(veri);
 
@@ -91,21 +103,21 @@ kütüphane.güncelle = function (dizin, dosya, veri, geriÇağırma) {
                         if (!hata) {
                             ds.close(dosyaTanımlayıcı, function (hata) {
                                 if (!hata) {
-                                    geriÇağırma("Dosya güncelleme işleminde hata yok :)");
+                                    geriCagirma(false, { 'bilgi': "Dosya güncelleme işleminde hata yok :)" });
                                 } else {
-                                    geriÇağırma('Dosyayı kapatırken hata oluştu :(');
+                                    geriCagirma('Dosyayı kapatırken hata oluştu :(');
                                 }
                             })
                         } else {
-                            geriÇağırma('Var olan dosyaya yazmada hata oluştu :(');
+                            geriCagirma('Var olan dosyaya yazmada hata oluştu :(');
                         }
                     })
                 } else {
-                    geriÇağırma('Dosyayı kırpmada hata oluştu :(');
+                    geriCagirma('Dosyayı kırpmada hata oluştu :(');
                 }
             });
         } else {
-            geriÇağırma('Güncellenecek dosya bulunamadı :(');
+            geriCagirma('Güncellenecek dosya bulunamadı :(');
         }
     });
 }
@@ -115,19 +127,19 @@ kütüphane.güncelle = function (dizin, dosya, veri, geriÇağırma) {
  * 
  * @param {string} dizin Silinecek dosyanın dizini
  * @param {string} dosya Silinecek dosya adı
- * @param {function} geriÇağırma Silme işleminden sonra yapılacak işlemler.
+ * @param {function} geriCagirma Silme işleminden sonra yapılacak işlemler.
  */
-kütüphane.sil = function (dizin, dosya, geriÇağırma) {
+dosya.sil = function (dizin, dosya, geriCagirma) {
     // Dosya baplantısını kaldırma
-    ds.unlink(kütüphane.anaDizin + dizin + '/' + dosya + '.json', function (hata) {
+    ds.unlink(yol.join(__dirname, '/../.data/') + dizin + '/' + dosya + '.json', function (hata) {
         if (!hata) {
-            geriÇağırma("Dosya silme işleminde hata yok :)");
+            geriCagirma(false, { 'bilgi': "Dosya silme işleminde hata yok :)" });
         } else {
-            geriÇağırma("Dosyadan veri silinmesinde hata meydana geldi :(");
+            geriCagirma("Dosyadan veri silinmesinde hata meydana geldi :(");
         }
     });
 }
 
 
 // Aktarılacak obje
-module.exports = kütüphane;
+module.exports = dosya;

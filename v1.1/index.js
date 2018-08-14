@@ -28,14 +28,6 @@ var httpSunucu = http.createServer(function (istek, yanıt) {
 });
 
 /**
- * HTTPS sunucusu oluşturma
- * Not: Sunucu her isteğe string ile karşılık vermeli
- */
-var httpsSunucu = http.createServer(httpsSunucuAyarları, function (istek, yanıt) {
-    birleşikSunucu(istek, yanıt);
-});
-
-/**
  * Güvenli sunucu için oluşturulan OpenSSL verilerini tanımlıyoruz.
  * Not: Dosyaların önceden OpenSSl ile oluşturulmuş olması lazım.
  */
@@ -46,11 +38,19 @@ var httpsSunucuAyarları = {
 };
 
 /**
+ * HTTPS sunucusu oluşturma
+ * Not: Sunucu her isteğe string ile karşılık vermeli
+ */
+var httpsSunucu = https.createServer(httpsSunucuAyarları, function (istek, yanıt) {
+    birleşikSunucu(istek, yanıt);
+});
+
+/**
  * Sunucuyu (HTTP) yapılamdırma dosyasındaki bağlantı noktasından dinliyoruz.
  * Örnek kullanım: curl localhost:3000 
  * Not: Eğer 3000 yerine 500 yazsaydık, locakhost:500 yapacaktık.
  */
-httpSunucu.listen(yapılandırma.httpağlantıNoktası, function () {
+httpSunucu.listen(yapılandırma.httpBağlantıNoktası, function () {
     console.log("Sunucu " + yapılandırma.httpBağlantıNoktası + " portundan dinleniyor.");
 });
 

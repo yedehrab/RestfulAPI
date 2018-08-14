@@ -16,7 +16,8 @@ var ortamlar = {};
 ortamlar.iskelet = {
     'httpBağlantıNoktası': 3000,
     'httpsBağlantıNoktası': 3001,
-    'ortamİsmi': 'iskelet'
+    'ortamİsmi': 'iskelet', 
+    'şifrelemeGizliliği': 'gizlidir'
 };
 
 /**
@@ -26,7 +27,8 @@ ortamlar.iskelet = {
 ortamlar.üretim = {
     'httpBağlantıNoktası': 5000,
     'httpsBağlantıNoktası': 5001,
-    'ortamİsmi': 'üretim'
+    'ortamİsmi': 'üretim',
+    'şifrelemeGizliliği': 'bu da gizlidir.'
 }
 
 /**
