@@ -1,4 +1,4 @@
-# RestfullAPI
+# RestfulAPI
 
 > API tasarımı
 
