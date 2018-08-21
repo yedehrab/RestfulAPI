@@ -2,8 +2,28 @@
 
 > API tasarımı
 
+## Version 1.3
+---------
+
+### Sorunlu özellikler 
+> HTTPS hala sıkıntılıdır.
+
+### Gelen Özellikler
+
+* Dosya işlemleri belirteç ile şekillendirilmiştir.
+
+## Önemli bilgiler
+
+> **Simge** değişken ismi **belirteç** olarak değiştirilmiştir.
+
+> Kodun içinde yorum satırları ile açıklanmıştır.
+
+
 ## Version 1.2
 ---------
+
+### Sorunlu özellikler 
+> HTTPS hala sıkıntılıdır.
 
 ### Gelen Özellikler
 
@@ -13,21 +33,34 @@
     * Güncelleme
     * Okuma
 
+* Simge (?) (token) işlemleri temeli
+    * Oluşturma
+    * Silme
+    * Güncelleme
+    * Okuma
 
+* Fonksiyonların parametrelerindeki türkçe karakterler kaldırıldı.
+> Dökümantasyonlarda hata oluşuyordu. (Türkçe karakter algılama sorunu)
 
 * Dosya işlemlerini test eden **test.js** dosyası.
 
+* Kullanıcı işlemleri
+    * Kullanıcıların olduğu dosya
+        > .data/kullanıcılar
+    * Kullanıcı ekleme 
+        * Telefon no ile indeksleme (ID yerine)
 
-### Ek notlar
+
+## Ek notlar
 * Dosya işlemlerinin gerçekleştiği dosyanın dizini;
 
     * **.../.data/test/yeniDosya.json**
 
 * Test dosyası sadece test amaçlı kullanılır.
 
-### Önemli bilgiler
+## Önemli bilgiler
 
-> Kodun içinde yorum satırları ile açıklanmıştır.
+> Detaylar kodun içinde yorum satırları ile açıklanmıştır.
 
 
 ## Version 1.1
