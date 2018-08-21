@@ -117,21 +117,30 @@ işleyiciler._kullanıcılar.get = function (veri, geriCagirma) {
         veri.sorguDizgisiObjeleri.telefon.trim() : false;
 
     if (telefon) {
-        _veri.oku("kullanıcılar", telefon, function (hata, veri) {
-            if (!hata && veri) {
-                // Gizlenmiş şifreyi, veriyi isteyene vermeden önce kaldırıyoruz.
-                delete veri.gizlenmişŞifre;
+        // Bilgilere erişmek isteyen kişinin kendimiz olduğunu anlamak için gereken işlemler.
+        var belirteç = typeof (veri.başlıklar.belirteç) == 'string' ? veri.başlıklar.belirteç : false;
 
-                // Durum kodu ve yükleri gönderiyoruz. (Index.js"teki seçilmişİşleyici)
-                geriCagirma(200, veri);
+        işleyiciler._belirteçler.belirteçOnaylama(belirteç, telefon, function (belirteçOnaylandıMı) {
+            if (belirteçOnaylandıMı) {
+                _veri.oku('kullanıcılar', telefon, function (hata, veri) {
+                    if (!hata && veri) {
+                        // Gizlenmiş şifreyi, veriyi isteyene vermeden önce kaldırıyoruz.
+                        delete veri.gizlenmişŞifre;
+
+                        // Durum kodu ve yükleri gönderiyoruz. (Index.js"teki seçilmişİşleyici)
+                        geriCagirma(200, veri);
+                    } else {
+                        geriCagirma(404, { "bilgi": "Gösterilecek kullanıcı bulunamadı :(" });
+                    }
+                });
             } else {
-                geriCagirma(404, { "bilgi": "Kullanıcı bilgisi bulunamadı :(" });
+                geriCagirma(400, { "bilgi": "Kullanıcı görme işlemi için belirteç onaylanmadı veya belirtecin ömrü bitmiş :(" });
             }
         });
-
     } else {
-        geriCagirma(400, { "bilgi": "Gerekli bilgiler eksik :(" });
+        geriCagirma(400, { "bilgi": "Kullanıcı görme işlemi için gerekli bilgi bulunmadı :(" });
     }
+
 };
 
 /**
@@ -158,27 +167,36 @@ işleyiciler._kullanıcılar.put = function (veri, geriCagirma) {
 
     if (telefon) {
         if (isim || soyİsim || şifre) {
-            _veri.oku("kullanıcılar", telefon, function (hata, kullanıcıVerisi) {
-                if (!hata && kullanıcıVerisi) {
-                    if (isim) {
-                        kullanıcıVerisi.isim = isim;
-                    }
-                    if (soyİsim) {
-                        kullanıcıVerisi.soyİsim = soyİsim;
-                    }
-                    if (şifre) {
-                        kullanıcıVerisi.gizlenmişŞifre = yardımcılar.şifreleme(şifre);
-                    }
+            // Kulanıcının giren kişinin kendi hesabı olduğundan emin oluyoruz.
+            var belirteç = typeof (veri.başlıklar.belirteç) == 'string' ? veri.başlıklar.belirteç : false;
 
-                    _veri.güncelle("kullanıcılar", telefon, kullanıcıVerisi, function (hata) {
-                        if (!hata) {
-                            geriCagirma(200, { "bilgi": "Kullanıcı güncellendi :)" });
+            işleyiciler._belirteçler.belirteçOnaylama(belirteç, telefon, function (belirteçOnaylandıMı) {
+                if (belirteçOnaylandıMı) {
+                    _veri.oku("kullanıcılar", telefon, function (hata, kullanıcıVerisi) {
+                        if (!hata && kullanıcıVerisi) {
+                            if (isim) {
+                                kullanıcıVerisi.isim = isim;
+                            }
+                            if (soyİsim) {
+                                kullanıcıVerisi.soyİsim = soyİsim;
+                            }
+                            if (şifre) {
+                                kullanıcıVerisi.gizlenmişŞifre = yardımcılar.şifreleme(şifre);
+                            }
+
+                            _veri.güncelle("kullanıcılar", telefon, kullanıcıVerisi, function (hata) {
+                                if (!hata) {
+                                    geriCagirma(200, { "bilgi": "Kullanıcı güncellendi :)" });
+                                } else {
+                                    geriCagirma(500, { "bilgi": "Kulanıcı güncellenemedi :(" });
+                                }
+                            });
                         } else {
-                            geriCagirma(500, { "bilgi": "Kulanıcı güncellenemedi :(" });
+                            geriCagirma(400, { "bilgi": "Kullanıcı bulunamadı :(" })
                         }
                     });
                 } else {
-                    geriCagirma(400, { "bilgi": "Kullanıcı bulunamadı :(" })
+                    geriCagirma(403, { "bilgi": "Kullanıcı güncellemek için belirteç bulunamadı veya belirtecin ömrü bitmiş :(" });
                 }
             });
         } else {
@@ -201,71 +219,59 @@ işleyiciler._kullanıcılar.delete = function (veri, geriCagirma) {
         veri.sorguDizgisiObjeleri.telefon.trim().length == 10 ? veri.sorguDizgisiObjeleri.telefon : false;
 
     if (telefon) {
-        _veri.oku("kullanıcılar", telefon, function (hata, veri) {
-            if (!hata) {
-                _veri.sil("kullanıcılar", telefon, function (hata, veri) {
+        var belirteç = typeof (veri.başlıklar.belirteç) == 'string' ? veri.başlıklar.belirteç : false;
+
+        işleyiciler._belirteçler.belirteçOnaylama(belirteç, telefon, function (belirteçOnaylama) {
+            if (belirteçOnaylandıMı) {
+                _veri.oku("kullanıcılar", telefon, function (hata, veri) {
                     if (!hata) {
-                        geriCagirma(200, { "bilgi": "İstenen kullanıcı silindi :)" });
+                        _veri.sil("kullanıcılar", telefon, function (hata, veri) {
+                            if (!hata) {
+                                geriCagirma(200, { "bilgi": "İstenen kullanıcı silindi :)" });
+                            } else {
+                                geriCagirma(500, { "bilgi": "Kullanıcı silinemedi :(" });
+                            }
+                        });
                     } else {
-                        geriCagirma(500, { "bilgi": "Kullanıcı silinemedi :(" });
+                        geriCagirma(400, { "bilgi": "Silenecek kullanıcı bulunamadı :(" });
                     }
                 });
             } else {
-                geriCagirma(400, { "bilgi": "Silenecek kullanıcı bulunamadı :(" });
+                geriCagirma(403, { "bilgi": "Kullanıcı silmek için belirteç bulunamadı veya belirtecin ömrü bitmiş :("});
             }
         });
     } else {
-        geriCagirma(400, { "bilgi": "Silmek için gereken bilgiler eksik :(" });
+        geriCagirma(400, { "bilgi": "Kullanıcı silmek için gereken bilgiler eksik :(" });
     }
 };
 
 /**
+ * İşleyiciyi belirteçler
  * 
- * @param {string} no Tokenler için kimlik no'su
- * @param {string} telefon Kullanıcı telefon numarası
- * @param {Function} geriCagirma İşlemler bittikten sonra çalışacak metot. 
- */
-işleyicileri._simgeler.simgeOnaylama = function (no, telefon, geriCagirma) {
-    _veri.oku('simgeler', no, function (hata, simgeVerisi) {
-        if (!hata && simgeVerisi) {
-            if (simgeVerisi.telefon == telefon && simgeVerisi.ömür > Date.now()) {
-                geriCagirma(true);
-            } else {
-                geriCagirma(false);
-            }
-        } else {
-            geriCagirma(false);
-        }
-    });
-}
-
-/**
- * İşleyiciyi simgeler
- * 
- * Örnek: localhost:3000/simgeler yazıldığında bu fonksiyon çalışır. (yönlendirici ile, index.js)
+ * Örnek: localhost:3000/belirteçler yazıldığında bu fonksiyon çalışır. (yönlendirici ile, index.js)
  *
  * @param {object} veri Index.js"te tanımlanan veri objesidir. İstekle gelir.
  * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot
  */
-işleyiciler.simgeler = function (veri, geriCagirma) {
+işleyiciler.belirteçler = function (veri, geriCagirma) {
     var uygunMetotlar = ["post", "get", "put", "delete"];
 
     if (uygunMetotlar.indexOf(veri.metot) > -1) {
-        işleyiciler._simgeler[veri.metot](veri, geriCagirma);
+        işleyiciler._belirteçler[veri.metot](veri, geriCagirma);
     } else {
         geriCagirma(405, { "bilgi": "Simgle işlemi için uygun metot bulunamadı :(" });
     }
 };
 
-// Simgeler işleyicisinin alt metotları için kalıp
-işleyiciler._simgeler = {};
+// Belirteçler işleyicisinin alt metotları için kalıp
+işleyiciler._belirteçler = {};
 
 /**
- * Simge oluşturma metodu 
+ * Belirteç oluşturma metodu 
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
  * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot.
  */
-işleyiciler._simgeler.post = function (veri, geriCagirma) {
+işleyiciler._belirteçler.post = function (veri, geriCagirma) {
     var telefon = typeof (veri.yükler.telefon) == "string" &&
         veri.yükler.telefon.trim().length == 10 ? veri.yükler.telefon.trim() : false;
 
@@ -279,69 +285,69 @@ işleyiciler._simgeler.post = function (veri, geriCagirma) {
                 var gizlenmişŞifre = yardımcılar.şifreleme(şifre);
 
                 if (gizlenmişŞifre == kullanıcıVerisi.gizlenmişŞifre) {
-                    var simgeNo = yardımcılar.rastgeleDizgiOluştur(20);
+                    var belirteçNo = yardımcılar.rastgeleDizgiOluştur(20);
                     var ömür = Date.now() + 1000 * 60 * 60;
 
-                    var simgeObjesi = {
+                    var belirteçObjesi = {
                         "telefon": telefon,
-                        "no": simgeNo,
+                        "no": belirteçNo,
                         "ömür": ömür
                     };
 
-                    _veri.oluştur("simgeler", simgeNo, simgeObjesi, function (hata) {
+                    _veri.oluştur("belirteçler", belirteçNo, belirteçObjesi, function (hata) {
                         if (!hata) {
-                            geriCagirma(200, simgeObjesi);
+                            geriCagirma(200, belirteçObjesi);
                         } else {
-                            geriCagirma(500, { "bilgi": "Simge oluşturulamadı :(" });
+                            geriCagirma(500, { "bilgi": "Belirteç oluşturulamadı :(" });
                         }
                     });
 
                 } else {
-                    geriCagirma(400, { "bilgi": "Simge oluşturmak için girilen şifre kullanıcı ile uyuşmamakta" });
+                    geriCagirma(400, { "bilgi": "Belirteç oluşturmak için girilen şifre kullanıcı ile uyuşmamakta" });
                 }
             } else {
-                geriCagirma(400, { "bilgi": "Simge oluşturmak için aranan kullanıcı bulunamadı :(" });
+                geriCagirma(400, { "bilgi": "Belirteç oluşturmak için aranan kullanıcı bulunamadı :(" });
             }
         });
     } else {
-        geriCagirma(400, { "bilgi": "Simge oluşturmak için gerekli alanlar doldurulmadı :(" })
+        geriCagirma(400, { "bilgi": "Belirteç oluşturmak için gerekli alanlar doldurulmadı :(" })
     }
 
 
 }
 
 /**
- * Simge alma metodu 
- * Not: localhost:3000/simgeler?no=... 
+ * Belirteç alma metodu 
+ * Not: localhost:3000/belirteçler?no=... 
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
  * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot.
  */
-işleyiciler._simgeler.get = function (veri, geriCagirma) {
+işleyiciler._belirteçler.get = function (veri, geriCagirma) {
     // Rastgele dizgi oluştur metodundaki değere eşit olmak zorunda, o sebeple 20
     var no = typeof (veri.sorguDizgisiObjeleri.no) == "string" &&
         veri.sorguDizgisiObjeleri.no.trim().length == 20 ? veri.sorguDizgisiObjeleri.no.trim() :
         false;
 
     if (no) {
-        _veri.oku("simgeler", no, function (hata, simgeVerisi) {
+        _veri.oku("belirteçler", no, function (hata, belirteçVerisi) {
             if (!hata) {
-                geriCagirma(200, simgeVerisi);
+                geriCagirma(200, belirteçVerisi);
             } else {
-                geriCagirma(404, { "bilgi": "Alınacak simge bulunamadı :(" });
+                geriCagirma(404, { "bilgi": "Alınacak belirteç bulunamadı :(" });
             }
         });
     } else {
-        geriCagirma(400, { "bilgi": "Simge alma işlemi için gereken alanlar eksik :(" });
+        geriCagirma(400, { "bilgi": "Belirteç alma işlemi için gereken alanlar eksik :(" });
     }
 }
 
 /**
- * Simge alma metodu 
- * Not: localhost:3000/simgeler?no=... 
+ * Belirteç alma metodu 
+ * Not: localhost:3000/belirteçler?no=... 
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
  * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot.
  */
-işleyiciler._simgeler.put = function (veri, geriCagirma) {
+işleyiciler._belirteçler.put = function (veri, geriCagirma) {
     // İndex'te rastgele dizgi oluşturma uzunluğu ile aynı olmak zorunda (20)
     var no = typeof (veri.yükler.no) == 'string' && veri.yükler.no.trim().length == 20 ?
         veri.yükler.no.trim() : false;
@@ -350,52 +356,72 @@ işleyiciler._simgeler.put = function (veri, geriCagirma) {
         veri.yükler.süreUzatma : false;
 
     if (no && süreUzatma) {
-        _veri.oku('simgeler', no, function (hata, simgeVerisi) {
+        _veri.oku('belirteçler', no, function (hata, belirteçVerisi) {
             if (!hata) {
-                if (simgeVerisi.ömür > Date.now()) {
-                    simgeVerisi.ömür = Date.now() + 1000 * 60 * 60;
+                if (belirteçVerisi.ömür > Date.now()) {
+                    belirteçVerisi.ömür = Date.now() + 1000 * 60 * 60;
 
-                    _veri.güncelle('simgeler', no, simgeVerisi, function (hata) {
+                    _veri.güncelle('belirteçler', no, belirteçVerisi, function (hata) {
                         if (!hata) {
-                            geriCagirma(200, { "bilgi": "Simge ömrü uzatıldı :)" });
+                            geriCagirma(200, { "bilgi": "Belirteç ömrü uzatıldı :)" });
                         } else {
-                            geriCagirma(500, { "bilgi": "Simge verisi güncellenemedi :(" });
+                            geriCagirma(500, { "bilgi": "Belirteç verisi güncellenemedi :(" });
                         }
                     });
                 } else {
-                    geriCagirma(400, { "bilgi": "Ömrü uzatılmak istenen simge çoktan ölmüştür :(" });
+                    geriCagirma(400, { "bilgi": "Ömrü uzatılmak istenen belirteç çoktan ölmüştür :(" });
                 }
             } else {
-                geriCagirma(400, { "bilgi": "Simge koyma işlemi için aranan simge bulunamadı :(" });
+                geriCagirma(400, { "bilgi": "Belirteç koyma işlemi için aranan belirteç bulunamadı :(" });
             }
         });
     } else {
-        geriCagirma(400, { "bilgi": "Simge koyma işlemi için gerekli alan(lar) eksik :(" });
+        geriCagirma(400, { "bilgi": "Belirteç koyma işlemi için gerekli alan(lar) eksik :(" });
     }
 }
 
-işleyiciler._simgeler.delete = function (veri, geriCagirma) {
+işleyiciler._belirteçler.delete = function (veri, geriCagirma) {
     var no = typeof (veri.sorguDizgisiObjeleri.no) == 'string' && veri.sorguDizgisiObjeleri.no.trim().length == 20 ?
         veri.sorguDizgisiObjeleri.no.trim() : false;
 
     if (no) {
-        _veri.oku('simgeler', no, function (hata) {
+        _veri.oku('belirteçler', no, function (hata) {
             if (!hata) {
-                _veri.sil('simgeler', no, function (hata) {
+                _veri.sil('belirteçler', no, function (hata) {
                     if (!hata) {
-                        geriCagirma(200, { "bilgi": "Simge başarıyla silindi :)" });
+                        geriCagirma(200, { "bilgi": "Belirteç başarıyla silindi :)" });
                     } else {
-                        geriCagirma(500, { "bilgi": "Simge silme işlemi başarısız oldu :(" });
+                        geriCagirma(500, { "bilgi": "Belirteç silme işlemi başarısız oldu :(" });
                     }
                 });
             } else {
-                geriCagirma(400, { "bilgi": "Silenecek simge bulunamadı :(" });
+                geriCagirma(400, { "bilgi": "Silenecek belirteç bulunamadı :(" });
             }
         });
     } else {
-        geriCagirma(400, { "bilgi": "Simge silmek için gereken alanlar eksin :(" });
+        geriCagirma(400, { "bilgi": "Belirteç silmek için gereken alanlar eksin :(" });
     }
 }
+
+/**
+ * Belirteçleri onaylamak için kullanılan metot.
+ * @param {string} belirteçNo Tokenler için kimlik no'su
+ * @param {string} telefon Kullanıcı telefon numarası
+ * @param {Function} geriCagirma İşlemler bittikten sonra çalışacak metot. (belirteçOnaylandıMı)
+ */
+işleyiciler._belirteçler.belirteçOnaylama = function (belirteçNo, telefon, geriCagirma) {
+    _veri.oku('belirteçler', belirteçNo, function (hata, belirteçVerisi) {
+        if (!hata && belirteçVerisi) {
+            if (belirteçVerisi.telefon == telefon && belirteçVerisi.ömür > Date.now()) {
+                geriCagirma(true);
+            } else {
+                geriCagirma(false);
+            }
+        } else {
+            geriCagirma(false);
+        }
+    });
+};
 
 /**
  * İşleyiciyi dürtme

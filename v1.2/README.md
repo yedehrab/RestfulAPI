@@ -3,12 +3,16 @@
 
 ### Sorunlu özellikler 
 > HTTPS hala sıkıntılıdır.
-> Yükler object değil string olarak geliyor.
-> delete işlemi çalışmıyor.
 
 ### Gelen Özellikler
 
 * Dosya işlemleri
+    * Oluşturma
+    * Silme
+    * Güncelleme
+    * Okuma
+
+* Simge (?) (token) işlemleri temeli
     * Oluşturma
     * Silme
     * Güncelleme
@@ -35,4 +39,4 @@
 
 ## Önemli bilgiler
 
-> Kodun içinde yorum satırları ile açıklanmıştır.
+> Detaylar kodun içinde yorum satırları ile açıklanmıştır.
