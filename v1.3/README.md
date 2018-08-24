@@ -5,11 +5,23 @@
 > HTTPS hala sıkıntılıdır.
 
 ### Gelen Özellikler
+* **Simgeler**, **Belirteçler** olarak değiştirilmiştir.
+* Kontrol servisi (/check) eklenmiştir.
 
-* Dosya işlemleri belirteç ile şekillendirilmiştir.
+### Kontrol (Check) nedir? 
 
-## Önemli bilgiler
+> Basit olarak: URL kontrolü için kullanılır.
+> Kullanıcılar için 5 taneye kadar kontrole izin vereceğiz. (?)
 
-> **Simge** değişken ismi **belirteç** olarak değiştirilmiştir.
 
-> Kodun içinde yorum satırları ile açıklanmıştır.
+## Değişen Kısımlar
+
+* config.js
+  * iskelet
+  * üretim
+
+* handlers.js
+  * işleyiciler.kontroller 
+
+* kullanıcılar (klasör) objelerinin içeriği değiştirildi. (**kontroller** eklendi)
+  

@@ -2,6 +2,29 @@
 
 > API tasarımı
 
+## Version 1.3.1
+---------
+
+### Sorunlu özellikler 
+> HTTPS hala sıkıntılıdır.
+
+### Gelen Özellikler
+
+* Kontrol servisi (/check) eklenmiştir.
+
+### Kontrol (Check) nedir? 
+
+> Basit olarak: URL kontrolü için kullanılır.
+> Kullanıcılar için 5 taneye kadar kontrole izin vereceğiz. (?)
+
+
+## Önemli bilgiler
+
+> **Simge** değişken ismi **belirteç** olarak değiştirilmiştir.
+
+> Kodun içinde yorum satırları ile açıklanmıştır.
+
+
 ## Version 1.3
 ---------
 

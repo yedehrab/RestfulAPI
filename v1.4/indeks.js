@@ -19,11 +19,12 @@ var http = require("http");
 var https = require("https")
 var url = require("url");
 var dizgiÇözücü = require("string_decoder").StringDecoder;
-var yapılandırma = require("./lib/config");
+var yapılandırma = require("./kütüphane/yapılandırma");
 var ds = require("fs");
-var testler = require("./lib/test");
-var işleyiciler = require("./lib/handlers");
-var yardımcılar = require("./lib/helpers");
+var testler = require("./kütüphane/test");
+var yardımcılar = require("./kütüphane/yardımcılar");
+var yönlendirici = require("./kütüphane/yönlendirici");
+
 
 // testler.hepsiniTestEt();
 
@@ -143,23 +144,16 @@ var birleşikSunucu = function (istek, yanıt) {
          */
         tampon += kodÇözücü.end();
 
-        /** 
-         * İsteğin gideceği işleyiciyi seçme
-         * Örnek: yönlendirici[ornek], yönlendirici içindeki ornek adlı anahtarın değerini tutar. [ornek = isleyiciler.örnek]
-         * @param {object} veri index.js"te tanımlanan veri objesi
-         * @param {function} geriCagirma İşlem bittikten sonra çalışacak metot
-         */
-        var seçilmişİşleyici =
-            typeof (yönlendirici[kırpılmışYol]) !== "undefined" ?
-                yönlendirici[kırpılmışYol] : işleyiciler.bulunamadı;
+        // İşleyiciyi ayarlıyoruz.
+        yönlendirici.işleyiciAyarla(kırpılmışYol);
 
         /**
-         * İşleyiciye gönderilen veri objesi oluşturma
-         * 
-         * Not: Her dosyada kullanılan veri objesidir. 
-         * 
-         * Örnek: { "kırpılmışYol" = "ornek", sorguDizgisiObjeleri = {}, metot = "post", yükler = {"isim" : "Yunus Emre"} [Body içindeki metinler] vs.}
-         */
+        * İşleyiciye gönderilen veri objesi oluşturma
+        * 
+        * Not: Her dosyada kullanılan veri objesidir. 
+        * 
+        * Örnek: { "kırpılmışYol" = "ornek", sorguDizgisiObjeleri = {}, metot = "post", yükler = {"isim" : "Yunus Emre"} [Body içindeki metinler] vs.}
+        */
         var veri = {
             "kırpılmışYol": kırpılmışYol,
             "sorguDizgisiObjeleri": sorguDizgisiObjeleri,
@@ -171,10 +165,10 @@ var birleşikSunucu = function (istek, yanıt) {
         /**
          * Seçilen işleyiciyi çalıştırma.
          */
-        seçilmişİşleyici(veri, function (durumKodu, yükler) {
+        yönlendirici.seçilmişİşleyici(veri, function (durumKodu, yükler) {
             // Durum kodunu kullan veya varsayılanı ele al
             durumKodu = typeof (durumKodu) === "number" ? durumKodu : 200;
-        
+
             // Yükleri kullan yada varsayılanı ele al
             yükler = typeof (yükler) === "object" ? yükler : {};
 
@@ -197,18 +191,3 @@ var birleşikSunucu = function (istek, yanıt) {
         });
     });
 }
-
-
-/**
- * İstekler için yönlendirici tanımlama
- * Örnek: localhost:3000/<değişken>
- * Not: Türkçe karakter içeremez :( [Adres çubuğuna yazıldığından dolayı] 
- */
-var yönlendirici = {
-    // localhost:3000/ornek
-    "ornek": işleyiciler.örnek,
-    "durt": işleyiciler.dürt,
-    "kullanicilar": işleyiciler.kullanıcılar,
-    "belirtecler" : işleyiciler.belirteçler,
-    "kontroller": işleyiciler.kontroller
-};
