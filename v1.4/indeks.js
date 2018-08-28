@@ -1,19 +1,19 @@
 /**
  * API için öncelikli dosya
- * Açılama: ES6 tabanında yazılmış bir API
- * Yazar: YunusEmre
+ * @description ES5 tabanında yazılmış bir API
+ * @author YunusEmre
  */
 
 /**
  * Bağımlılıklar
- * -> http ve https; Sunucu oluşturmak için gereklidir.
- * -> url; Sunucunun url'i için gereklidir.
- * -> dizgiÇözücü; ASCI kodlarını çözümlemek için gereklidir.
- * -> yapılandırma; Yapılandırma için gerekli olan, ortam değişkenlerini içerir. [ config.js dosyasındaki ]
- * -> ds; FS, yani file system, dosya işlemleri için gereklidir.
- * -> testler; Dosya işlemlerini test etmek için gereklidir.
- * -> işleyiciler; Yönlendirici için gereklidir.
- * -> yardımcılar; Şifreleme işlemi gibi işlemlerde gereklidir.
+ * * http ve https; Sunucu oluşturmak için gereklidir.
+ * * url; Sunucunun url'i için gereklidir.
+ * * dizgiÇözücü; ASCI kodlarını çözümlemek için gereklidir.
+ * * yapılandırma; Yapılandırma için gerekli olan, ortam değişkenlerini içerir. [ config.js dosyasındaki ]
+ * * ds; FS, yani file system, dosya işlemleri için gereklidir.
+ * * testler; Dosya işlemlerini test etmek için gereklidir.
+ * * işleyiciler; Yönlendirici için gereklidir.
+ * * yardımcılar; Şifreleme işlemi gibi işlemlerde gereklidir.
  */
 var http = require("http");
 var https = require("https")
@@ -28,9 +28,9 @@ var yönlendirici = require("./kütüphane/yönlendirici");
 
 // testler.hepsiniTestEt();
 
-/**
+/** 
  * HTTP sunucusu oluşturma
- * Not: Sunucu her isteğe string ile karşılık vermeli
+ * * Not: *Sunucu her isteğe string ile karşılık vermeli*
  */
 var httpSunucu = http.createServer(function (istek, yanıt) {
     birleşikSunucu(istek, yanıt);
@@ -38,7 +38,7 @@ var httpSunucu = http.createServer(function (istek, yanıt) {
 
 /**
  * Güvenli sunucu için oluşturulan OpenSSL verilerini tanımlıyoruz.
- * Not: Dosyaların önceden OpenSSl ile oluşturulmuş olması lazım.
+ * * Not: *Dosyaların önceden OpenSSl ile oluşturulmuş olması lazım.*
  */
 var httpsSunucuAyarları = {
     // Dosya okuma [ readFileSync ]
@@ -48,7 +48,7 @@ var httpsSunucuAyarları = {
 
 /**
  * HTTPS sunucusu oluşturma
- * Not: Sunucu her isteğe string ile karşılık vermeli
+ * * Not: *Sunucu her isteğe string ile karşılık vermeli*
  */
 var httpsSunucu = https.createServer(httpsSunucuAyarları, function (istek, yanıt) {
     birleşikSunucu(istek, yanıt);
@@ -56,8 +56,8 @@ var httpsSunucu = https.createServer(httpsSunucuAyarları, function (istek, yan�
 
 /**
  * Sunucuyu (HTTP) yapılamdırma dosyasındaki bağlantı noktasından dinliyoruz.
- * Örnek kullanım: curl localhost:3000 
- * Not: Eğer 3000 yerine 500 yazsaydık, localhost:500 yapacaktık.
+ * * Örnek kullanım: *curl localhost:3000 [yapılandırma = 3000]*
+ * * Not: *Eğer 3000 yerine 500 yazsaydık, localhost:500 yapacaktık.*
  */
 httpSunucu.listen(yapılandırma.httpBağlantıNoktası, function () {
     console.log("Sunucu " + yapılandırma.httpBağlantıNoktası + " portundan dinleniyor.");
@@ -65,8 +65,8 @@ httpSunucu.listen(yapılandırma.httpBağlantıNoktası, function () {
 
 /**
  * Sunucuyu (HTTPS) yapılamdırma dosyasındaki bağlantı noktasından dinliyoruz.
- * Örnek kullanım: curl localhost:3000 
- * Not: Eğer 3000 yerine 500 yazsaydık, locakhost:500 yapacaktık.
+ * * Örnek kullanım: *curl localhost:3000*
+ * * Not: *Eğer 3000 yerine 500 yazsaydık, locakhost:500 yapacaktık.*
  */
 httpsSunucu.listen(yapılandırma.httpsBağlantıNoktası, function () {
     console.log("Güvenli Sunucu " + yapılandırma.httpsBağlantıNoktası + " portundan dinleniyor.");
@@ -80,47 +80,48 @@ httpsSunucu.listen(yapılandırma.httpsBağlantıNoktası, function () {
 var birleşikSunucu = function (istek, yanıt) {
     /**
      * Url ayrıştırma işlemi
-     * Örnek: {... query: {}, pathname: "/ornek" ... } şeklinde bir url classı
+     * * Örnek: *{... query: {}, pathname: "/ornek" ... } şeklinde bir url classı*
      */
     var ayrıştırılmışUrl = url.parse(istek.url, true);
 
     /**
      * Sorgu kelimesini (query string) obje olarak almak.
-     * Örnek: "curl localhost:3000/foo?test=testtir" ise { test : "testtir" }
-     * Not: "?test=testtir" sorgu dizgisidir.
+     * * Örnek: *"curl localhost:3000/foo?test=testtir" ise { test : "testtir" }*
+     * * Not: *"?test=testtir" sorgu dizgisidir.*
      */
     var sorguDizgisiObjeleri = ayrıştırılmışUrl.query;
 
     /**
-     * Ayrıştırılan urldeki pathname değişkenindeki değeri yol"a alıyorz.
-     * Örnek: "curl localhost:3000/ornek/test/" => yolu "/ornek/test/"
-     * Not: sorgu dizgileri ele alınmaz ( "curl localhost:3000/ornek?foo=bar" => yolu "/ornek" )
+     * Ayrıştırılan urldeki pathname değişkenindeki değeri yol"a alıyorz. 
+     * 
+     * * Örnek: *"curl localhost:3000/ornek/test/" => yolu "/ornek/test/"*
+     * * Not: *sorgu dizgileri ele alınmaz ( "curl localhost:3000/ornek?foo=bar" => yolu "/ornek" )*
      */
     var yol = ayrıştırılmışUrl.pathname;
 
     /**
      * Replace içinde verilen işaretler çıkartılarak alınan yol. 
-     * Örnek: "/ornek" -> "ornek" veya "/ornek/test/" -> "ornek/test/" olarak kırpılmakta. 
-     * Not: Sadece ilk karakter kırpılıyor (?)
+     * * Örnek: *["/ornek" -> "ornek"] veya ["/ornek/test/" -> "ornek/test/"] olarak kırpılmakta.*
+     * * Not: *Sadece ilk karakter kırpılıyor (?)*
      */
     var kırpılmışYol = yol.replace(/^\/+|\+$/g, "");
 
     /**
      * HTTP metodu alma
-     * Örnek: GET, POST, PUT, DELETE ...
+     * * Örnek: *GET, POST, PUT, DELETE ...*
      */
     var metot = istek.method.toLowerCase();
 
     /**
      * İsteğin içindeki başlıkları (header keys) obje olarak almak.
-     * Not: Postman ile headers sekmesinde gönderilen anahtarları (keys) 
-     * ve değerlerini (the value of them) içerir.
+     * * Not: *Postman ile headers sekmesinde gönderilen anahtarları (keys) 
+     * ve değerlerini (the value of them) içerir.*
      */
     var başlıklar = istek.headers;
 
     /**
      * ASCI kodlarını çözümlemek için kod çözücü tanımlama
-     * Not: "utf-8" çözümleme yöntemidir
+     * * Not: *"utf-8" çözümleme yöntemidir*
      */
     var kodÇözücü = new dizgiÇözücü("utf-8");
     var tampon = "";
@@ -132,7 +133,7 @@ var birleşikSunucu = function (istek, yanıt) {
     istek.on("data", function (veri) {
         /**
          * ASCI kodlarını "utf-8" formatında çözümlüyoruz.
-         * Ornek: 42 75 -> Bu [ 42 = B, 75 = u]
+         * * Ornek: *42 75 -> Bu [ 42 = B, 75 = u]*
          */
         tampon += kodÇözücü.write(veri);
     });
@@ -140,7 +141,7 @@ var birleşikSunucu = function (istek, yanıt) {
     istek.on("end", function () {
         /**
          * Son kısmı ekliyoruz.
-         * Not: Şu anlık "" (?)
+         * Not: *Şu anlık "" (?)*
          */
         tampon += kodÇözücü.end();
 
@@ -149,10 +150,9 @@ var birleşikSunucu = function (istek, yanıt) {
 
         /**
         * İşleyiciye gönderilen veri objesi oluşturma
-        * 
-        * Not: Her dosyada kullanılan veri objesidir. 
-        * 
-        * Örnek: { "kırpılmışYol" = "ornek", sorguDizgisiObjeleri = {}, metot = "post", yükler = {"isim" : "Yunus Emre"} [Body içindeki metinler] vs.}
+        * * Not: *Her dosyada kullanılan veri objesidir.*
+        * * Örnek: *{ "kırpılmışYol" = "ornek", "sorguDizgisiObjeleri" = {}, "metot" = "post", 
+        *   "yükler" = {"isim" : "Yunus Emre"} [Body içindeki metinler] vs.}*
         */
         var veri = {
             "kırpılmışYol": kırpılmışYol,
@@ -162,9 +162,7 @@ var birleşikSunucu = function (istek, yanıt) {
             "yükler": yardımcılar.jsonuObjeyeDönüştür(tampon)
         };
 
-        /**
-         * Seçilen işleyiciyi çalıştırma.
-         */
+        // Seçilen işleyiciyi çalıştırma
         yönlendirici.seçilmişİşleyici(veri, function (durumKodu, yükler) {
             // Durum kodunu kullan veya varsayılanı ele al
             durumKodu = typeof (durumKodu) === "number" ? durumKodu : 200;
@@ -175,18 +173,14 @@ var birleşikSunucu = function (istek, yanıt) {
             // Yükleri dizgi"ye çevirme
             var yükDizgisi = JSON.stringify(yükler);
 
-            /**
-             * Döndürülen sonucun içeriğinin JSON olduğunu belirliyoruz.
-             */
+            // Döndürülen sonucun içeriğinin JSON olduğunu belirliyoruz.
             yanıt.setHeader("Content-type", "application/json");
 
-            /**
-             * Sonucu döndürme
-             */
+            // Sonucu döndürme
             yanıt.writeHead(durumKodu);
             yanıt.end(yükDizgisi);
 
-
+            // Sonucu konsola yazma
             console.log("Yanıt: ", durumKodu, yükDizgisi);
         });
     });
