@@ -13,7 +13,7 @@
  * * ds; FS, yani file system, dosya işlemleri için gereklidir.
  * * testler; Dosya işlemlerini test etmek için gereklidir.
  * * işleyiciler; Yönlendirici için gereklidir.
- * * yardımcılar; Şifreleme işlemi gibi işlemlerde gereklidir.
+ * * yardımcılar; Şifreleme işlembi gibi işlemlerde gereklidir.
  */
 var http = require("http");
 var https = require("https")

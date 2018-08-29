@@ -19,24 +19,22 @@ var veri = {};
 
 /**
  * Ana dosya yollarını tanımlama
- * 
- * Not: __dirname evrensel objedir (global object) değiştirilemez (türkçeleştirilemez)
- * 
- * Not: __dirname; Bulunduğum dizini verir.
- * !ÖNEMLİ : ÇALIŞMIYOR.
+ * * *__dirname* evrensel objedir (global object) değiştirilemez (türkçeleştirilemez)
+ * * *__dirname* Bulunduğum dizini verir.
  */
-veri.anaDizin = yol.join(__dirname, '/../.veri/');
+veri.anaDizin = yol.join(__dirname, "/../../.veri/");
 
 /**
  * Veri oluşturma
  * @param {string} dizin Verinin oluşturulacağı dizin / klasör ismi
  * @param {string} dosya Verilerin içinde bulunacağı dosya'nın ismi
  * @param {object} veri İndex.js'teki veri objesi
- * @param {function} geriCagirma(hata, yükler) İşlemler yapıldıktan sonra çalışacak metot 
+ * @param {function} geriCagirma - *(hata, yükler)* İşlemler yapıldıktan sonra çalışacak metot
  */
 veri.oluştur = function (dizin, dosya, veri, geriCagirma) {
+    console.log(this.anaDizin);
     // Dosyayı yazmak için açma
-    ds.open(yol.join(__dirname, '/../.veri/') + dizin + '/' + dosya + '.json', 'wx', function (hata, dosyaTanımlayıcı) {
+    ds.open(this.anaDizin + dizin + '/' + dosya + '.json', 'wx', function (hata, dosyaTanımlayıcı) {
         if (!hata && dosyaTanımlayıcı) {
             // Veriyi dizgiye çeviriyoruz.
             var dizgiVerisi = JSON.stringify(veri);
@@ -54,7 +52,6 @@ veri.oluştur = function (dizin, dosya, veri, geriCagirma) {
                     geriCagirma('Dosyaya yazarken hata meydana geldi :(');
                 }
             });
-
         } else {
             geriCagirma('Dosya oluşturulamadı, zaten oluşturulmuş olabilir ;)');
         }
@@ -65,10 +62,10 @@ veri.oluştur = function (dizin, dosya, veri, geriCagirma) {
  * Veri okuma
  * @param {string} dizin Dosya dizini
  * @param {string} dosya Dosya
- * @param {function} geriCagirma(hata, veri) İşlemler yapıldıktan sonra çalışacak metot 
+ * @param {function} geriCagirma- *(hata, yükler)* İşlemler yapıldıktan sonra çalışacak metot 
  */
 veri.oku = function (dizin, dosya, geriCagirma) {
-    ds.readFile(yol.join(__dirname, '/../.veri/') + dizin + '/' + dosya + '.json', 'utf8', function (hata, veri) {
+    ds.readFile(this.anaDizin + dizin + '/' + dosya + '.json', 'utf8', function (hata, veri) {
         if (!hata && veri) {
             // Eğer hata yoksa obje olarak döndürüyoruz. (string değil) [ileride delete ile silme yapabilmek için]
             var veriObjesi = yardımcılar.jsonuObjeyeDönüştür(veri);
@@ -86,10 +83,10 @@ veri.oku = function (dizin, dosya, geriCagirma) {
  * @param {string} dizin Dosya dizini
  * @param {string} dosya Dosya
  * @param {string} veri Veri dizgisi
- * @param {function} geriCagirma(hata, veri) İşlemler yapıldıktan sonra çalışacak metot 
+ * @param {function} geriCagirma - *(hata, yükler)* İşlemler yapıldıktan sonra çalışacak metot 
  */
 veri.güncelle = function (dizin, dosya, veri, geriCagirma) {
-    ds.open(yol.join(__dirname, '/../.veri/') + dizin + '/' + dosya + '.json', 'r+', function (hata, dosyaTanımlayıcı) {
+    ds.open(this.anaDizin + dizin + '/' + dosya + '.json', 'r+', function (hata, dosyaTanımlayıcı) {
         if (!hata && dosyaTanımlayıcı) {
             var veriDizgisi = JSON.stringify(veri);
 
@@ -125,11 +122,11 @@ veri.güncelle = function (dizin, dosya, veri, geriCagirma) {
  * 
  * @param {string} dizin Silinecek dosyanın dizini
  * @param {string} dosya Silinecek dosya adı
- * @param {function} geriCagirma(hata, veri) İşlemler yapıldıktan sonra çalışacak metot 
+ * @param {function} geriCagirma- *(hata, yükler)* İşlemler yapıldıktan sonra çalışacak metot 
  */
 veri.sil = function (dizin, dosya, geriCagirma) {
     // Dosya baplantısını kaldırma
-    ds.unlink(yol.join(__dirname, '/../.veri/') + dizin + '/' + dosya + '.json', function (hata) {
+    ds.unlink(this.anaDizin + dizin + '/' + dosya + '.json', function (hata) {
         if (!hata) {
             geriCagirma(false, { 'bilgi': "Dosya silme işleminde hata yok :)" });
         } else {

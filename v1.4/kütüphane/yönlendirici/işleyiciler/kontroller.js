@@ -1,6 +1,6 @@
 
 var belirteçler = require("./belirteçler");
-var _veri = require("./../dosya");
+var _veri = require("./../veri");
 
 kontroller = function (veri, geriCagirma) {
     var uygunMetotlar = ["post", "get", "put", "delete"];
@@ -16,12 +16,14 @@ _kontroller = {};
 
 /**
  * Kontrol oluşturma metodu 
- * Not: localhost:3000/belirteçler?no=... 
+ *
+ * * Gerekli veriler: *Protokol, url, metot, başarı kodları, zaman aşımı*
+ * * Kullanım şekli: *localhost:3000/kontroller*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot.
- * @requires protokol, url, metot, başarıKodları, zamanAşımı
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _kontroller.post = function (veri, geriCagirma) {
+    // Gerekli veriler
     var protokol = typeof (veri.yükler.protokol) == 'string' &&
         ["http", "https"].indexOf(veri.yükler.protokol) > -1 ?
         veri.yükler.protokol : false;
@@ -47,8 +49,8 @@ _kontroller.post = function (veri, geriCagirma) {
 
     if (protokol && url && metot && başarıKodları && zamanAşımı) {
         // Sadece tanınmış kullanıclar kontrol yapabilsin diye belirtece bakıyoruz.
-        var belirteç = typeof (veri.başlıklar.belirteç) == 'string' ?
-            veri.başlıklar.belirteç : false;
+        var belirteç = typeof (veri.başlıklar.belirtec) == 'string' ?
+            veri.başlıklar.belirtec : false;
 
         if (belirteç) {
             _veri.oku('belirteçler', belirteç, function (hata, belirteçVerisi) {
@@ -115,12 +117,14 @@ _kontroller.post = function (veri, geriCagirma) {
 
 /**
  * Kontrol alma metodu 
- * Not: localhost:3000/belirteçler?no=... 
+ *
+ * * Gerekli veriler: *No*
+ * * Kullanım şekli: *localhost:3000/kontroller?no=...*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot.
- * @requires protokol, url, metot, başarıKodları, zamanAşımı
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _kontroller.get = function (veri, geriCagirma) {
+    // Gerekli veriler
     var no = typeof (veri.sorguDizgisiObjeleri.no) == "string" &&
         veri.sorguDizgisiObjeleri.no.trim().length > 20 ?
         veri.sorguDizgisiObjeleri.no.trim() : false;
@@ -128,8 +132,8 @@ _kontroller.get = function (veri, geriCagirma) {
     if (no) {
         _veri.oku("kontroller", no, function (hata, kontrolVerisi) {
             if (!hata && kontrolVerisi) {
-                var belirteç = typeof (veri.başlıklar.belirteç) == "string" ?
-                    veri.başlıklar.belirteç : false;
+                var belirteç = typeof (veri.başlıklar.belirtec) == "string" ?
+                    veri.başlıklar.belirtec : false;
 
                 belirteçler.belirteçOnaylama(belirteç, kullanıcıVerisi, function (belirteçOnaylandıMı) {
                     if (belirteçOnaylandıMı) {
@@ -152,17 +156,14 @@ _kontroller.get = function (veri, geriCagirma) {
 /**
  * Kontrol güncelleme metodu 
  *
- * Gerekli veriler; > No
- * > sds
- * İsteğe bağlı veriler; 
- * * Protokol, url, metot, başarı kodları, zaman aşımı
+ * * Gerekli veriler: *No*
+ * * İsteğe bağlı veriler: *Protokol, url, metot, başarı kodları, zaman aşımı*
+ * * Kullanım şekli; *localhost:3000/kontroller?no=...*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot. {@callback function (durumKodu, yükler)}
- * Kullanım şekli;
- * * localhost:3000/belirteçler?no=...
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _kontroller.put = function (veri, geriCagirma) {
-    // Gerekli bilgileri alıyoruz.
+    // Gerekli veriler
     var no = typeof (veri.yükler.no) == "string" &&
         veri.yükler.no.trim().length == 20 ?
         veri.yükler.no.trim() : false;
@@ -191,18 +192,53 @@ _kontroller.put = function (veri, geriCagirma) {
     if (no) {
         // İsteğe bağlı veriler yoksa, hata vereceğiz.
         if (protokol || url || metot || başarıKodları || zamanAşımı) {
-            _veri.oku("kontroller", no, function (hata, kontrollerVerisi) {
-                if (!hata && kontrollerVerisi) {
-                    var belirteç = typeof (veri.başlıklar.belirteç) == "string" ?
-                        veri.başlıklar.belirteç : false;
+            _veri.oku("kontroller", no, function (hata, kontrolVerisi) {
+                if (!hata && kontrolVerisi) {
+                    var belirteç = typeof (veri.başlıklar.belirtec) == "string" ?
+                        veri.başlıklar.belirtec : false;
 
-                    
+                    belirteçler.belirteçOnaylama(belirteç, kontrolVerisi.telefon, function(belirteçOnaylandıMı){
+                        if (belirteçOnaylandıMı) {
+                            // Gereken kontrolleri güncelleme
+                            if (protokol) {
+                                kontrolVerisi.protokol = protokol;
+                            }
+                            if (url) {
+                                kontrolVerisi.url = url;
+                            }
+                            if (metot) {
+                                kontrolVerisi.metot = metot;
+                            }
+                            if (başarıKodları) {
+                                kontrolVerisi.başarıKodları = başarıKodları;
+                            }
+                            if (zamanAşımı) {
+                                kontrolVerisi.zamanAşımı = zamanAşımı;
+                            }
+
+                            // Yenilikleri kaydetme
+                            _veri.güncelle("kontroller", no, kontrolVerisi, function(hata){
+                                if (!hata) {
+                                    geriCagirma(200);
+                                } else {
+                                    geriCagirma(500, {"bilgi": "Kontrol güncelleme işleminde hata meydana geldi :("});
+                                }
+                            });
+
+                        } else {
+                            geriCagirma(403, {"bilgi": "Kontrol güncelleme işlemi için belirteç onaylanmadı :("});
+                        }
+                    });
+
+                } else {
+                    geriCagirma(400, {"bilgi": "Kontrol güncelleme işlemi için no mevcut değil :("});
                 }
-
             });
+        } else {
+            geriCagirma(400, {"bilgi": "Kontrol güncelleme işlemi için veriler mevcut değil :("});
         }
     } else {
-
+        geriCagirma(400, {"bilgi": "Kontrol güncelleme işlemi için gerekli alanlar eksik :("});
     }
 }
 

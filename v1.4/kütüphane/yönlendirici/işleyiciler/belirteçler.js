@@ -8,11 +8,8 @@ var yardımcılar = require("./../../yardımcılar");
  * Örnek: localhost:3000/belirteçler yazıldığında bu fonksiyon çalışır. (yönlendirici ile, index.js)
  *
  * @param {object} veri Index.js"te tanımlanan veri objesidir. İstekle gelir.
- * @param {işleyici} geriCagirma İşlemler bittiği zaman çalışacan metot
- * 
- * @callback işleyici
- * @param {number} durumKodu
- * @param {object} yükler 
+ * @param {işleyici} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot
+ *
  */
 belirteçler = function (veri, geriCagirma) {
     var uygunMetotlar = ["post", "get", "put", "delete"];
@@ -26,12 +23,12 @@ belirteçler = function (veri, geriCagirma) {
 
 /**
  * Belirteçleri onaylamak için kullanılan metot.
- * @param {string} belirteçNo Tokenler için kimlik no'su
+ * @param {string} belirtec Okunacak (aranacak) belirteç
  * @param {string} telefon Kullanıcı telefon numarası
- * @param {test} geriCagirma İşlemler bittikten sonra çalışacak metot.
+ * @param {test} geriCagirma - *(belirtecOnaylandiMi)* İşlemler bittikten sonra çalışacak metot. 
  */
-belirteçler.belirteçOnaylama = function (belirteçNo, telefon, geriCagirma) {
-    _veri.oku('belirteçler', belirteçNo, function (hata, belirteçVerisi) {
+belirteçler.belirteçOnaylama = function (belirtec, telefon, geriCagirma) {
+    _veri.oku('belirteçler', belirtec, function (hata, belirteçVerisi) {
         if (!hata && belirteçVerisi) {
             if (belirteçVerisi.telefon == telefon && belirteçVerisi.ömür > Date.now()) {
                 geriCagirma(true);
@@ -50,7 +47,7 @@ _belirteçler = {};
 /**
  * Belirteç oluşturma metodu 
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot.
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _belirteçler.post = function (veri, geriCagirma) {
     var telefon = typeof (veri.yükler.telefon) == "string" &&
@@ -101,7 +98,7 @@ _belirteçler.post = function (veri, geriCagirma) {
  * Belirteç alma metodu 
  * Not: localhost:3000/belirteçler?no=... 
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot.
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _belirteçler.get = function (veri, geriCagirma) {
     // Rastgele dizgi oluştur metodundaki değere eşit olmak zorunda, o sebeple 20
@@ -126,7 +123,7 @@ _belirteçler.get = function (veri, geriCagirma) {
  * Belirteç alma metodu 
  * Not: localhost:3000/belirteçler?no=... 
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot.
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _belirteçler.put = function (veri, geriCagirma) {
     // İndex'te rastgele dizgi oluşturma uzunluğu ile aynı olmak zorunda (20)
@@ -165,7 +162,7 @@ _belirteçler.put = function (veri, geriCagirma) {
  * Belirteç alma metodu 
  * Not: localhost:3000/belirteçler?no=... 
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot.
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _belirteçler.delete = function (veri, geriCagirma) {
     var no = typeof (veri.sorguDizgisiObjeleri.no) == 'string' && veri.sorguDizgisiObjeleri.no.trim().length == 20 ?

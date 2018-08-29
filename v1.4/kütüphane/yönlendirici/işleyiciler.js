@@ -29,7 +29,7 @@ işleyiciler.kontroller = kontroller;
  * Örnek: localhost:3000/durt yazıldığında bu fonksiyon çalışır. (yönlendirici ile, index.js)
  *
  * @param {object} veri Index.js"te tanımlanan veri objesidir. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot
  */
 işleyiciler.dürt = function (veri, geriCagirma) {
     geriCagirma(200);
@@ -43,7 +43,7 @@ işleyiciler.dürt = function (veri, geriCagirma) {
  * Not: ornek, yönlendirici "nin bir objesidir.
  * 
  * @param {object} veri Index.js"te tanımlanan veri objesidir. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot 
  */
 işleyiciler.örnek = function (veri, geriCagirma) {
     // HTTP durumunu ve yüklerini geri çağırıyoruz.
@@ -58,7 +58,7 @@ işleyiciler.örnek = function (veri, geriCagirma) {
  * Not: ornek1, yönlendirici"de tanımlı olmayan bir objesidir.
  * 
  * @param {object} veri Index.js"te tanımlanan veri objesidir. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot
  */
 işleyiciler.bulunamadı = function (veri, geriCagirma) {
     // HTTP hata kodunu geri çağırıyoruz.

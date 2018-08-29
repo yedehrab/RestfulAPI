@@ -3,6 +3,8 @@
  * -> belirteçler; Kullanıcı sisteme giriş yapmış mı kontrolü için kullanılıyor.
  */
 var belirteçler = require("./belirteçler");
+var _veri = require("./../veri");
+var yardımcılar = require("./../../yardımcılar");
 
 /**
  * İşleyiciler, kullanıcı işlemleri için metot
@@ -11,7 +13,7 @@ var belirteçler = require("./belirteçler");
  * Not: _kullanıcılar; private oluyor, dışarıdan erişilemez.
  * 
  * @param {object} veri Index.js"te tanımlanan veri objesidir. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot
  */
 
 kullanıcılar = function (veri, geriCagirma) {
@@ -36,7 +38,7 @@ _kullanıcılar = {};
 /**
  * Kullanıcı oluşturma metodu 
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot.
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _kullanıcılar.post = function (veri, geriCagirma) {
     // İsim alma, 0 karakterden fazla olmalı
@@ -95,7 +97,7 @@ _kullanıcılar.post = function (veri, geriCagirma) {
  * Kullanıcı girişi
  * @property Sadece kimliği onaylanmış kişiler, kendi biligilerine erişebilir. (Diğerlerine erişemez)
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot.
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _kullanıcılar.get = function (veri, geriCagirma) {
     // Telefon numarasını kontrol etmemiz gerekmekte
@@ -105,7 +107,7 @@ _kullanıcılar.get = function (veri, geriCagirma) {
 
     if (telefon) {
         // Bilgilere erişmek isteyen kişinin kendimiz olduğunu anlamak için gereken işlemler.
-        var belirteç = typeof (veri.başlıklar.belirteç) == 'string' ? veri.başlıklar.belirteç : false;
+        var belirteç = typeof (veri.başlıklar.belirtec) == 'string' ? veri.başlıklar.belirtec : false;
 
         belirteçler.belirteçOnaylama(belirteç, telefon, function (belirteçOnaylandıMı) {
             if (belirteçOnaylandıMı) {
@@ -134,7 +136,7 @@ _kullanıcılar.get = function (veri, geriCagirma) {
  * Kullanıcı verileri güncelleme
  * @property Sadece kimliği onaylanmış kişiler, kendi bilgilerini değiştirebilir. (Diğerlerine erişemez)
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot.
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _kullanıcılar.put = function (veri, geriCagirma) {
     // Kullanıcıyı kontrol etme
@@ -198,7 +200,7 @@ _kullanıcılar.put = function (veri, geriCagirma) {
  * Kullanıcı verileri güncelleme
  * @property Sadece kimliği onaylanmış kişiler, kendi bilgilerini değiştirebilir. (Diğerlerine erişemez)
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot.
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _kullanıcılar.delete = function (veri, geriCagirma) {
     // Kullanıcının olduğunu kontrol ediyoruz.

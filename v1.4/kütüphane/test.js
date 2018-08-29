@@ -3,7 +3,7 @@
  * Açıklama: Test için kullanlan metotları içerir, debug için kullanılır.
  */
 
-var _veri = require('./yönlendirici/dosya');
+var _veri = require('./yönlendirici/veri');
 
 // Test metotları objesi
 var testler = {};

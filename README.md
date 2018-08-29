@@ -3,19 +3,65 @@
 > API tasarımı
 
 ## Genel Notlar
+* Yönlendirici
+  > URL'deki veriye göre uygun sayfaya yönlendirme yapılır.
+
+  > Türkçe karakter **içeremezler**. (Postman'da hata veriyor.)
+
+  > Örnek: *localhost:300/ornek*
+
 * Yükler
   > Kullanıcı adı ve şifre girin gibi verilerin girildiği alanlardan gelen bilgiler.
 
-  > Veri olurma işlemleri için kullanırlır.
+  > Veri oluşturma işlemleri için kullanırlır.
+
+  > Türkçe karakter **içerebilirler**.
+
+  > Örnek: *localhost:300/ornek* url'si altında body içindeki veriler.
+  > { "yükler": "selam" }
+
 * Sorgu Dizgisi Objeleri
   > Tamam butonuna basıldığında adres çubuğunun sonuna eklenen "?no=3" gibi bilgiler.
   
   > Güncelleme ve veri alma gibi işlemlerde kullanılır.
+
+  > Türkçe karakter **içeremezler**. (Postman'da hata veriyor.)
+
+  > Örnek: *localhost:300/ornek?no=231*
+
 * Başlıklar
   > Kullanıcı giriş yaptığında, sayfalar arası gezinirken değişmeyen bilgiler.
   
   > Kontrol işlemleri için kullanılır. (belirteçler)
+
+  > Türkçe karakter **içeremezler**. (Postman'da hata veriyor.)
+
+  > Örnek: *localhost:300/ornek* url'si altında header içindeki veriler.
+  > { "key": "belirtec", "value": "0542502495040" }
 -----
+
+## Version 1.4
+---------
+
+### Sorunlu özellikler 
+> HTTPS hala sıkıntılıdır.
+
+### Gelen Özellikler
+
+* Baştan aşağı kod yapısı düzenlendi.
+
+* Geniş türkçeleştirme.
+
+* Header'lardaki türkçe karakter sorununa özel, türkçeye özgü karakterler kaldırıldı.
+
+* Kontroller eklendi & güncellendi.
+  * Post
+  * Get
+  * Put
+  * Delete
+
+  
+
 
 ## Version 1.3.1
 ---------
