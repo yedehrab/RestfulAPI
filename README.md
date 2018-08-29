@@ -64,6 +64,7 @@
   * Put
   * Delete
 
+* Twilio ile SMS atma
   
 
 

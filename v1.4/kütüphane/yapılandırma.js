@@ -18,10 +18,15 @@ var ortamlar = {};
 ortamlar.iskelet = {
     'httpBağlantıNoktası': 3000,
     'httpsBağlantıNoktası': 3001,
-    'ortamİsmi': 'iskelet', 
+    'ortamİsmi': 'iskelet',
     'şifrelemeGizliliği': 'gizlidir',
     "kimlikUzunluğu": 20,
-    "enFazlaKontrol" : 5
+    "enFazlaKontrol": 5,
+    "twilio": {
+        "telefon": "+14582092684",
+        "accountSid": "ACbffe0500c3a5c8816a7b960eada3b654",
+        "authToken": "2343de26f1219f836a1964316f5c82f6"
+    }
 };
 
 /**
@@ -34,7 +39,12 @@ ortamlar.üretim = {
     'ortamİsmi': 'üretim',
     'şifrelemeGizliliği': 'bu da gizlidir.',
     "kimlikUzunluğu": 20,
-    "enFazlaKontrol" : 5
+    "enFazlaKontrol": 5,
+    "twilio": {
+        "telefon": "+14582092684",
+        "accountSid": "ACbffe0500c3a5c8816a7b960eada3b654",
+        "authToken": "2343de26f1219f836a1964316f5c82f6"
+    }
 }
 
 /**
@@ -48,7 +58,7 @@ var anlıkOrtam = typeof (process.env.NODE_ENV) == 'string' ?
  * Şu anki ortamı kontrol ediyoruz, eğer yukarıdakilerden biri değile
  * iskeleti (varsayılan) tanımlıyoruz.
  */
-var aktarılacakOrtam = typeof(ortamlar[anlıkOrtam]) == 'object' ?
-ortamlar[anlıkOrtam] : ortamlar.iskelet;
+var aktarılacakOrtam = typeof (ortamlar[anlıkOrtam]) == 'object' ?
+    ortamlar[anlıkOrtam] : ortamlar.iskelet;
 
 module.exports = aktarılacakOrtam;

@@ -11,6 +11,7 @@
 var kripto = require('crypto');
 var yapılandırma = require('./yapılandırma');
 var sorguDizgisi = require("querystring");
+var https = require("https");
 
 /**
  * Yardımcıları tutan dizi
@@ -75,13 +76,13 @@ yardımcılar.rastgeleDizgiOluştur = function (dizgiUzunlugu) {
  * @param {function(boolean | object):void} geriCagirma İşlem sırasında hata meydana gelirse true
  * * arg0: HTTP varsayılan durum kodları | Hata durumunda açıklamalar
  */
-yardımcılar.twilioSMSGönder = function (telefonNo, mesaj, geriCagirma){
+yardımcılar.twilioSMSGönder = function (telefonNo, mesaj, geriCagirma) {
     // Parametreleri kontrol ediyoruz.
     telefonNo = typeof (telefonNo) == "string" &&
         telefonNo.trim().length == 10 ?
         telefonNo : false;
 
-    mesaj = typeof(mesaj) == "string" &&
+    mesaj = typeof (mesaj) == "string" &&
         mesaj.trim().length > 0 &&
         mesaj.trim().length < 1600 ?
         mesaj : false;
@@ -89,12 +90,48 @@ yardımcılar.twilioSMSGönder = function (telefonNo, mesaj, geriCagirma){
     if (telefonNo && mesaj) {
         // Yük bilgilerini yapılandırma (Türkçeleştirilemez, kaşrı sunucuya gönderilecektir.)
         var yükler = {
-            "From": yapılandırma.twilio.telefondan,
+            "From": yapılandırma.twilio.telefon,
             "To": "+90" + telefonNo,
             "Body": mesaj
         }
+        // Objeyi stringe çeviriyoruz
+        var yükDizgisi = sorguDizgisi.stringify(yükler);
 
-        var yükDizgisi = q
+        var istekDetayları = {
+            "protocol": "https:",
+            "host": "api.twilio.com",
+            "method": "post",
+            "path": "/2010-04-01/Accounts/" + yapılandırma.twilio.accountSid+"/Messages.json",
+            'auth': yapılandırma.twilio.accountSid + ':' + yapılandırma.twilio.authToken,
+            'headers': {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': Buffer.byteLength(yükDizgisi)
+            }
+        };
+
+        // İsteği örneklendiriyoruz
+        var istek = https.request(istekDetayları, function (istek) {
+            // Durum kodunu alıyoruz
+            var durumKodu = istek.statusCode;
+            // Eğer işlemler düzgün çalıştıysa geri bildirim veriyoruz
+            if (durumKodu != 200 && durumKodu != 201) {
+                geriCagirma('Durum kodu: ' + durumKodu);
+            } else {
+                geriCagirma(false);
+            }
+        });
+
+        // Hata durumunda isteği kesiyoruz ki hata fırlatmasın (thrown)
+        istek.on("error", function (hata){
+            geriCagirma(hata);
+        });
+
+        // Yükleri yazıyoruz
+        istek.write(yükDizgisi);
+
+        // İsteği kapatıyoruz
+        istek.end();
+
     } else {
         geriCagirma("Verilen bilgiler eksik veya kullanışsız :(");
     }

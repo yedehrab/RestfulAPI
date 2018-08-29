@@ -26,6 +26,7 @@ var yardımcılar = require("./kütüphane/yardımcılar");
 var yönlendirici = require("./kütüphane/yönlendirici");
 
 // testler.hepsiniTestEt();
+testler.SMSTesti();
 
 /**
  * HTTP sunucusu oluşturma
