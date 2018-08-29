@@ -9,8 +9,9 @@ var yapılandırma = require("./../../yapılandırma");
  * * Örnek: *localhost:3000/belirteçler yazıldığında bu fonksiyon çalışır. (yönlendirici ile, index.js)*
  *
  * @param {object} veri Index.js"te tanımlanan veri objesidir. İstekle gelir.
- * @param {işleyici} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot
- *
+ * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: HTTP varsayılan durum kodları
+ ** arg1: Ek bilgiler, açıklamalar
  */
 belirteçler = function (veri, geriCagirma) {
     var uygunMetotlar = ["post", "get", "put", "delete"];
@@ -26,7 +27,8 @@ belirteçler = function (veri, geriCagirma) {
  * Belirteçleri onaylamak için kullanılan metot.
  * @param {string} belirtec Okunacak (aranacak) belirteç
  * @param {string} telefonNo Kullanıcı telefonNo numarası
- * @param {test} geriCagirma - *(belirtecOnaylandiMi)* Belitecin onaylanma durumu
+ * @param {function(boolean):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: Belirtecin onaylanma durumu
  */
 belirteçler.belirteçOnaylama = function (belirtec, telefonNo, geriCagirma) {
     _veri.oku('belirteçler', belirtec, function (hata, belirteçVerisi) {
@@ -51,7 +53,9 @@ _belirteçler = {};
  * * Gerekli veriler: *Telefon No, Şifre*
  * * Kullanım şekli: *Yükler ile kullanılır (Body içindeki JSON verileri) (localhost:3000/belitecler)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittikten sonra verilen yanıtlar.
+ * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: HTTP varsayılan durum kodları
+ ** arg1: Ek bilgiler, açıklamalar
  */
 _belirteçler.post = function (veri, geriCagirma) {
     // Gerekli veriler
@@ -105,7 +109,9 @@ _belirteçler.post = function (veri, geriCagirma) {
  * * Gerekli veriler: *Kimlik*
  * * Kullanım Şekli: *localhost:3000/belirteçler?kimlik=... (Sorgu verisi)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittikten sonra verilen yanıtlar.
+ * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: HTTP varsayılan durum kodları
+ ** arg1: Ek bilgiler, açıklamalar
  */
 _belirteçler.get = function (veri, geriCagirma) {
     // Rastgele dizgi oluştur metodundaki değere eşit olmak zorunda, o sebeple yapılandırma.kimlikUzunluğu
@@ -131,7 +137,9 @@ _belirteçler.get = function (veri, geriCagirma) {
  * * Gerekli Veriler: *Kimlik, Süre Uzatma*
  * * Kullanım şekli: *Yükler ile kullanılır (Body içindeki JSON verileri) (localhost:3000/belirtecler)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
+ * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: HTTP varsayılan durum kodları
+ ** arg1: Ek bilgiler, açıklamalar
  */
 _belirteçler.put = function (veri, geriCagirma) {
     // İndex'te rastgele dizgi oluşturma uzunluğu ile aynı olmak zorunda (yapılandırma.kimlikUzunluğu)
@@ -171,7 +179,9 @@ _belirteçler.put = function (veri, geriCagirma) {
  * * Gerekli Veriler: *Kimlik*
  * * Kullanım Şekli: *localhost:3000/belirteçler?kimlik=... (Sorgu verisi)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
+ * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: HTTP varsayılan durum kodları
+ ** arg1: Ek bilgiler, açıklamalar
  */
 _belirteçler.delete = function (veri, geriCagirma) {
     var kimlik = typeof (veri.sorguDizgisiObjeleri.kimlik) == 'string' &&

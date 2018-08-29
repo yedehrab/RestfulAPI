@@ -25,12 +25,11 @@ var testler = require("./kütüphane/test");
 var yardımcılar = require("./kütüphane/yardımcılar");
 var yönlendirici = require("./kütüphane/yönlendirici");
 
-
 // testler.hepsiniTestEt();
 
-/** 
+/**
  * HTTP sunucusu oluşturma
- * * Not: *Sunucu her isteğe string ile karşılık vermeli*
+ * Not: Sunucu her isteğe string ile karşılık vermeli
  */
 var httpSunucu = http.createServer(function (istek, yanıt) {
     birleşikSunucu(istek, yanıt);
@@ -38,7 +37,7 @@ var httpSunucu = http.createServer(function (istek, yanıt) {
 
 /**
  * Güvenli sunucu için oluşturulan OpenSSL verilerini tanımlıyoruz.
- * * Not: *Dosyaların önceden OpenSSl ile oluşturulmuş olması lazım.*
+ * Not: Dosyaların önceden OpenSSl ile oluşturulmuş olması lazım.
  */
 var httpsSunucuAyarları = {
     // Dosya okuma [ readFileSync ]
@@ -48,7 +47,7 @@ var httpsSunucuAyarları = {
 
 /**
  * HTTPS sunucusu oluşturma
- * * Not: *Sunucu her isteğe string ile karşılık vermeli*
+ * Not: Sunucu her isteğe string ile karşılık vermeli
  */
 var httpsSunucu = https.createServer(httpsSunucuAyarları, function (istek, yanıt) {
     birleşikSunucu(istek, yanıt);
@@ -56,8 +55,8 @@ var httpsSunucu = https.createServer(httpsSunucuAyarları, function (istek, yan�
 
 /**
  * Sunucuyu (HTTP) yapılamdırma dosyasındaki bağlantı noktasından dinliyoruz.
- * * Örnek kullanım: *curl localhost:3000 [yapılandırma = 3000]*
- * * Not: *Eğer 3000 yerine 500 yazsaydık, localhost:500 yapacaktık.*
+ * Örnek kullanım: curl localhost:3000 
+ * Not: Eğer 3000 yerine 500 yazsaydık, localhost:500 yapacaktık.
  */
 httpSunucu.listen(yapılandırma.httpBağlantıNoktası, function () {
     console.log("Sunucu " + yapılandırma.httpBağlantıNoktası + " portundan dinleniyor.");
@@ -65,8 +64,8 @@ httpSunucu.listen(yapılandırma.httpBağlantıNoktası, function () {
 
 /**
  * Sunucuyu (HTTPS) yapılamdırma dosyasındaki bağlantı noktasından dinliyoruz.
- * * Örnek kullanım: *curl localhost:3000*
- * * Not: *Eğer 3000 yerine 500 yazsaydık, locakhost:500 yapacaktık.*
+ * Örnek kullanım: curl localhost:3000 
+ * Not: Eğer 3000 yerine 500 yazsaydık, locakhost:500 yapacaktık.
  */
 httpsSunucu.listen(yapılandırma.httpsBağlantıNoktası, function () {
     console.log("Güvenli Sunucu " + yapılandırma.httpsBağlantıNoktası + " portundan dinleniyor.");
@@ -141,12 +140,9 @@ var birleşikSunucu = function (istek, yanıt) {
     istek.on("end", function () {
         /**
          * Son kısmı ekliyoruz.
-         * Not: *Şu anlık "" (?)*
+         * Not: *Şu anlık "" (?)*s
          */
         tampon += kodÇözücü.end();
-
-        // İşleyiciyi ayarlıyoruz.
-        yönlendirici.işleyiciAyarla(kırpılmışYol);
 
         /**
         * İşleyiciye gönderilen veri objesi oluşturma
@@ -162,26 +158,29 @@ var birleşikSunucu = function (istek, yanıt) {
             "yükler": yardımcılar.jsonuObjeyeDönüştür(tampon)
         };
 
-        // Seçilen işleyiciyi çalıştırma
-        yönlendirici.seçilmişİşleyici(veri, function (durumKodu, yükler) {
-            // Durum kodunu kullan veya varsayılanı ele al
-            durumKodu = typeof (durumKodu) === "number" ? durumKodu : 200;
 
-            // Yükleri kullan yada varsayılanı ele al
-            yükler = typeof (yükler) === "object" ? yükler : {};
+        // İşleyiciyi ayarlıyoruz.
+        yönlendirici.işleyiciAyarla(kırpılmışYol, function (seçilmişİşleyici) {
+            seçilmişİşleyici(veri, function (durumKodu, yükler) {
+                // Durum kodunu kullan veya varsayılanı ele al
+                durumKodu = typeof (durumKodu) === "number" ? durumKodu : 200;
 
-            // Yükleri dizgi"ye çevirme
-            var yükDizgisi = JSON.stringify(yükler);
+                // Yükleri kullan yada varsayılanı ele al
+                yükler = typeof (yükler) === "object" ? yükler : {};
 
-            // Döndürülen sonucun içeriğinin JSON olduğunu belirliyoruz.
-            yanıt.setHeader("Content-type", "application/json");
+                // Yükleri dizgi"ye çevirme
+                var yükDizgisi = JSON.stringify(yükler);
 
-            // Sonucu döndürme
-            yanıt.writeHead(durumKodu);
-            yanıt.end(yükDizgisi);
+                // Döndürülen sonucun içeriğinin JSON olduğunu belirliyoruz.
+                yanıt.setHeader("Content-type", "application/json");
 
-            // Sonucu konsola yazma
-            console.log("Yanıt: ", durumKodu, yükDizgisi);
+                // Sonucu döndürme
+                yanıt.writeHead(durumKodu);
+                yanıt.end(yükDizgisi);
+
+                // Sonucu konsola yazma
+                console.log("Yanıt: ", durumKodu, yükDizgisi);
+            });
         });
     });
 }

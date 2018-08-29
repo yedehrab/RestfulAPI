@@ -13,7 +13,9 @@ var yardımcılar = require("./../../yardımcılar");
  * Not: _kullanıcılar; private oluyor, dışarıdan erişilemez.
  * 
  * @param {object} veri Index.js"te tanımlanan veri objesidir. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot
+ * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: HTTP varsayılan durum kodları
+ ** arg1: Ek bilgiler, açıklamalar
  */
 
 kullanıcılar = function (veri, geriCagirma) {
@@ -41,7 +43,9 @@ _kullanıcılar = {};
  * * Not: *telefonNo* kimlik yerine kullanılmaktadır.
  * * Kullanım şekli: *Yükler ile kullanılır (Body içindeki JSON verileri) (localhost:3000/kullanicilar)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
+ * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: HTTP varsayılan durum kodları
+ ** arg1: Ek bilgiler, açıklamalar
  */
 _kullanıcılar.post = function (veri, geriCagirma) {
     // İsim alma, 0 karakterden fazla olmalı
@@ -103,7 +107,9 @@ _kullanıcılar.post = function (veri, geriCagirma) {
  * * Not: *Sadece kimliği onaylanmış kişiler, kendi biligilerine erişebilir. (Diğerlerine erişemez)*
  * * Kullanım Şekli: *localhost:3000/kullanıcılar?telefonNo=... (Sorgu Verisi)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
+ * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: HTTP varsayılan durum kodları
+ ** arg1: Ek bilgiler, açıklamalar
  */
 _kullanıcılar.get = function (veri, geriCagirma) {
     // telefonNo numarasını kontrol etmemiz gerekmekte
@@ -143,7 +149,9 @@ _kullanıcılar.get = function (veri, geriCagirma) {
  * * Not: *Sadece kimliği onaylanmış kişiler, kendi bilgilerini değiştirebilir. (Diğerlerine erişemez)*
  * * Kullanım şekli: *Yükler ile kullanılır (Body içindeki JSON verileri) (localhost:3000/kullanicilar)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
+ * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: HTTP varsayılan durum kodları
+ ** arg1: Ek bilgiler, açıklamalar
  */
 _kullanıcılar.put = function (veri, geriCagirma) {
     // Kullanıcıyı kontrol etme
@@ -209,7 +217,9 @@ _kullanıcılar.put = function (veri, geriCagirma) {
  * * Not: *Sadece kimliği onaylanmış kişiler, kendi bilgilerini değiştirebilir. (Diğerlerine erişemez)*
  * * Kullanım Şekli: *localhost:3000/kullanıcılar?telefonNo=... (Sorgu Verisi)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
+ * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: HTTP varsayılan durum kodları
+ ** arg1: Ek bilgiler, açıklamalar
  */
 _kullanıcılar.delete = function (veri, geriCagirma) {
     // Kullanıcının olduğunu kontrol ediyoruz.

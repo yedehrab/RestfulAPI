@@ -21,7 +21,9 @@ _kontroller = {};
  * * Gerekli veriler: *Protokol, url, metot, başarı kodları, zaman aşımı*
  * * Kullanım şekli: *Yükler ile kullanılır (Body içindeki JSON verileri) (localhost:3000/kontroller)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittikten sonra verilen yanıtlar.
+ * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: HTTP varsayılan durum kodları
+ ** arg1: Ek bilgiler, açıklamalar
  */
 _kontroller.post = function (veri, geriCagirma) {
     // Gerekli veriler
@@ -52,7 +54,7 @@ _kontroller.post = function (veri, geriCagirma) {
         // Sadece tanınmış kullanıclar kontrol yapabilsin diye belirtece bakıyoruz.
         var belirteç = typeof (veri.başlıklar.belirtec) == 'string' ?
             veri.başlıklar.belirtec : false;
-        console.log(veri.başlıklar.belirtec);
+
 
         if (belirteç) {
             _veri.oku('belirteçler', belirteç, function (hata, belirteçVerisi) {
@@ -124,7 +126,9 @@ _kontroller.post = function (veri, geriCagirma) {
  * * Gerekli veriler: *Kimlik*
  * * Kullanım şekli: *localhost:3000/kontroller?kimlik=... (Sorgu Verisi)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittikten sonra verilen yanıtlar.
+ * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: HTTP varsayılan durum kodları
+ ** arg1: Ek bilgiler, açıklamalar
  */
 _kontroller.get = function (veri, geriCagirma) {
     // Gerekli veriler
@@ -162,7 +166,9 @@ _kontroller.get = function (veri, geriCagirma) {
  * * İsteğe bağlı veriler: *Protokol, url, metot, başarı kodları, zaman aşımı*
  * * Kullanım şekli: *Yükler ile kullanılır (Body içindeki JSON verileri) (localhost:3000/kontroller)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittikten sonra verilen yanıtlar.
+ * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: HTTP varsayılan durum kodları
+ ** arg1: Ek bilgiler, açıklamalar
  */
 _kontroller.put = function (veri, geriCagirma) {
     // Gerekli veriler
@@ -249,7 +255,9 @@ _kontroller.put = function (veri, geriCagirma) {
  * * Gerekli veriler: *Kimlik*
  * * Kullanım Şekli: *localhost:3000/kontroller?kimlik=... (Sorgu Verisi)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittikten sonra verilen yanıtlar.
+ * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: HTTP varsayılan durum kodları
+ ** arg1: Ek bilgiler, açıklamalar
  */
 _kontroller.delete = function (veri, geriCagirma) {
     // Gerekli veriler 
