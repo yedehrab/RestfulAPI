@@ -20,6 +20,7 @@ ortamlar.iskelet = {
     'httpsBağlantıNoktası': 3001,
     'ortamİsmi': 'iskelet', 
     'şifrelemeGizliliği': 'gizlidir',
+    "kimlikUzunluğu": 20,
     "enFazlaKontrol" : 5
 };
 
@@ -32,6 +33,7 @@ ortamlar.üretim = {
     'httpsBağlantıNoktası': 5001,
     'ortamİsmi': 'üretim',
     'şifrelemeGizliliği': 'bu da gizlidir.',
+    "kimlikUzunluğu": 20,
     "enFazlaKontrol" : 5
 }
 

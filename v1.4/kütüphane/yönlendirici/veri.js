@@ -26,10 +26,10 @@ veri.anaDizin = yol.join(__dirname, "/../../.veri/");
 
 /**
  * Veri oluşturma
- * @param {string} dizin Verinin oluşturulacağı dizin / klasör ismi
- * @param {string} dosya Verilerin içinde bulunacağı dosya'nın ismi
- * @param {object} veri İndex.js'teki veri objesi
- * @param {function} geriCagirma - *(hata, yükler)* İşlemler yapıldıktan sonra çalışacak metot
+ * @param {string} dizin Dosyanın oluşturulacağı dizin / klasör ismi
+ * @param {string} dosya Verilerin içinde bulunacağı dosya'nın ismi *(kimlik)*
+ * @param {object} veri Dosyaya kayıt edilecek veri
+ * @param {function} geriCagirma - *(hata, yükler)* İşlemler yapıldıktan sonra verilen yanıt
  */
 veri.oluştur = function (dizin, dosya, veri, geriCagirma) {
     console.log(this.anaDizin);
@@ -60,9 +60,9 @@ veri.oluştur = function (dizin, dosya, veri, geriCagirma) {
 
 /**
  * Veri okuma
- * @param {string} dizin Dosya dizini
- * @param {string} dosya Dosya
- * @param {function} geriCagirma- *(hata, yükler)* İşlemler yapıldıktan sonra çalışacak metot 
+ * @param {string} dizin Dosyanın oluşturulacağı dizin / klasör ismi
+ * @param {string} dosya Verilerin içinde bulunacağı dosya'nın ismi *(kimlik)*
+ * @param {function} geriCagirma- *(hata, veriObjesi)* İşlemler yapıldıktan sonra verilen yanıt 
  */
 veri.oku = function (dizin, dosya, geriCagirma) {
     ds.readFile(this.anaDizin + dizin + '/' + dosya + '.json', 'utf8', function (hata, veri) {
@@ -80,10 +80,10 @@ veri.oku = function (dizin, dosya, geriCagirma) {
 /**
  * Verileri güncelleme metodu
  * 
- * @param {string} dizin Dosya dizini
- * @param {string} dosya Dosya
- * @param {string} veri Veri dizgisi
- * @param {function} geriCagirma - *(hata, yükler)* İşlemler yapıldıktan sonra çalışacak metot 
+ * @param {string} dizin Dosyanın oluşturulacağı dizin / klasör ismi
+ * @param {string} dosya Verilerin içinde bulunacağı dosya'nın ismi *(kimlik)*
+ * @param {object} veri Dosyaya kayıt edilecek veri
+ * @param {function} geriCagirma - *(hata, yükler)* İşlemler yapıldıktan sonra verilen yanıt 
  */
 veri.güncelle = function (dizin, dosya, veri, geriCagirma) {
     ds.open(this.anaDizin + dizin + '/' + dosya + '.json', 'r+', function (hata, dosyaTanımlayıcı) {
@@ -120,9 +120,9 @@ veri.güncelle = function (dizin, dosya, veri, geriCagirma) {
 /**
  * Dosyayı silmek
  * 
- * @param {string} dizin Silinecek dosyanın dizini
- * @param {string} dosya Silinecek dosya adı
- * @param {function} geriCagirma- *(hata, yükler)* İşlemler yapıldıktan sonra çalışacak metot 
+ * @param {string} dizin Dosyanın oluşturulacağı dizin / klasör ismi
+ * @param {string} dosya Verilerin içinde bulunacağı dosya'nın ismi *(kimlik)*
+ * @param {function} geriCagirma- *(hata, yükler)* İşlemler yapıldıktan sonra verilen yanıt 
  */
 veri.sil = function (dizin, dosya, geriCagirma) {
     // Dosya baplantısını kaldırma

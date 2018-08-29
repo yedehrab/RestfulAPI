@@ -37,6 +37,9 @@ _kullanıcılar = {};
 
 /**
  * Kullanıcı oluşturma metodu 
+ * * Gerekli Veriler: *İsim, soy isim, telefon no, şifre, koşul kabulü*
+ * * Not: *telefonNo* kimlik yerine kullanılmaktadır.
+ * * Kullanım şekli: *Yükler ile kullanılır (Body içindeki JSON verileri) (localhost:3000/kullanicilar)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
  * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
@@ -47,9 +50,9 @@ _kullanıcılar.post = function (veri, geriCagirma) {
     // Soyad alma, 0 karakterden fazla olmalı
     var soyİsim = typeof (veri.yükler.soyİsim) == "string" &&
         veri.yükler.isim.trim().length > 0 ? veri.yükler.soyİsim.trim() : false;
-    // Telefon bilgisi alma. Telefonlar 10 haneli olur.
-    var telefon = typeof (veri.yükler.telefon) == "string" &&
-        veri.yükler.telefon.trim().length == 10 ? veri.yükler.telefon.trim() : false;
+    // telefonNo bilgisi alma. telefonNolar 10 haneli olur.
+    var telefonNo = typeof (veri.yükler.telefonNo) == "string" &&
+        veri.yükler.telefonNo.trim().length == 10 ? veri.yükler.telefonNo.trim() : false;
     // Şifre alma
     var şifre = typeof (veri.yükler.şifre) == "string" &&
         veri.yükler.isim.trim().length > 0 ? veri.yükler.şifre.trim() : false;
@@ -57,24 +60,25 @@ _kullanıcılar.post = function (veri, geriCagirma) {
     var koşulKabulü = typeof (veri.yükler.koşulKabulü) == "boolean" &&
         veri.yükler.koşulKabulü == true ? true : false;
 
-    if (isim && soyİsim && telefon && şifre && koşulKabulü) {
+    if (isim && soyİsim && telefonNo && şifre && koşulKabulü) {
         // Kullanıcının zaten olmadığından emin oluyoruz
-        _veri.oku("kullanıcılar", telefon, function (hata, veri) {
-            // Eğer kullanıcı dosyasında istenen telefon no bulunmaz ise, hata verir. Yani kullanıcı yoksa;
+        _veri.oku("kullanıcılar", telefonNo, function (hata) {
+            // Eğer kullanıcı dosyasında istenen telefonNo no bulunmaz ise, hata verir. Yani kullanıcı yoksa;
             if (hata) {
                 // Şifreyi şifreleyerek (hashing) tutuyoruz.
                 var gizlenmişŞifre = yardımcılar.şifreleme(şifre);
 
                 if (gizlenmişŞifre) {
+                    // Kimlik (telefonNo) türkçe karakter içeremez, çünkü adres çubuğundan değer ile çağırılmaktadır. (sorguDizgisi)
                     var kullanıcıObjesi = {
                         "isim": isim,
                         "soyİsim": soyİsim,
-                        "telefon": telefon,
+                        "telefonNo": telefonNo,
                         "gizlenmişŞifre": gizlenmişŞifre,
                         "koşulKabulü": koşulKabulü
                     };
 
-                    _veri.oluştur("kullanıcılar", telefon, kullanıcıObjesi, function (hata) {
+                    _veri.oluştur("kullanıcılar", telefonNo, kullanıcıObjesi, function (hata) {
                         if (!hata) {
                             geriCagirma(200);
                         } else {
@@ -85,7 +89,7 @@ _kullanıcılar.post = function (veri, geriCagirma) {
                     geriCagirma(500, { "bilgi": "Kullanıcı şifrelenemedi :(" });
                 }
             } else {
-                geriCagirma(400, { "bilgi": "Bu telefon numarası zaten kayıtlı :(" });
+                geriCagirma(400, { "bilgi": "Bu telefonNo numarası zaten kayıtlı :(" });
             }
         });
     } else {
@@ -95,23 +99,25 @@ _kullanıcılar.post = function (veri, geriCagirma) {
 
 /**
  * Kullanıcı girişi
- * @property Sadece kimliği onaylanmış kişiler, kendi biligilerine erişebilir. (Diğerlerine erişemez)
+ * * Gerekli Veriler: *Telefon no*
+ * * Not: *Sadece kimliği onaylanmış kişiler, kendi biligilerine erişebilir. (Diğerlerine erişemez)*
+ * * Kullanım Şekli: *localhost:3000/kullanıcılar?telefonNo=... (Sorgu Verisi)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
  * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _kullanıcılar.get = function (veri, geriCagirma) {
-    // Telefon numarasını kontrol etmemiz gerekmekte
-    var telefon = typeof (veri.sorguDizgisiObjeleri.telefon) == "string" &&
-        veri.sorguDizgisiObjeleri.telefon.trim().length == 10 ?
-        veri.sorguDizgisiObjeleri.telefon.trim() : false;
+    // telefonNo numarasını kontrol etmemiz gerekmekte
+    var telefonNo = typeof (veri.sorguDizgisiObjeleri.telefonNo) == "string" &&
+        veri.sorguDizgisiObjeleri.telefonNo.trim().length == 10 ?
+        veri.sorguDizgisiObjeleri.telefonNo.trim() : false;
 
-    if (telefon) {
+    if (telefonNo) {
         // Bilgilere erişmek isteyen kişinin kendimiz olduğunu anlamak için gereken işlemler.
         var belirteç = typeof (veri.başlıklar.belirtec) == 'string' ? veri.başlıklar.belirtec : false;
 
-        belirteçler.belirteçOnaylama(belirteç, telefon, function (belirteçOnaylandıMı) {
+        belirteçler.belirteçOnaylama(belirteç, telefonNo, function (belirteçOnaylandıMı) {
             if (belirteçOnaylandıMı) {
-                _veri.oku('kullanıcılar', telefon, function (hata, veri) {
+                _veri.oku('kullanıcılar', telefonNo, function (hata, veri) {
                     if (!hata && veri) {
                         // Gizlenmiş şifreyi, veriyi isteyene vermeden önce kaldırıyoruz.
                         delete veri.gizlenmişŞifre;
@@ -134,15 +140,16 @@ _kullanıcılar.get = function (veri, geriCagirma) {
 
 /**
  * Kullanıcı verileri güncelleme
- * @property Sadece kimliği onaylanmış kişiler, kendi bilgilerini değiştirebilir. (Diğerlerine erişemez)
+ * * Not: *Sadece kimliği onaylanmış kişiler, kendi bilgilerini değiştirebilir. (Diğerlerine erişemez)*
+ * * Kullanım şekli: *Yükler ile kullanılır (Body içindeki JSON verileri) (localhost:3000/kullanicilar)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
  * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _kullanıcılar.put = function (veri, geriCagirma) {
     // Kullanıcıyı kontrol etme
     // Not: === yerine == kullanıyoruz, detaylı kontrol etmeye gerek yok.
-    var telefon = typeof (veri.yükler.telefon) == "string" &&
-        veri.yükler.telefon.trim().length == 10 ? veri.yükler.telefon.trim() : false;
+    var telefonNo = typeof (veri.yükler.telefonNo) == "string" &&
+        veri.yükler.telefonNo.trim().length == 10 ? veri.yükler.telefonNo.trim() : false;
 
     // İsim alma, 0 karakterden fazla olmalı
     var isim = typeof (veri.yükler.isim) == "string" &&
@@ -154,14 +161,14 @@ _kullanıcılar.put = function (veri, geriCagirma) {
     var şifre = typeof (veri.yükler.şifre) == "string" &&
         veri.yükler.isim.trim().length > 0 ? veri.yükler.şifre.trim() : false;
 
-    if (telefon) {
+    if (telefonNo) {
         if (isim || soyİsim || şifre) {
             // Kulanıcının giren kişinin kendi hesabı olduğundan emin oluyoruz.
-            var belirteç = typeof (veri.başlıklar.belirteç) == 'string' ? veri.başlıklar.belirteç : false;
+            var belirteç = typeof (veri.başlıklar.belirtec) == 'string' ? veri.başlıklar.belirtec : false;
 
-            belirteçler.belirteçOnaylama(belirteç, telefon, function (belirteçOnaylandıMı) {
+            belirteçler.belirteçOnaylama(belirteç, telefonNo, function (belirteçOnaylandıMı) {
                 if (belirteçOnaylandıMı) {
-                    _veri.oku("kullanıcılar", telefon, function (hata, kullanıcıVerisi) {
+                    _veri.oku("kullanıcılar", telefonNo, function (hata, kullanıcıVerisi) {
                         if (!hata && kullanıcıVerisi) {
                             if (isim) {
                                 kullanıcıVerisi.isim = isim;
@@ -173,7 +180,7 @@ _kullanıcılar.put = function (veri, geriCagirma) {
                                 kullanıcıVerisi.gizlenmişŞifre = yardımcılar.şifreleme(şifre);
                             }
 
-                            _veri.güncelle("kullanıcılar", telefon, kullanıcıVerisi, function (hata) {
+                            _veri.güncelle("kullanıcılar", telefonNo, kullanıcıVerisi, function (hata) {
                                 if (!hata) {
                                     geriCagirma(200, { "bilgi": "Kullanıcı güncellendi :)" });
                                 } else {
@@ -198,23 +205,25 @@ _kullanıcılar.put = function (veri, geriCagirma) {
 
 /**
  * Kullanıcı verileri güncelleme
- * @property Sadece kimliği onaylanmış kişiler, kendi bilgilerini değiştirebilir. (Diğerlerine erişemez)
+ * * Gerekli Veriler: "Telefon no"
+ * * Not: *Sadece kimliği onaylanmış kişiler, kendi bilgilerini değiştirebilir. (Diğerlerine erişemez)*
+ * * Kullanım Şekli: *localhost:3000/kullanıcılar?telefonNo=... (Sorgu Verisi)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
  * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _kullanıcılar.delete = function (veri, geriCagirma) {
     // Kullanıcının olduğunu kontrol ediyoruz.
-    var telefon = typeof (veri.sorguDizgisiObjeleri.telefon) == "string" &&
-        veri.sorguDizgisiObjeleri.telefon.trim().length == 10 ? veri.sorguDizgisiObjeleri.telefon : false;
+    var telefonNo = typeof (veri.sorguDizgisiObjeleri.telefonNo) == "string" &&
+        veri.sorguDizgisiObjeleri.telefonNo.trim().length == 10 ? veri.sorguDizgisiObjeleri.telefonNo : false;
 
-    if (telefon) {
-        var belirteç = typeof (veri.başlıklar.belirteç) == 'string' ? veri.başlıklar.belirteç : false;
+    if (telefonNo) {
+        var belirteç = typeof (veri.başlıklar.belirtec) == 'string' ? veri.başlıklar.belirtec : false;
 
-        belirteçler.belirteçOnaylama(belirteç, telefon, function (belirteçOnaylama) {
+        belirteçler.belirteçOnaylama(belirteç, telefonNo, function (belirteçOnaylandıMı) {
             if (belirteçOnaylandıMı) {
-                _veri.oku("kullanıcılar", telefon, function (hata, veri) {
+                _veri.oku("kullanıcılar", telefonNo, function (hata) {
                     if (!hata) {
-                        _veri.sil("kullanıcılar", telefon, function (hata, veri) {
+                        _veri.sil("kullanıcılar", telefonNo, function (hata) {
                             if (!hata) {
                                 geriCagirma(200, { "bilgi": "İstenen kullanıcı silindi :)" });
                             } else {

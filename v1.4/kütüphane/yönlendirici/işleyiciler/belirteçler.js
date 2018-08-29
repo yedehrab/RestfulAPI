@@ -1,11 +1,12 @@
 
 var _veri = require("../veri");
 var yardımcılar = require("./../../yardımcılar");
+var yapılandırma = require("./../../yapılandırma");
 
 /**
  * İşleyiciyi belirteçler
  * 
- * Örnek: localhost:3000/belirteçler yazıldığında bu fonksiyon çalışır. (yönlendirici ile, index.js)
+ * * Örnek: *localhost:3000/belirteçler yazıldığında bu fonksiyon çalışır. (yönlendirici ile, index.js)*
  *
  * @param {object} veri Index.js"te tanımlanan veri objesidir. İstekle gelir.
  * @param {işleyici} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot
@@ -24,13 +25,14 @@ belirteçler = function (veri, geriCagirma) {
 /**
  * Belirteçleri onaylamak için kullanılan metot.
  * @param {string} belirtec Okunacak (aranacak) belirteç
- * @param {string} telefon Kullanıcı telefon numarası
- * @param {test} geriCagirma - *(belirtecOnaylandiMi)* İşlemler bittikten sonra çalışacak metot. 
+ * @param {string} telefonNo Kullanıcı telefonNo numarası
+ * @param {test} geriCagirma - *(belirtecOnaylandiMi)* Belitecin onaylanma durumu
  */
-belirteçler.belirteçOnaylama = function (belirtec, telefon, geriCagirma) {
+belirteçler.belirteçOnaylama = function (belirtec, telefonNo, geriCagirma) {
     _veri.oku('belirteçler', belirtec, function (hata, belirteçVerisi) {
         if (!hata && belirteçVerisi) {
-            if (belirteçVerisi.telefon == telefon && belirteçVerisi.ömür > Date.now()) {
+            // Telefon no, kimlik niyetine kullanıldığı için telefon no'ları karşılaştırıyoruz.
+            if (belirteçVerisi.telefonNo == telefonNo && belirteçVerisi.ömür > Date.now()) {
                 geriCagirma(true);
             } else {
                 geriCagirma(false);
@@ -46,33 +48,37 @@ _belirteçler = {};
 
 /**
  * Belirteç oluşturma metodu 
+ * * Gerekli veriler: *Telefon No, Şifre*
+ * * Kullanım şekli: *Yükler ile kullanılır (Body içindeki JSON verileri) (localhost:3000/belitecler)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittikten sonra verilen yanıtlar.
  */
 _belirteçler.post = function (veri, geriCagirma) {
-    var telefon = typeof (veri.yükler.telefon) == "string" &&
-        veri.yükler.telefon.trim().length == 10 ? veri.yükler.telefon.trim() : false;
+    // Gerekli veriler
+    var telefonNo = typeof (veri.yükler.telefonNo) == "string" &&
+        veri.yükler.telefonNo.trim().length == 10 ? veri.yükler.telefonNo.trim() : false;
 
     var şifre = typeof (veri.yükler.şifre) == "string" &&
         veri.yükler.şifre.trim().length > 0 ? veri.yükler.şifre.trim() : false;
 
-    if (telefon && şifre) {
-        _veri.oku("kullanıcılar", telefon, function (hata, kullanıcıVerisi) {
+    if (telefonNo && şifre) {
+        _veri.oku("kullanıcılar", telefonNo, function (hata, kullanıcıVerisi) {
             if (!hata && kullanıcıVerisi) {
                 // Alınan şifreyi gizlenmiş şifre ile karşılaştırmamız lazım.
                 var gizlenmişŞifre = yardımcılar.şifreleme(şifre);
 
                 if (gizlenmişŞifre == kullanıcıVerisi.gizlenmişŞifre) {
-                    var belirteçNo = yardımcılar.rastgeleDizgiOluştur(20);
+                    var belirteçKimliği = yardımcılar.rastgeleDizgiOluştur(yapılandırma.kimlikUzunluğu);
                     var ömür = Date.now() + 1000 * 60 * 60;
 
+                    // Kimlik (belirtecKimligi) türkçe karakter içeremez, çünkü adres çubuğundan değer ile çağırılmaktadır. (Sorgu verisi)
                     var belirteçObjesi = {
-                        "telefon": telefon,
-                        "no": belirteçNo,
+                        "telefonNo": telefonNo,
+                        "kimlik": belirteçKimliği,
                         "ömür": ömür
                     };
 
-                    _veri.oluştur("belirteçler", belirteçNo, belirteçObjesi, function (hata) {
+                    _veri.oluştur("belirteçler", belirteçKimliği, belirteçObjesi, function (hata) {
                         if (!hata) {
                             geriCagirma(200, belirteçObjesi);
                         } else {
@@ -96,18 +102,19 @@ _belirteçler.post = function (veri, geriCagirma) {
 
 /**
  * Belirteç alma metodu 
- * Not: localhost:3000/belirteçler?no=... 
+ * * Gerekli veriler: *Kimlik*
+ * * Kullanım Şekli: *localhost:3000/belirteçler?kimlik=... (Sorgu verisi)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
- * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
+ * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittikten sonra verilen yanıtlar.
  */
 _belirteçler.get = function (veri, geriCagirma) {
-    // Rastgele dizgi oluştur metodundaki değere eşit olmak zorunda, o sebeple 20
-    var no = typeof (veri.sorguDizgisiObjeleri.no) == "string" &&
-        veri.sorguDizgisiObjeleri.no.trim().length == 20 ? veri.sorguDizgisiObjeleri.no.trim() :
+    // Rastgele dizgi oluştur metodundaki değere eşit olmak zorunda, o sebeple yapılandırma.kimlikUzunluğu
+    var kimlik = typeof (veri.sorguDizgisiObjeleri.kimlik) == "string" &&
+        veri.sorguDizgisiObjeleri.kimlik.trim().length == yapılandırma.kimlikUzunluğu ? veri.sorguDizgisiObjeleri.kimlik.trim() :
         false;
 
-    if (no) {
-        _veri.oku("belirteçler", no, function (hata, belirteçVerisi) {
+    if (kimlik) {
+        _veri.oku("belirteçler", kimlik, function (hata, belirteçVerisi) {
             if (!hata) {
                 geriCagirma(200, belirteçVerisi);
             } else {
@@ -120,26 +127,27 @@ _belirteçler.get = function (veri, geriCagirma) {
 }
 
 /**
- * Belirteç alma metodu 
- * Not: localhost:3000/belirteçler?no=... 
+ * Belirteç güncelleme metodu 
+ * * Gerekli Veriler: *Kimlik, Süre Uzatma*
+ * * Kullanım şekli: *Yükler ile kullanılır (Body içindeki JSON verileri) (localhost:3000/belirtecler)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
  * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _belirteçler.put = function (veri, geriCagirma) {
-    // İndex'te rastgele dizgi oluşturma uzunluğu ile aynı olmak zorunda (20)
-    var no = typeof (veri.yükler.no) == 'string' && veri.yükler.no.trim().length == 20 ?
-        veri.yükler.no.trim() : false;
+    // İndex'te rastgele dizgi oluşturma uzunluğu ile aynı olmak zorunda (yapılandırma.kimlikUzunluğu)
+    var kimlik = typeof (veri.yükler.kimlik) == 'string' &&
+        veri.yükler.kimlik.trim().length == yapılandırma.kimlikUzunluğu ?
+        veri.yükler.kimlik.trim() : false;
 
-    var süreUzatma = typeof (veri.yükler.süreUzatma) == 'boolean' && veri.yükler.süreUzatma ?
-        veri.yükler.süreUzatma : false;
+    var süreUzatma = typeof (veri.yükler.süreUzatma) == 'boolean' && veri.yükler.süreUzatma
 
-    if (no && süreUzatma) {
-        _veri.oku('belirteçler', no, function (hata, belirteçVerisi) {
+    if (kimlik && süreUzatma) {
+        _veri.oku('belirteçler', kimlik, function (hata, belirteçVerisi) {
             if (!hata) {
                 if (belirteçVerisi.ömür > Date.now()) {
                     belirteçVerisi.ömür = Date.now() + 1000 * 60 * 60;
 
-                    _veri.güncelle('belirteçler', no, belirteçVerisi, function (hata) {
+                    _veri.güncelle('belirteçler', kimlik, belirteçVerisi, function (hata) {
                         if (!hata) {
                             geriCagirma(200, { "bilgi": "Belirteç ömrü uzatıldı :)" });
                         } else {
@@ -150,28 +158,30 @@ _belirteçler.put = function (veri, geriCagirma) {
                     geriCagirma(400, { "bilgi": "Ömrü uzatılmak istenen belirteç çoktan ölmüştür :(" });
                 }
             } else {
-                geriCagirma(400, { "bilgi": "Belirteç koyma işlemi için aranan belirteç bulunamadı :(" });
+                geriCagirma(400, { "bilgi": "Belirteç güncelleme işlemi için aranan belirteç bulunamadı :(" });
             }
         });
     } else {
-        geriCagirma(400, { "bilgi": "Belirteç koyma işlemi için gerekli alan(lar) eksik :(" });
+        geriCagirma(400, { "bilgi": "Belirteç güncelleme işlemi için gerekli alan(lar) eksik :(" });
     }
 }
 
 /**
- * Belirteç alma metodu 
- * Not: localhost:3000/belirteçler?no=... 
+ * Belirteç silme metodu 
+ * * Gerekli Veriler: *Kimlik*
+ * * Kullanım Şekli: *localhost:3000/belirteçler?kimlik=... (Sorgu verisi)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
  * @param {function} geriCagirma - *(durumKodu, yükler)* İşlemler bittiği zaman çalışacan metot.
  */
 _belirteçler.delete = function (veri, geriCagirma) {
-    var no = typeof (veri.sorguDizgisiObjeleri.no) == 'string' && veri.sorguDizgisiObjeleri.no.trim().length == 20 ?
-        veri.sorguDizgisiObjeleri.no.trim() : false;
+    var kimlik = typeof (veri.sorguDizgisiObjeleri.kimlik) == 'string' &&
+        veri.sorguDizgisiObjeleri.kimlik.trim().length == yapılandırma.kimlikUzunluğu ?
+        veri.sorguDizgisiObjeleri.kimlik.trim() : false;
 
-    if (no) {
-        _veri.oku('belirteçler', no, function (hata) {
+    if (kimlik) {
+        _veri.oku('belirteçler', kimlik, function (hata) {
             if (!hata) {
-                _veri.sil('belirteçler', no, function (hata) {
+                _veri.sil('belirteçler', kimlik, function (hata) {
                     if (!hata) {
                         geriCagirma(200, { "bilgi": "Belirteç başarıyla silindi :)" });
                     } else {

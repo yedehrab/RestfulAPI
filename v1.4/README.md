@@ -18,4 +18,17 @@
   * Put
   * Delete
 
+### Değişikler
+* Yükler değiştirilmiştir.
+  * telefon -> telefonNo
+
+* Objelerin değişken isimleri değiştirilmiştir.
+  * Kullanıcılar
+    * telefon -> telefonNo
+  * Beliteçler
+    * telefon -> telefonNo
+  * Kontroller
+    * kullanıcıTel -> telefonNo
+    * kontrolNo & no -> kontrolKimligi
+
   

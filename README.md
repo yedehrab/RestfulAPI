@@ -3,6 +3,10 @@
 > API tasarımı
 
 ## Genel Notlar
+
+* Metot kullanımı
+  > **trim()**: Dizgideki boşlukları kaldırmak için kullanılır.
+
 * Yönlendirici
   > URL'deki veriye göre uygun sayfaya yönlendirme yapılır.
 
