@@ -5,8 +5,8 @@
 
 /**
  * Bağımlılıklar
- * -> kripta; Şifreleme metodları için
- * -> yapılandırma; Ana program yapılandırma dosyası (şifreleme için)
+ * * kripto; *Şifreleme metodları için*
+ * * yapılandırma; *Ana program yapılandırma dosyası (şifreleme için)*
  */
 var kripto = require('crypto');
 var yapılandırma = require('./yapılandırma');
@@ -45,18 +45,18 @@ yardımcılar.jsonuObjeyeDönüştür = function (dizgi) {
 
 /**
  * Rastgele bir dizgi oluşturma
- * @param {number} dizgiUzunluğu Oluşturulacak rastgele dizginin uzunluğu
+ * @param {number} dizgiUzunlugu Oluşturulacak rastgele dizginin uzunluğu
  */
-yardımcılar.rastgeleDizgiOluştur = function (dizgiUzunluğu) {
-    dizgiUzunluğu = typeof (dizgiUzunluğu) == 'number' &&
-        dizgiUzunluğu > 0 ? dizgiUzunluğu : false;
+yardımcılar.rastgeleDizgiOluştur = function (dizgiUzunlugu) {
+    dizgiUzunlugu = typeof (dizgiUzunlugu) == 'number' &&
+        dizgiUzunlugu > 0 ? dizgiUzunlugu : false;
 
-    if (dizgiUzunluğu) {
+    if (dizgiUzunlugu) {
         // Türkçe karakter içeremez, adres çubuğuna yazılmaktadır.
         var olasıKarakterler = 'abcdefghijklmnoprstuvwxyz0123456789';
         var dizgi = '';
 
-        for (i = 1; i <= dizgiUzunluğu; i++) {
+        for (i = 1; i <= dizgiUzunlugu; i++) {
             var rastgeleKarakter = olasıKarakterler.charAt(Math.floor(Math.random() * olasıKarakterler.length));
             dizgi += rastgeleKarakter;
         }

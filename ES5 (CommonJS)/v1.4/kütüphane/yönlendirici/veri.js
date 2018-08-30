@@ -15,7 +15,7 @@ var yardımcılar = require('../yardımcılar')
 /**
  * Aktarılacak modül için bu değişkeni oluşturuyoruz.
  */
-var dosya = {};
+var veri = {};
 
 /**
  * Ana dosya yollarını tanımlama
@@ -25,16 +25,16 @@ var dosya = {};
  * Not: __dirname; Bulunduğum dizini verir.
  * !ÖNEMLİ : ÇALIŞMIYOR.
  */
-dosya.anaDizin = yol.join(__dirname, '/../.veri/');
+veri.anaDizin = yol.join(__dirname, '/../.veri/');
 
 /**
- * Dosyaya veri yazma
- * @param {string} dizin Dosya dizini
- * @param {string} dosya Dosya ismi
+ * Veri oluşturma
+ * @param {string} dizin Verinin oluşturulacağı dizin / klasör ismi
+ * @param {string} dosya Verilerin içinde bulunacağı dosya'nın ismi
  * @param {object} veri İndex.js'teki veri objesi
- * @param {function} geriCagirma(hata, veri) İşlemler yapıldıktan sonra çalışacak metot 
+ * @param {function} geriCagirma(hata, yükler) İşlemler yapıldıktan sonra çalışacak metot 
  */
-dosya.oluştur = function (dizin, dosya, veri, geriCagirma) {
+veri.oluştur = function (dizin, dosya, veri, geriCagirma) {
     // Dosyayı yazmak için açma
     ds.open(yol.join(__dirname, '/../.veri/') + dizin + '/' + dosya + '.json', 'wx', function (hata, dosyaTanımlayıcı) {
         if (!hata && dosyaTanımlayıcı) {
@@ -62,12 +62,12 @@ dosya.oluştur = function (dizin, dosya, veri, geriCagirma) {
 };
 
 /**
- * 
+ * Veri okuma
  * @param {string} dizin Dosya dizini
  * @param {string} dosya Dosya
  * @param {function} geriCagirma(hata, veri) İşlemler yapıldıktan sonra çalışacak metot 
  */
-dosya.oku = function (dizin, dosya, geriCagirma) {
+veri.oku = function (dizin, dosya, geriCagirma) {
     ds.readFile(yol.join(__dirname, '/../.veri/') + dizin + '/' + dosya + '.json', 'utf8', function (hata, veri) {
         if (!hata && veri) {
             // Eğer hata yoksa obje olarak döndürüyoruz. (string değil) [ileride delete ile silme yapabilmek için]
@@ -88,7 +88,7 @@ dosya.oku = function (dizin, dosya, geriCagirma) {
  * @param {string} veri Veri dizgisi
  * @param {function} geriCagirma(hata, veri) İşlemler yapıldıktan sonra çalışacak metot 
  */
-dosya.güncelle = function (dizin, dosya, veri, geriCagirma) {
+veri.güncelle = function (dizin, dosya, veri, geriCagirma) {
     ds.open(yol.join(__dirname, '/../.veri/') + dizin + '/' + dosya + '.json', 'r+', function (hata, dosyaTanımlayıcı) {
         if (!hata && dosyaTanımlayıcı) {
             var veriDizgisi = JSON.stringify(veri);
@@ -127,7 +127,7 @@ dosya.güncelle = function (dizin, dosya, veri, geriCagirma) {
  * @param {string} dosya Silinecek dosya adı
  * @param {function} geriCagirma(hata, veri) İşlemler yapıldıktan sonra çalışacak metot 
  */
-dosya.sil = function (dizin, dosya, geriCagirma) {
+veri.sil = function (dizin, dosya, geriCagirma) {
     // Dosya baplantısını kaldırma
     ds.unlink(yol.join(__dirname, '/../.veri/') + dizin + '/' + dosya + '.json', function (hata) {
         if (!hata) {
@@ -140,4 +140,4 @@ dosya.sil = function (dizin, dosya, geriCagirma) {
 
 
 // Aktarılacak obje
-module.exports = dosya;
+module.exports = veri;

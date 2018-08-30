@@ -2,6 +2,21 @@
 
 > API tasarımı
 
+## Genel Notlar
+* Yükler
+  > Kullanıcı adı ve şifre girin gibi verilerin girildiği alanlardan gelen bilgiler.
+
+  > Veri olurma işlemleri için kullanırlır.
+* Sorgu Dizgisi Objeleri
+  > Tamam butonuna basıldığında adres çubuğunun sonuna eklenen "?no=3" gibi bilgiler.
+  
+  > Güncelleme ve veri alma gibi işlemlerde kullanılır.
+* Başlıklar
+  > Kullanıcı giriş yaptığında, sayfalar arası gezinirken değişmeyen bilgiler.
+  
+  > Kontrol işlemleri için kullanılır. (belirteçler)
+-----
+
 ## Version 1.3.1
 ---------
 

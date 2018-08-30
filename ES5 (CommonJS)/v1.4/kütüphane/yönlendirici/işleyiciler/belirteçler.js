@@ -1,5 +1,5 @@
 
-var dosya = require("./../dosya");
+var _veri = require("../veri");
 var yardımcılar = require("./../../yardımcılar");
 
 /**
@@ -8,7 +8,11 @@ var yardımcılar = require("./../../yardımcılar");
  * Örnek: localhost:3000/belirteçler yazıldığında bu fonksiyon çalışır. (yönlendirici ile, index.js)
  *
  * @param {object} veri Index.js"te tanımlanan veri objesidir. İstekle gelir.
- * @param {function} geriCagirma İşlemler bittiği zaman çalışacan metot
+ * @param {işleyici} geriCagirma İşlemler bittiği zaman çalışacan metot
+ * 
+ * @callback işleyici
+ * @param {number} durumKodu
+ * @param {object} yükler 
  */
 belirteçler = function (veri, geriCagirma) {
     var uygunMetotlar = ["post", "get", "put", "delete"];
@@ -18,6 +22,26 @@ belirteçler = function (veri, geriCagirma) {
     } else {
         geriCagirma(405, { "bilgi": "Simgle işlemi için uygun metot bulunamadı :(" });
     }
+};
+
+/**
+ * Belirteçleri onaylamak için kullanılan metot.
+ * @param {string} belirteçNo Tokenler için kimlik no'su
+ * @param {string} telefon Kullanıcı telefon numarası
+ * @param {test} geriCagirma İşlemler bittikten sonra çalışacak metot.
+ */
+belirteçler.belirteçOnaylama = function (belirteçNo, telefon, geriCagirma) {
+    _veri.oku('belirteçler', belirteçNo, function (hata, belirteçVerisi) {
+        if (!hata && belirteçVerisi) {
+            if (belirteçVerisi.telefon == telefon && belirteçVerisi.ömür > Date.now()) {
+                geriCagirma(true);
+            } else {
+                geriCagirma(false);
+            }
+        } else {
+            geriCagirma(false);
+        }
+    });
 };
 
 // Belirteçler işleyicisinin alt metotları için kalıp
@@ -36,7 +60,7 @@ _belirteçler.post = function (veri, geriCagirma) {
         veri.yükler.şifre.trim().length > 0 ? veri.yükler.şifre.trim() : false;
 
     if (telefon && şifre) {
-        dosya.oku("kullanıcılar", telefon, function (hata, kullanıcıVerisi) {
+        _veri.oku("kullanıcılar", telefon, function (hata, kullanıcıVerisi) {
             if (!hata && kullanıcıVerisi) {
                 // Alınan şifreyi gizlenmiş şifre ile karşılaştırmamız lazım.
                 var gizlenmişŞifre = yardımcılar.şifreleme(şifre);
@@ -51,7 +75,7 @@ _belirteçler.post = function (veri, geriCagirma) {
                         "ömür": ömür
                     };
 
-                    dosya.oluştur("belirteçler", belirteçNo, belirteçObjesi, function (hata) {
+                    _veri.oluştur("belirteçler", belirteçNo, belirteçObjesi, function (hata) {
                         if (!hata) {
                             geriCagirma(200, belirteçObjesi);
                         } else {
@@ -86,7 +110,7 @@ _belirteçler.get = function (veri, geriCagirma) {
         false;
 
     if (no) {
-        dosya.oku("belirteçler", no, function (hata, belirteçVerisi) {
+        _veri.oku("belirteçler", no, function (hata, belirteçVerisi) {
             if (!hata) {
                 geriCagirma(200, belirteçVerisi);
             } else {
@@ -113,12 +137,12 @@ _belirteçler.put = function (veri, geriCagirma) {
         veri.yükler.süreUzatma : false;
 
     if (no && süreUzatma) {
-        dosya.oku('belirteçler', no, function (hata, belirteçVerisi) {
+        _veri.oku('belirteçler', no, function (hata, belirteçVerisi) {
             if (!hata) {
                 if (belirteçVerisi.ömür > Date.now()) {
                     belirteçVerisi.ömür = Date.now() + 1000 * 60 * 60;
 
-                    dosya.güncelle('belirteçler', no, belirteçVerisi, function (hata) {
+                    _veri.güncelle('belirteçler', no, belirteçVerisi, function (hata) {
                         if (!hata) {
                             geriCagirma(200, { "bilgi": "Belirteç ömrü uzatıldı :)" });
                         } else {
@@ -148,9 +172,9 @@ _belirteçler.delete = function (veri, geriCagirma) {
         veri.sorguDizgisiObjeleri.no.trim() : false;
 
     if (no) {
-        dosya.oku('belirteçler', no, function (hata) {
+        _veri.oku('belirteçler', no, function (hata) {
             if (!hata) {
-                dosya.sil('belirteçler', no, function (hata) {
+                _veri.sil('belirteçler', no, function (hata) {
                     if (!hata) {
                         geriCagirma(200, { "bilgi": "Belirteç başarıyla silindi :)" });
                     } else {
@@ -165,25 +189,5 @@ _belirteçler.delete = function (veri, geriCagirma) {
         geriCagirma(400, { "bilgi": "Belirteç silmek için gereken alanlar eksin :(" });
     }
 }
-
-/**
- * Belirteçleri onaylamak için kullanılan metot.
- * @param {string} belirteçNo Tokenler için kimlik no'su
- * @param {string} telefon Kullanıcı telefon numarası
- * @param {Function} geriCagirma İşlemler bittikten sonra çalışacak metot. (belirteçOnaylandıMı)
- */
-_belirteçler.belirteçOnaylama = function (belirteçNo, telefon, geriCagirma) {
-    dosya.oku('belirteçler', belirteçNo, function (hata, belirteçVerisi) {
-        if (!hata && belirteçVerisi) {
-            if (belirteçVerisi.telefon == telefon && belirteçVerisi.ömür > Date.now()) {
-                geriCagirma(true);
-            } else {
-                geriCagirma(false);
-            }
-        } else {
-            geriCagirma(false);
-        }
-    });
-};
 
 module.exports = belirteçler;
