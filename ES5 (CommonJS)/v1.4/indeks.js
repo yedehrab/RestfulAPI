@@ -13,11 +13,7 @@
  * * ds; FS, yani file system, dosya işlemleri için gereklidir.
  * * testler; Dosya işlemlerini test etmek için gereklidir.
  * * işleyiciler; Yönlendirici için gereklidir.
-<<<<<<< HEAD:ES5 (CommonJS)/v1.4/indeks.js
- * * yardımcılar; Şifreleme işlemi gibi işlemlerde gereklidir.
-=======
  * * yardımcılar; Şifreleme işlembi gibi işlemlerde gereklidir.
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b:v1.4/indeks.js
  */
 var http = require("http");
 var https = require("https");
@@ -145,11 +141,7 @@ var birleşikSunucu = function (istek, yanıt) {
     istek.on("end", function () {
         /**
          * Son kısmı ekliyoruz.
-<<<<<<< HEAD:ES5 (CommonJS)/v1.4/indeks.js
          * Not: *Şu anlık "" (?)*
-=======
-         * Not: *Şu anlık "" (?)*s
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b:v1.4/indeks.js
          */
         tampon += kodÇözücü.end();
 
@@ -167,13 +159,6 @@ var birleşikSunucu = function (istek, yanıt) {
             "yükler": yardımcılar.jsonuObjeyeDönüştür(tampon)
         };
 
-<<<<<<< HEAD:ES5 (CommonJS)/v1.4/indeks.js
-        // Seçilen işleyiciyi çalıştırma
-        yönlendirici.seçilmişİşleyici(veri, function (durumKodu, yükler) {
-            // Durum kodunu kullan veya varsayılanı ele al
-            durumKodu = typeof (durumKodu) === "number" ? durumKodu : 200;
-=======
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b:v1.4/indeks.js
 
         // İşleyiciyi ayarlıyoruz.
         yönlendirici.işleyiciAyarla(kırpılmışYol, function (seçilmişİşleyici) {
@@ -184,17 +169,6 @@ var birleşikSunucu = function (istek, yanıt) {
                 // Yükleri kullan yada varsayılanı ele al
                 yükler = typeof (yükler) === "object" ? yükler : {};
 
-<<<<<<< HEAD:ES5 (CommonJS)/v1.4/indeks.js
-            // Döndürülen sonucun içeriğinin JSON olduğunu belirliyoruz.
-            yanıt.setHeader("Content-type", "application/json");
-
-            // Sonucu döndürme
-            yanıt.writeHead(durumKodu);
-            yanıt.end(yükDizgisi);
-
-            // Sonucu konsola yazma
-            console.log("Yanıt: ", durumKodu, yükDizgisi);
-=======
                 // Yükleri dizgi"ye çevirme
                 var yükDizgisi = JSON.stringify(yükler);
 
@@ -208,7 +182,6 @@ var birleşikSunucu = function (istek, yanıt) {
                 // Sonucu konsola yazma
                 console.log("Yanıt: ", durumKodu, yükDizgisi);
             });
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b:v1.4/indeks.js
         });
     });
 }

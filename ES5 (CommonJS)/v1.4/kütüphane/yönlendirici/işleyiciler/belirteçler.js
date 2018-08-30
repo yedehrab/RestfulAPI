@@ -9,17 +9,9 @@ var yapılandırma = require("./../../yapılandırma");
  * * Örnek: *localhost:3000/belirteçler yazıldığında bu fonksiyon çalışır. (yönlendirici ile, index.js)*
  *
  * @param {object} veri Index.js"te tanımlanan veri objesidir. İstekle gelir.
-<<<<<<< HEAD:ES5 (CommonJS)/v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
- * @param {işleyici} geriCagirma İşlemler bittiği zaman çalışacan metot
- * 
- * @callback işleyici
- * @param {number} durumKodu
- * @param {object} yükler 
-=======
  * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
  ** arg0: HTTP varsayılan durum kodları
  ** arg1: Ek bilgiler, açıklamalar
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b:v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
  */
 belirteçler = function (veri, geriCagirma) {
     var uygunMetotlar = ["post", "get", "put", "delete"];
@@ -33,16 +25,6 @@ belirteçler = function (veri, geriCagirma) {
 
 /**
  * Belirteçleri onaylamak için kullanılan metot.
-<<<<<<< HEAD:ES5 (CommonJS)/v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
- * @param {string} belirteçNo Tokenler için kimlik no'su
- * @param {string} telefon Kullanıcı telefon numarası
- * @param {test} geriCagirma İşlemler bittikten sonra çalışacak metot.
- */
-belirteçler.belirteçOnaylama = function (belirteçNo, telefon, geriCagirma) {
-    _veri.oku('belirteçler', belirteçNo, function (hata, belirteçVerisi) {
-        if (!hata && belirteçVerisi) {
-            if (belirteçVerisi.telefon == telefon && belirteçVerisi.ömür > Date.now()) {
-=======
  * @param {string} belirtec Okunacak (aranacak) belirteç
  * @param {string} telefonNo Kullanıcı telefonNo numarası
  * @param {function(boolean):void} geriCagirma İşlemler bittiği zaman verilen yanıt
@@ -53,7 +35,6 @@ belirteçler.belirteçOnaylama = function (belirtec, telefonNo, geriCagirma) {
         if (!hata && belirteçVerisi) {
             // Telefon no, kimlik niyetine kullanıldığı için telefon no'ları karşılaştırıyoruz.
             if (belirteçVerisi.telefonNo == telefonNo && belirteçVerisi.ömür > Date.now()) {
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b:v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
                 geriCagirma(true);
             } else {
                 geriCagirma(false);
@@ -84,13 +65,8 @@ _belirteçler.post = function (veri, geriCagirma) {
     var şifre = typeof (veri.yükler.şifre) == "string" &&
         veri.yükler.şifre.trim().length > 0 ? veri.yükler.şifre.trim() : false;
 
-<<<<<<< HEAD:ES5 (CommonJS)/v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
-    if (telefon && şifre) {
-        _veri.oku("kullanıcılar", telefon, function (hata, kullanıcıVerisi) {
-=======
     if (telefonNo && şifre) {
         _veri.oku("kullanıcılar", telefonNo, function (hata, kullanıcıVerisi) {
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b:v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
             if (!hata && kullanıcıVerisi) {
                 // Alınan şifreyi gizlenmiş şifre ile karşılaştırmamız lazım.
                 var gizlenmişŞifre = yardımcılar.şifreleme(şifre);
@@ -106,11 +82,7 @@ _belirteçler.post = function (veri, geriCagirma) {
                         "ömür": ömür
                     };
 
-<<<<<<< HEAD:ES5 (CommonJS)/v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
-                    _veri.oluştur("belirteçler", belirteçNo, belirteçObjesi, function (hata) {
-=======
                     _veri.oluştur("belirteçler", belirteçKimliği, belirteçObjesi, function (hata) {
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b:v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
                         if (!hata) {
                             geriCagirma(200, belirteçObjesi);
                         } else {
@@ -147,13 +119,8 @@ _belirteçler.get = function (veri, geriCagirma) {
         veri.sorguDizgisiObjeleri.kimlik.trim().length == yapılandırma.kimlikUzunluğu ? veri.sorguDizgisiObjeleri.kimlik.trim() :
         false;
 
-<<<<<<< HEAD:ES5 (CommonJS)/v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
-    if (no) {
-        _veri.oku("belirteçler", no, function (hata, belirteçVerisi) {
-=======
     if (kimlik) {
         _veri.oku("belirteçler", kimlik, function (hata, belirteçVerisi) {
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b:v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
             if (!hata) {
                 geriCagirma(200, belirteçVerisi);
             } else {
@@ -182,22 +149,13 @@ _belirteçler.put = function (veri, geriCagirma) {
 
     var süreUzatma = typeof (veri.yükler.süreUzatma) == 'boolean' && veri.yükler.süreUzatma
 
-<<<<<<< HEAD:ES5 (CommonJS)/v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
-    if (no && süreUzatma) {
-        _veri.oku('belirteçler', no, function (hata, belirteçVerisi) {
-=======
     if (kimlik && süreUzatma) {
         _veri.oku('belirteçler', kimlik, function (hata, belirteçVerisi) {
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b:v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
             if (!hata) {
                 if (belirteçVerisi.ömür > Date.now()) {
                     belirteçVerisi.ömür = Date.now() + 1000 * 60 * 60;
 
-<<<<<<< HEAD:ES5 (CommonJS)/v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
-                    _veri.güncelle('belirteçler', no, belirteçVerisi, function (hata) {
-=======
                     _veri.güncelle('belirteçler', kimlik, belirteçVerisi, function (hata) {
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b:v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
                         if (!hata) {
                             geriCagirma(200, { "bilgi": "Belirteç ömrü uzatıldı :)" });
                         } else {
@@ -230,17 +188,10 @@ _belirteçler.delete = function (veri, geriCagirma) {
         veri.sorguDizgisiObjeleri.kimlik.trim().length == yapılandırma.kimlikUzunluğu ?
         veri.sorguDizgisiObjeleri.kimlik.trim() : false;
 
-<<<<<<< HEAD:ES5 (CommonJS)/v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
-    if (no) {
-        _veri.oku('belirteçler', no, function (hata) {
-            if (!hata) {
-                _veri.sil('belirteçler', no, function (hata) {
-=======
     if (kimlik) {
         _veri.oku('belirteçler', kimlik, function (hata) {
             if (!hata) {
                 _veri.sil('belirteçler', kimlik, function (hata) {
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b:v1.4/kütüphane/yönlendirici/işleyiciler/belirteçler.js
                     if (!hata) {
                         geriCagirma(200, { "bilgi": "Belirteç başarıyla silindi :)" });
                     } else {
