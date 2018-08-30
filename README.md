@@ -3,20 +3,86 @@
 > API tasarımı
 
 ## Genel Notlar
+<<<<<<< HEAD
 * Yükler
   > Kullanıcı adı ve şifre girin gibi verilerin girildiği alanlardan gelen bilgiler.
 
   > Veri olurma işlemleri için kullanırlır.
+=======
+
+* Metot kullanımı
+  > **trim()**: Dizgideki boşlukları kaldırmak için kullanılır.
+
+* Yönlendirici
+  > URL'deki veriye göre uygun sayfaya yönlendirme yapılır.
+
+  > Türkçe karakter **içeremezler**. (Postman'da hata veriyor.)
+
+  > Örnek: *localhost:300/ornek*
+
+* Yükler
+  > Kullanıcı adı ve şifre girin gibi verilerin girildiği alanlardan gelen bilgiler.
+
+  > Veri oluşturma işlemleri için kullanırlır.
+
+  > Türkçe karakter **içerebilirler**.
+
+  > Örnek: *localhost:300/ornek* url'si altında body içindeki veriler.
+  > { "yükler": "selam" }
+
+>>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b
 * Sorgu Dizgisi Objeleri
   > Tamam butonuna basıldığında adres çubuğunun sonuna eklenen "?no=3" gibi bilgiler.
   
   > Güncelleme ve veri alma gibi işlemlerde kullanılır.
+<<<<<<< HEAD
+=======
+
+  > Türkçe karakter **içeremezler**. (Postman'da hata veriyor.)
+
+  > Örnek: *localhost:300/ornek?no=231*
+
+>>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b
 * Başlıklar
   > Kullanıcı giriş yaptığında, sayfalar arası gezinirken değişmeyen bilgiler.
   
   > Kontrol işlemleri için kullanılır. (belirteçler)
+<<<<<<< HEAD
 -----
 
+=======
+
+  > Türkçe karakter **içeremezler**. (Postman'da hata veriyor.)
+
+  > Örnek: *localhost:300/ornek* url'si altında header içindeki veriler.
+  > { "key": "belirtec", "value": "0542502495040" }
+-----
+
+## Version 1.4
+---------
+
+### Sorunlu özellikler 
+> HTTPS hala sıkıntılıdır.
+
+### Gelen Özellikler
+
+* Baştan aşağı kod yapısı düzenlendi.
+
+* Geniş türkçeleştirme.
+
+* Header'lardaki türkçe karakter sorununa özel, türkçeye özgü karakterler kaldırıldı.
+
+* Kontroller eklendi & güncellendi.
+  * Post
+  * Get
+  * Put
+  * Delete
+
+* Twilio ile SMS atma
+  
+
+
+>>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b
 ## Version 1.3.1
 ---------
 

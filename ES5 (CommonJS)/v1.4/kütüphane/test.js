@@ -3,7 +3,8 @@
  * Açıklama: Test için kullanlan metotları içerir, debug için kullanılır.
  */
 
-var _veri = require('./yönlendirici/dosya');
+var _veri = require('./yönlendirici/veri');
+var yardımcılar = require("./yardımcılar");
 
 // Test metotları objesi
 var testler = {};
@@ -54,6 +55,12 @@ testler.hepsiniTestEt = function () {
     testler.oku();
     testler.sil();
     testler.oku();
+}
+
+testler.SMSTesti = function () {
+    yardımcılar.twilioSMSGönder("5308977689", "Aylık 5000₺ kazanmak ister misin? :D", function (hata){
+        console.log(hata);
+    });
 }
 
 // Test metodlarının olduğu objeyi aktarma işlemi
