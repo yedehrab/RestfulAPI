@@ -3,12 +3,6 @@
 > API tasarımı
 
 ## Genel Notlar
-<<<<<<< HEAD
-* Yükler
-  > Kullanıcı adı ve şifre girin gibi verilerin girildiği alanlardan gelen bilgiler.
-
-  > Veri olurma işlemleri için kullanırlır.
-=======
 
 * Metot kullanımı
   > **trim()**: Dizgideki boşlukları kaldırmak için kullanılır.
@@ -30,27 +24,19 @@
   > Örnek: *localhost:300/ornek* url'si altında body içindeki veriler.
   > { "yükler": "selam" }
 
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b
 * Sorgu Dizgisi Objeleri
   > Tamam butonuna basıldığında adres çubuğunun sonuna eklenen "?no=3" gibi bilgiler.
   
   > Güncelleme ve veri alma gibi işlemlerde kullanılır.
-<<<<<<< HEAD
-=======
 
   > Türkçe karakter **içeremezler**. (Postman'da hata veriyor.)
 
   > Örnek: *localhost:300/ornek?no=231*
 
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b
 * Başlıklar
   > Kullanıcı giriş yaptığında, sayfalar arası gezinirken değişmeyen bilgiler.
   
   > Kontrol işlemleri için kullanılır. (belirteçler)
-<<<<<<< HEAD
------
-
-=======
 
   > Türkçe karakter **içeremezler**. (Postman'da hata veriyor.)
 
@@ -82,7 +68,6 @@
   
 
 
->>>>>>> c532540505da8ada0547bd6491527c2fd5cd1d1b
 ## Version 1.3.1
 ---------
 
