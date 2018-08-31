@@ -1,3 +1,8 @@
+/**
+ * Kullanıcı sisteme giriş yaptığı zaman, oluşturulur. Kullanıcının giriş yapmış olduğunu ispatlar.
+ * @author Yunus Emre
+ */
+
 import { oku, oluştur, güncelle, sil } from "../veri";
 import { şifreleme, rastgeleDizgiOluştur } from "./../yardımcılar";
 import { kimlikUzunluğu } from "./../yapılandırma";
@@ -82,7 +87,11 @@ metotlar.post = (veri, geriCagirma) => {
           var belirteçKimliği = rastgeleDizgiOluştur(kimlikUzunluğu);
           var ömür = Date.now() + 1000 * 60 * 60;
 
-          // Kimlik (belirtecKimligi) türkçe karakter içeremez, çünkü adres çubuğundan değer ile çağırılmaktadır. (Sorgu verisi)
+          /**
+           * Kullanıcının siteme giriş yapmış olduğunu kontrol etmek için kullanılır.
+           * * Not: *Kimlik (belirtecKimligi) türkçe karakter içeremez, çünkü adres çubuğundan değer ile çağırılmaktadır. (Sorgu verisi)*
+           * @property ömür Kullanıcının giriş yaptıktan sonra, en fazla giriş yapmış halde kalma süresi
+           */
           var belirteçObjesi = {
             telefonNo: telefonNo,
             kimlik: belirteçKimliği,

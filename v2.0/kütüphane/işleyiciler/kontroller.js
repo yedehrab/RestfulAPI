@@ -198,12 +198,12 @@ metotlar.get = (veri, geriCagirma) => {
           }
         );
       } else {
-        geriCagirma(404, { bilgi: "Kontroller okunurken hata oluştu :(" });
+        geriCagirma(404, { bilgi: "Kontrol bulunamadı veya hata oluştu :(" });
       }
     });
   } else {
     geriCagirma(200, {
-      bilgi: "Kontrol alma işlemi için gerekli alanlar eksik :("
+      bilgi: "Gereken kimlik bilgisi eksik :("
     });
   }
 };
@@ -291,7 +291,7 @@ metotlar.put = (veri, geriCagirma) => {
                 // Yenilikleri kaydetme
                 güncelle("kontroller", kimlik, kontrolVerisi, hata => {
                   if (!hata) {
-                    geriCagirma(200);
+                    geriCagirma(200, { bilgi: "Kontrol bilgisi güncellendi :)"});
                   } else {
                     geriCagirma(500, {
                       bilgi:
@@ -315,7 +315,7 @@ metotlar.put = (veri, geriCagirma) => {
       });
     } else {
       geriCagirma(400, {
-        bilgi: "Kontrol güncelleme işlemi için veriler mevcut değil :("
+        bilgi: "Kontrol güncelleme işlemi için güncellenecek veriler mevcut değil :("
       });
     }
   } else {

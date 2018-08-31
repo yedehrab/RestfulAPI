@@ -1,6 +1,11 @@
 /**
+ * Kullanıcı işlemleri için kullanılır
+ * @author Yunus Emre
+ */
+
+/**
  * Bağımlılıklar
- * -> belirteçler; Kullanıcı sisteme giriş yapmış mı kontrolü için kullanılıyor.
+ * * belirteçler; Kullanıcı sisteme giriş yapmış mı kontrolü için kullanılıyor.
  */
 import belirteçler from "./belirteçler";
 import { oku, oluştur, güncelle, sil } from "./../veri";
@@ -100,7 +105,7 @@ metotlar.post = (veri, geriCagirma) => {
 
           oluştur("kullanıcılar", telefonNo, kullanıcıObjesi, hata => {
             if (!hata) {
-              geriCagirma(200);
+              geriCagirma(200, { bilgi: "Kullanıcı oluşturuldu :)"});
             } else {
               geriCagirma(500, { bilgi: "Kullanıcı oluşturulamadı :(" });
             }

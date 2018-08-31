@@ -56,7 +56,7 @@ export function rastgeleDizgiOluştur(dizgiUzunlugu) {
     const olasıKarakterler = "abcdefghijklmnoprstuvwxyz0123456789";
     let dizgi = "";
 
-    for (i = 1; i <= dizgiUzunlugu; i++) {
+    for (let i = 1; i <= dizgiUzunlugu; i++) {
       let rastgeleKarakter = olasıKarakterler.charAt(
         Math.floor(Math.random() * olasıKarakterler.length)
       );
