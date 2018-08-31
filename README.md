@@ -6,6 +6,7 @@
 ## Kod Hakkında Notlar
 
 * İşleyiciler
+
   * Kullanıcılar: Kullanıcı işlemleri için kullanılır
   * Belirteçler: Kullanıcı sisteme giriş yaptığı zaman, oluşturulur. Kullanıcının giriş yapmış olduğunu ispatlar.
 
