@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node komutlar/derleme",
-    "build": "mkdir dağıtım & babel index.js -s -d dağıtım",
+    "build": "mkdir dağıtım & babel indeks.js kütüphane/* kütüphane/işleyiciler/* -s -d dağıtım",
     "clean": "rd /s /q dağıtım",
     "rebuild": "npm run clean & npm run build"
   },
