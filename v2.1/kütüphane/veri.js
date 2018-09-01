@@ -29,7 +29,7 @@ import {
  * * *__dirname* evrensel objedir (global object) değiştirilemez (türkçeleştirilemez)
  * * *__dirname* Bulunduğum dizini verir.
  */
-export const anaDizin = join(__dirname, "/../.veri/");
+export const anaDizin = join(__dirname, "/../.veriler/");
 
 /**
  * Veri oluşturma
@@ -158,9 +158,9 @@ export function sil(dizin, dosya, geriCagirma) {
  * Dosya içindeki tüm verileri listeleme
  *
  * @param {string} dizin Listelenmek istenen dizin / klasör ismi
- * @param {function(boolean, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ * @param {function(boolean, string):void} geriCagirma İşlemler bittiği zaman verilen yanıt
  ** arg0: İşlem sırasında hata oldu mu (varsa true)
- ** arg1: Okunmaya çalışılan veri / dosya isimleri
+ ** arg1: Bulunan veri / dosya isimleri (kimlikleri)
  */
 export function listele(dizin, geriCagirma) {
   diziniOku(`${anaDizin}${dizin}/`, (hata, veri) => {

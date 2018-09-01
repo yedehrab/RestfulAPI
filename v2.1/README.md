@@ -7,6 +7,8 @@
 ### Değişiklikler
 
 * Yapı değişikliği ve güncelleme
+* Raporlama özelliği
+* .veri -> .veriler
 
 ### Scriptler
 

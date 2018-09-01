@@ -5,12 +5,14 @@
 import {
     listele as verileriListele,
     oku as verileriOku
-} from "./veri"
-import { kimlikUzunluğu } from "./yapılandırma"
-import { parse as ayrıştır } from "url"
+} from "./veri";
+import { kimlikUzunluğu } from "./yapılandırma";
+import { parse as ayrıştır } from "url";
 import { request as httpİsteği } from 'http';
 import { request as httpsİsteği } from 'https';
 import { güncelle as verileriGüncelle } from './veri';
+import { worker } from "cluster";
+import { ilaveEt as raporaİlaveEt } from './rapor';
 
 const işçiler = {};
 
@@ -20,13 +22,13 @@ const işçiler = {};
  */
 işçiler.bütünKontrolleriAl = () => {
     console.log("Kontrol alma sırasındayız..");
-    verileriListele("kontroller", (hata, kontroller) => {
-        if (!hata && kontroller && kontroller.length > 0) {
-            kontroller.forEach(kontrol => {
+    verileriListele("kontroller", (hata, kontrolKimlikleri) => {
+        if (!hata && kontrolKimlikleri && kontrolKimlikleri.length > 0) {
+            kontrolKimlikleri.forEach(kontrolKimliği => {
                 // Her bir kontrolü okuma
-                verileriOku("kontroller", kontrol, (hata, orjKontrolVerisi) => {
-                    if (!hata && orjKontrolVerisi) {
-                        işçiler.kontrolVerisiniOnayla(orjKontrolVerisi);
+                verileriOku("kontroller", kontrolKimliği, (hata, kontrolVerisi) => {
+                    if (!hata && kontrolVerisi) {
+                        işçiler.kontrolVerisiniOnayla(kontrolVerisi);
                     } else {
                         console.log("Kontrol verisi okunamadı");
                     }
@@ -103,7 +105,7 @@ işçiler.kontrolVerisiniOnayla = kontrolVerisi => {
         kontrolVerisi.başarıKodları &&
         kontrolVerisi.zamanAşımı
     ) {
-       işçiler.kontrolEt(kontrolVerisi);
+        işçiler.kontrolEt(kontrolVerisi);
     } else {
         console.log("Hata: Kontrollerden biri düzgün formatlanmamış, bu adım atlanıyor.");
     }
@@ -170,7 +172,7 @@ işçiler.kontrolEt = kontrolVerisi => {
         };
 
         if (!sonuçGönderildi) {
-            işçiler.kontrolSonucu(kontrolVerisi, kontrolSonucu);
+            işçiler.kontrolSonucunuİşle(kontrolVerisi, kontrolSonucu);
             sonuçGönderildi = true;
         }
     });
@@ -199,6 +201,11 @@ işçiler.kontrolSonucunuİşle = (kontrolVerisi, kontrolSonucu) => {
         ? true
         : false;
 
+    const kontrolünVakti = Date.now();
+
+    // Sonuçları raporlama
+    işçiler.raporla(kontrolVerisi, kontrolSonucu, durum, bildirilmeli, kontrolünVakti);
+
     // Kontrol verisini güncelleme
     const yeniKontrolVerisi = kontrolVerisi;
     yeniKontrolVerisi.durum = durum;
@@ -225,6 +232,39 @@ işçiler.kontrolSonucunuİşle = (kontrolVerisi, kontrolSonucu) => {
 işçiler.kullanıcıyaBildir = kontrolVerisi => {
     const msj = `Uyarı: ${kontrolVerisi.metot} kontrolü için ${kontrolVerisi.protokol}://${kontrolVerisi.url} şu anlık ile ${kontrolVerisi.durum}`;
     console.log(`Kullanıcıya "${msj}" bildirildi.`);
+
+}
+
+/**
+ * Sonuçları raporlama (kayıt altına alma) [log]
+ * @param {object} kontrolVerisi Raporlanacak kontrol verisi
+ * @param {object} kontrolSonucu Raporlanacak kontrol verisinin kontrol sonucu
+ * @param {string} durum Raporlanacak kontrolün *aktif* veya *pasif* olma durumu
+ * @param {boolean} bildirilmeli Durum değişikliğinden dolayı kullanıcı uyarılmalı mı bilgisi
+ * @param {string} kontrolünVakti Raporlanacak kontrolün yapıldığı vakit
+ */
+işçiler.raporla = (kontrolVerisi, kontrolSonucu, durum, uyarı, kontrolünVakti) => {
+    const kayıtVerisi = {
+        kontrol: kontrolVerisi,
+        sonuç: kontrolSonucu,
+        durum: durum,
+        uyarı: uyarı,
+        zaman: kontrolünVakti
+    };
+
+    // Veriyi dizgiye dönüştürme
+    const raporDizgisi = JSON.stringify(kayıtVerisi);
+
+    // Rapor dosyasını isminin ayarlanması
+    const raporDosyasıİsmi = kontrolVerisi.kimlik;
+
+    raporaİlaveEt(raporDosyasıİsmi, raporDizgisi, hata => {
+        if (!hata) {
+            console.log("Raporlama işlemi başarılı :)");
+        } else {
+            console.log("Raporlama işlemi başarısız :(");
+        }
+    });
 
 }
 
