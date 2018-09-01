@@ -48,10 +48,6 @@ import {
 
 const sunucu = {};
 
-twilioSMSGönder("5308977689", "Bu bir denemedir", durumKodu => {
-    console.log(durumKodu);
-});
-
 /**
  * HTTP sunucusu oluşturma
  * Not: Sunucu her isteğe string ile karşılık vermeli

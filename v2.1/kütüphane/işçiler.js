@@ -184,7 +184,7 @@ işçiler.kontrolEt = kontrolVerisi => {
  * * Not: *Sadece durumun değişmesi olayını bildirir.*
  */
 işçiler.kontrolSonucunuİşle = (kontrolVerisi, kontrolSonucu) => {
-    console.log(`Durum Kodu: ${kontrolSonucu.yanıtKodu}`);
+    // console.log(`Durum Kodu: ${kontrolSonucu.yanıtKodu}`);
 
     // Kontrolün akitf veya pasif olduğuna karar verme
     const durum = !kontrolSonucu.hata &&
