@@ -8,9 +8,21 @@
  * -> ds; Dosya işlemleri için gerekli [ fs = file system ]
  * -> yol; Dosyaların yollarını bulmak için gerekli
  */
-import { open, writeFile, close, readFile, ftruncate, unlink } from "fs";
-import { join } from "path";
-import { jsonuObjeyeDönüştür } from "./yardımcılar";
+import {
+  open,
+  writeFile,
+  close,
+  readFile,
+  ftruncate,
+  unlink,
+  readdir as diziniOku
+} from "fs";
+import {
+  join
+} from "path";
+import {
+  jsonuObjeyeDönüştür
+} from "./yardımcılar";
 
 /**
  * Ana dosya yollarını tanımlama
@@ -24,7 +36,9 @@ export const anaDizin = join(__dirname, "/../.veri/");
  * @param {string} dizin Dosyanın oluşturulacağı dizin / klasör ismi
  * @param {string} dosya Verilerin içinde bulunacağı dosya'nın ismi *(kimlik)*
  * @param {object} veri Dosyaya kayıt edilecek veri
- * @param {function} geriCagirma - *(hata, yükler)* İşlemler yapıldıktan sonra verilen yanıt
+ * @param {function(boolean, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: İşlem sırasında hata oldu mu (varsa true)
+ ** arg1: Ek bilgiler, açıklamalar
  */
 export function oluştur(dizin, dosya, veri, geriCagirma) {
   // Dosyayı yazmak için açma
@@ -58,7 +72,9 @@ export function oluştur(dizin, dosya, veri, geriCagirma) {
  * Veri okuma
  * @param {string} dizin Dosyanın oluşturulacağı dizin / klasör ismi
  * @param {string} dosya Verilerin içinde bulunacağı dosya'nın ismi *(kimlik)*
- * @param {function} geriCagirma- *(hata, veriObjesi)* İşlemler yapıldıktan sonra verilen yanıt
+ * @param {function(boolean, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: İşlem sırasında hata oldu mu (varsa true)
+ ** arg1: Okunmak istenen veri / dosya
  */
 export function oku(dizin, dosya, geriCagirma) {
   readFile(`${anaDizin}${dizin}/${dosya}.json`, "utf8", (hata, veri) => {
@@ -78,7 +94,9 @@ export function oku(dizin, dosya, geriCagirma) {
  * @param {string} dizin Dosyanın oluşturulacağı dizin / klasör ismi
  * @param {string} dosya Verilerin içinde bulunacağı dosya'nın ismi *(kimlik)*
  * @param {object} veri Dosyaya kayıt edilecek veri
- * @param {function} geriCagirma - *(hata, yükler)* İşlemler yapıldıktan sonra verilen yanıt
+ * @param {function(boolean, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: İşlem sırasında hata oldu mu (varsa true)
+ ** arg1: Ek bilgiler, açıklamalar
  */
 export function güncelle(dizin, dosya, veri, geriCagirma) {
   open(`${anaDizin}${dizin}/${dosya}.json`, "r+", (hata, dosyaTanımlayıcı) => {
@@ -119,15 +137,43 @@ export function güncelle(dizin, dosya, veri, geriCagirma) {
  *
  * @param {string} dizin Dosyanın oluşturulacağı dizin / klasör ismi
  * @param {string} dosya Verilerin içinde bulunacağı dosya'nın ismi *(kimlik)*
- * @param {function} geriCagirma- *(hata, yükler)* İşlemler yapıldıktan sonra verilen yanıt
+ * @param {function(boolean, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: İşlem sırasında hata oldu mu (varsa true)
+ ** arg1: Ek bilgiler, açıklamalar
  */
 export function sil(dizin, dosya, geriCagirma) {
   // Dosya baplantısını kaldırma
   unlink(`${anaDizin}${dizin}/${dosya}.json`, hata => {
     if (!hata) {
-      geriCagirma(false, { bilgi: "Dosya silme işleminde hata yok :)" });
+      geriCagirma(false, {
+        bilgi: "Dosya silme işleminde hata yok :)"
+      });
     } else {
       geriCagirma("Dosyadan veri silinmesinde hata meydana geldi :(");
+    }
+  });
+}
+
+/**
+ * Dosya içindeki tüm verileri listeleme
+ *
+ * @param {string} dizin Listelenmek istenen dizin / klasör ismi
+ * @param {function(boolean, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: İşlem sırasında hata oldu mu (varsa true)
+ ** arg1: Okunmaya çalışılan veri / dosya isimleri
+ */
+export function listele(dizin, geriCagirma) {
+  diziniOku(`${anaDizin}${dizin}/`, (hata, veri) => {
+    if (!hata && veri && veri.length > 0) {
+      const kırpılmışDosyaİsimleri = [];
+
+      veri.forEach(dosyaİsmi => {
+        kırpılmışDosyaİsimleri.push(dosyaİsmi.replace(`.json`, ``));
+      });
+
+      geriCagirma(false, kırpılmışDosyaİsimleri);
+    } else {
+      geriCagirma(hata, veri);
     }
   });
 }

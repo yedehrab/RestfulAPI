@@ -6,7 +6,7 @@
 
 ### Değişiklikler
 
-> ES6 javascript yapısına geçildi
+* Yapı değişikliği ve güncelleme
 
 ### Scriptler
 

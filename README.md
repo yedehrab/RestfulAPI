@@ -11,6 +11,8 @@
   * Belirteçler: Kullanıcı sisteme giriş yaptığı zaman, oluşturulur. Kullanıcının giriş yapmış olduğunu ispatlar.
 
 ## Genel Notlar
+* Kontroller:
+  > Bir sitenin aktif veya pasif olduğunu kontrol etmemize yarar. (google aktif, wikipedi pasif (kapalı, yanıt vemiyor))
 
 * Metot kullanımı
   > **trim()**: Dizgideki boşlukları kaldırmak için kullanılır.
