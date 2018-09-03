@@ -268,21 +268,36 @@ işçiler.raporla = (kontrolVerisi, kontrolSonucu, durum, uyarı, kontrolünVakt
 
 }
 
-/*
-**
-* İşçilerin her dakikada başı çalışma döngüsü
-*/
+/**
+ * İşçilerin her dakikada başı çalışma döngüsü
+ */
 işçiler.tekrarla = () => {
+    // Dakikalık tekrarlayıcı tanımlıyoruz
     setInterval(() => {
         işçiler.bütünKontrolleriAl();
-    }, 1000 * 10);
+    }, 1000 * 60);
 };
+
+işçiler.günlükRaporla = () => {
+    // Günlük tekrarlayıcı tanımlıyoruz
+    setInterval(() => {
+        işçiler.bütünKontrolleriAl();
+    }, 1000 * 60 * 60 * 24);
+}
+
+işçiler.raporlarıŞekillendir = () => {
+-
+}
 
 // İşçiler'i başlatma
 export function başlat() {
     // Bütün kontrolleri hızlı bir şekilde derliyoruz.
     işçiler.bütünKontrolleriAl();
+
+    // Sürekli olarak terkar ediyoruz.
     işçiler.tekrarla();
+
+    // Bütün kayıtları sıkıştırıyoruz
 }
 
 export default işçiler;
