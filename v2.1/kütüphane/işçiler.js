@@ -11,8 +11,16 @@ import { parse as ayrıştır } from "url";
 import { request as httpİsteği } from 'http';
 import { request as httpsİsteği } from 'https';
 import { güncelle as verileriGüncelle } from './veri';
-import { worker } from "cluster";
-import { ilaveEt as raporaİlaveEt } from './rapor';
+import {
+    ilaveEt as raporaİlaveEt,
+    listele as raporlarıListele,
+    sıkıştır as raporlarıSıkıştırma,
+    kırp as raporlarıKırp
+} from './rapor';
+import { debuglog as hataKaydı } from 'util'
+
+// Hata ayıklama modundaki (debug mode) mesajları göstermek için kullanılacak 
+const hataAyıkla = hataKaydı('işçiler');
 
 const işçiler = {};
 
@@ -21,7 +29,7 @@ const işçiler = {};
  * geri çağırma oluşturumuza gerek yok.*
  */
 işçiler.bütünKontrolleriAl = () => {
-    console.log("Kontrol alma sırasındayız..");
+    hataAyıkla("Kontrol alma sırasındayız..");
     verileriListele("kontroller", (hata, kontrolKimlikleri) => {
         if (!hata && kontrolKimlikleri && kontrolKimlikleri.length > 0) {
             kontrolKimlikleri.forEach(kontrolKimliği => {
@@ -30,12 +38,12 @@ işçiler.bütünKontrolleriAl = () => {
                     if (!hata && kontrolVerisi) {
                         işçiler.kontrolVerisiniOnayla(kontrolVerisi);
                     } else {
-                        console.log("Kontrol verisi okunamadı");
+                        hataAyıkla("Kontrol verisi okunamadı");
                     }
                 });
             });
         } else {
-            console.log("Hata: İşlenecek kontrol bulunamadı :(");
+            hataAyıkla("Hata: İşlenecek kontrol bulunamadı :(");
         }
     });
 };
@@ -107,7 +115,7 @@ işçiler.kontrolVerisiniOnayla = kontrolVerisi => {
     ) {
         işçiler.kontrolEt(kontrolVerisi);
     } else {
-        console.log("Hata: Kontrollerden biri düzgün formatlanmamış, bu adım atlanıyor.");
+        hataAyıkla("Hata: Kontrollerden biri düzgün formatlanmamış, bu adım atlanıyor.");
     }
 
 }
@@ -186,7 +194,7 @@ işçiler.kontrolEt = kontrolVerisi => {
  * * Not: *Sadece durumun değişmesi olayını bildirir.*
  */
 işçiler.kontrolSonucunuİşle = (kontrolVerisi, kontrolSonucu) => {
-    // console.log(`Durum Kodu: ${kontrolSonucu.yanıtKodu}`);
+    // hataAyıkla(`Durum Kodu: ${kontrolSonucu.yanıtKodu}`);
 
     // Kontrolün akitf veya pasif olduğuna karar verme
     const durum = !kontrolSonucu.hata &&
@@ -218,10 +226,10 @@ işçiler.kontrolSonucunuİşle = (kontrolVerisi, kontrolSonucu) => {
             if (bildirilmeli) {
                 işçiler.kullanıcıyaBildir(yeniKontrolVerisi);
             } else {
-                console.log("Kontrol sonucu eskisinden farklı değil, kullanıcıya bildirim yapılmadı ;)");
+                hataAyıkla("Kontrol sonucu eskisinden farklı değil, kullanıcıya bildirim yapılmadı ;)");
             }
         } else {
-            console.log("Kontrollerden birini güncellerken hata oluştu :(");
+            hataAyıkla("Kontrollerden birini güncellerken hata oluştu :(");
         }
     });
 }
@@ -231,7 +239,7 @@ işçiler.kontrolSonucunuİşle = (kontrolVerisi, kontrolSonucu) => {
  */
 işçiler.kullanıcıyaBildir = kontrolVerisi => {
     const msj = `Uyarı: ${kontrolVerisi.metot} kontrolü için ${kontrolVerisi.protokol}://${kontrolVerisi.url} şu anlık ile ${kontrolVerisi.durum}`;
-    console.log(`Kullanıcıya "${msj}" bildirildi.`);
+    hataAyıkla(`Kullanıcıya "${msj}" bildirildi.`);
 
 }
 
@@ -260,9 +268,9 @@ işçiler.raporla = (kontrolVerisi, kontrolSonucu, durum, uyarı, kontrolünVakt
 
     raporaİlaveEt(raporDosyasıİsmi, raporDizgisi, hata => {
         if (!hata) {
-            console.log("Raporlama işlemi başarılı :)");
+            hataAyıkla("Raporlama işlemi başarılı :)");
         } else {
-            console.log("Raporlama işlemi başarısız :(");
+            hataAyıkla("Raporlama işlemi başarısız :(");
         }
     });
 
@@ -285,8 +293,40 @@ işçiler.günlükRaporla = () => {
     }, 1000 * 60 * 60 * 24);
 }
 
-işçiler.raporlarıŞekillendir = () => {
--
+işçiler.raportlarıSıkıştır = () => {
+    // Sıkıştırılmamış bütün raporları görüntüleme 
+    raporlarıListele(false, (hata, raporlar) => {
+        if (!hata && raporlar && raporlar.length > 0) {
+            raporlar.forEach(raporAdı => {
+                // Raporları farklı bir dosyada sıkıştırma
+                var raporKimliği = raporAdı.replace(".log", "");
+                var yeniRaporKimliği = `${raporKimliği}-${Date.now()}`;
+
+                raporlarıSıkıştırma(raporKimliği, yeniRaporKimliği, hata => {
+                    if (!hata) {
+                        raporlarıKırp(raporKimliği, hata => {
+                            if (!hata) {
+                                hataAyıkla("Rapor sıkıştırma başarılı :)");
+                            } else {
+                                hataAyıkla("Raporları kıprmada hata meydana geldi :(", hata);
+                            }
+                        })
+                    } else {
+                        hataAyıkla("Raporları sıkıştımada hata meydana geldi :(");
+                    }
+                });
+            });
+        } else {
+            hataAyıkla("Hata: Sıkıştırılacak rapor bilgisi bulunamadı :(");
+        }
+    });
+}
+
+işçiler.raporSıkıştmaDöngüsü = () => {
+    // Günlük tekrarlayıcı tanımlıyoruz
+    setInterval(() => {
+        işçiler.raportlarıSıkıştır();
+    }, 1000 * 60 * 60 * 24);
 }
 
 // İşçiler'i başlatma
@@ -298,6 +338,11 @@ export function başlat() {
     işçiler.tekrarla();
 
     // Bütün kayıtları sıkıştırıyoruz
+    işçiler.raportlarıSıkıştır();
+
+    // Günlük olarak tekrarlıyoruz.
+    işçiler.raporSıkıştmaDöngüsü();
+
 }
 
 export default işçiler;

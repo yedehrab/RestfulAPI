@@ -45,6 +45,10 @@ import {
 import {
     join as yoluKat
 } from "path";
+import { debuglog as hataKaydı } from 'util'
+
+// Hata ayıklama modundaki (debug mode) mesajları göstermek için kullanılacak 
+const hataAyıkla = hataKaydı('sunucu');
 
 const sunucu = {};
 
@@ -180,8 +184,13 @@ sunucu.birleşikSunucu = (istek, yanıt) => {
                 yanıt.writeHead(durumKodu);
                 yanıt.end(yükDizgisi);
 
-                // Sonucu konsola yazma
-                console.log("Yanıt: ", durumKodu, yükDizgisi);
+                // İşlem yanıtı olumlu ise yeşil, değilse kırmızı yazma
+                if (durumKodu == 202) {
+                    hataAyıkla("\x1b[32m%s\x1b[0m",`${metot} /${kırpılmışYol} ${durumKodu}`);
+                } else {
+                    hataAyıkla("\x1b[31m%s\x1b[0m",`${metot} /${kırpılmışYol} ${durumKodu}`);
+                }
+                
             });
         });
     });
@@ -194,7 +203,7 @@ export function başlat() {
      * Not: Eğer 3000 yerine 500 yazsaydık, localhost:500 yapacaktık.
      */
     sunucu.httpSunucu.listen(httpBağlantıNoktası, () => {
-        console.log(`Sunucu ${httpBağlantıNoktası} portundan dinleniyor.`);
+        console.log("\x1b[33m%s\x1b[0m", `Sunucu ${httpBağlantıNoktası} portundan dinleniyor.`);
     });
 
     /**
@@ -203,6 +212,6 @@ export function başlat() {
      * Not: Eğer 3000 yerine 500 yazsaydık, locakhost:500 yapacaktık.
      */
     sunucu.httpsSunucu.listen(httpsBağlantıNoktası, () => {
-        console.log(`Güvenli Sunucu ${httpsBağlantıNoktası} portundan dinleniyor.`);
+        console.log("\x1b[33m%s\x1b[0m", `Güvenli Sunucu ${httpsBağlantıNoktası} portundan dinleniyor.\n`);
     });
 }
