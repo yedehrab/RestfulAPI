@@ -189,11 +189,47 @@ sunucu.birleşikSunucu = (istek, yanıt) => {
                     yükler = typeof (yükler) == 'object'
                         ? yükler
                         : {};
+
                     // JSON'u dizgiye çevirme
                     yükDizgisi = JSON.stringify(yükler);
                 } else if (içerikTipi == 'html') {
                     // Yanıt türünü HTML yapma
                     yanıt.setHeader('Content-Type', 'text/html');
+                    // Eğer yükler geçerli ise onları kullanma
+                    yükDizgisi = typeof (yükler) == 'string'
+                        ? yükler
+                        : '';
+                } else if (içerikTipi == 'favicon') {
+                    // Yanıt türünü HTML yapma
+                    yanıt.setHeader('Content-Type', 'image/x-icon');
+                    // Eğer yükler geçerli ise onları kullanma
+                    yükDizgisi = typeof (yükler)  !== 'undefined'
+                        ? yükler
+                        : '';
+                } else if (içerikTipi == 'css') {
+                    // Yanıt türünü HTML yapma
+                    yanıt.setHeader('Content-Type', 'text/css');
+                    // Eğer yükler geçerli ise onları kullanma
+                    yükDizgisi = typeof (yükler) !== 'undefined'
+                        ? yükler
+                        : '';
+                } else if (içerikTipi == 'png') {
+                    // Yanıt türünü HTML yapma
+                    yanıt.setHeader('Content-Type', 'iamge/png');
+                    // Eğer yükler geçerli ise onları kullanma
+                    yükDizgisi = typeof (yükler)  !== 'undefined'
+                        ? yükler
+                        : '';
+                } else if (içerikTipi == 'jpg') {
+                    // Yanıt türünü HTML yapma
+                    yanıt.setHeader('Content-Type', 'iamge/jpg');
+                    // Eğer yükler geçerli ise onları kullanma
+                    yükDizgisi = typeof (yükler) !== 'undefined'
+                        ? yükler
+                        : '';
+                } else if (içerikTipi == 'plain') {
+                    // Yanıt türünü HTML yapma
+                    yanıt.setHeader('Content-Type', 'text/plain');
                     // Eğer yükler geçerli ise onları kullanma
                     yükDizgisi = typeof (yükler) == 'string'
                         ? yükler

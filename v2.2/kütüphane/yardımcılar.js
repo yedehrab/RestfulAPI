@@ -194,7 +194,7 @@ export function evrenselKalıplarıAl(dizgi, veri, geriCagirma) {
       // Alt bilgiyi alma
       kalıpAl('_altbilgi', veri, (hata, altDizgi) => {
         if (!hata && altDizgi) {
-          const tamDizgi = üstDizgi + altDizgi;
+          const tamDizgi = üstDizgi + dizgi + altDizgi;
           geriCagirma(false, tamDizgi);
         } else {
           geriCagirma('Altbilgi kalıbı bulunamadı :(');
@@ -221,7 +221,7 @@ export function iliştir(dizgi, veri) {
     : {};
 
   // Yapılandırma dosyasındaki anahtar değerleri alıyoruz.
-  for (let anahtarİsmi in evrenselKalıplar) { 
+  for (let anahtarİsmi in evrenselKalıplar) {
     if (evrenselKalıplar.hasOwnProperty(anahtarİsmi)) {
       // Anahtarları veri objelerine kayıt ediyoruz
       veri[`evrensel.${anahtarİsmi}`] = evrenselKalıplar[anahtarİsmi];
@@ -240,4 +240,31 @@ export function iliştir(dizgi, veri) {
   }
 
   return dizgi;
+}
+
+/**
+ * Genel klasörü içindeki statik varlıkları geri cağırma
+ * @param {string} dosyaIsmi İstenen dosyanın ismi
+ * @param {function (string | boolean , string): void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: *İşlem sırasında oluşan hatanın açıklaması (hata yoksa false)*
+ ** arg0: *İstenen sitenin kalıbı*
+ */
+export function statikVarlıklarıAl(dosyaIsmi, geriCagirma) {
+  // Değişkeni kontrol ediyoruz ve gerekirse şekillendiriyoruz
+  dosyaIsmi = typeof (dosyaIsmi) == 'string' && dosyaIsmi.length > 0
+    ? dosyaIsmi
+    : false;
+
+    if (dosyaIsmi) {
+      var genelDizin = yolaKat(__dirname, '/../genel/');
+      dosyayıOku(`${genelDizin}${dosyaIsmi}`, (hata, veri) => {
+        if (!hata && veri) {
+          geriCagirma(false, veri);
+        } else {
+          geriCagirma('Dosya bulunamadı :(');
+        }
+      });
+    } else {
+      geriCagirma('Geçerli bir dosya ismi girilmedi :(');
+    }
 }

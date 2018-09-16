@@ -9,6 +9,12 @@ import kullanıcılar from "./işleyiciler/kullanıcılar";
 import belirteçler from "./işleyiciler/belirteçler";
 import kontroller from "./işleyiciler/kontroller";
 import indeks from './işleyiciler/indeks';
+import sekmeİkonu from './işleyiciler/sekme-ikonu';
+import genel from './işleyiciler/genel';
+import { debuglog as hataKaydı } from 'util';
+
+// Hata ayıklama modundaki (debug mode) mesajları göstermek için kullanılacak 
+const hataAyıkla = hataKaydı('genel');
 
 /**
  * İstekler için yönlendirici tanımlama
@@ -23,7 +29,9 @@ const yönlendirme = {
   durt: dürt,
   'api/kullanicilar': kullanıcılar,
   'api/belirtecler': belirteçler,
-  'api/kontroller': kontroller
+  'api/kontroller': kontroller,
+  'sekme-ikonu.ico': sekmeİkonu,
+  genel: genel
 };
 
 /**
@@ -34,10 +42,17 @@ const yönlendirme = {
  * * arg0: *function(veri, function(durumKodu, yükler))*
  */
 export function işleyiciAyarla(isleyici, geriCagirma) {
-  const seçilmişİşleyici =
+  // Eğer verilen işleyici mevcutsa onu, değilse bulunmadı işleyicisini seçiyoruz
+  let seçilmişİşleyici =
     typeof yönlendirme[isleyici] !== "undefined"
       ? yönlendirme[isleyici]
       : bulunamadı;
 
+  // Eğer genel varlıkları işaret ediyorsa genel varlıkları gösteren işleyiciyi ele alıyoruz
+  seçilmişİşleyici = isleyici.indexOf('genel/') > -1
+    ? genel
+    : seçilmişİşleyici;
+
+  hataAyıkla(seçilmişİşleyici);
   geriCagirma(seçilmişİşleyici);
 }

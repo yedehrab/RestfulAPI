@@ -31,7 +31,7 @@ ortamlar.iskelet = {
     uygulamaİsmi: "Yemreak",
     şirketİsmi: "Öğrenci, Inc",
     kuruluşYılı: "2018",
-    anaUrl: "https://localhost:3000"
+    anaUrl: "http://localhost:3000/"
   }
 };
 
@@ -55,7 +55,7 @@ ortamlar.üretim = {
     uygulamaİsmi: "Yemreak",
     şirketİsmi: "Öğrenci, Inc",
     kuruluşYılı: "2018",
-    anaUrl: "https://localhost:5000"
+    anaUrl: "http://localhost:5000/"
   }
 };
 

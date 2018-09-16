@@ -40,6 +40,7 @@ const indeks = (veri, geriCagirma) => {
                     if (!hata && dizgi) {
                         // Sayfayı html olarak geri döndürme
                         geriCagirma(200, dizgi, 'html');
+                        
                     } else {
                         hataAyıkla(hata);
                         geriCagirma(500, undefined, 'html');
