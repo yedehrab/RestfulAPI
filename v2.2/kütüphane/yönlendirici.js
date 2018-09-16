@@ -8,6 +8,7 @@ import dürt from "./işleyiciler/dürt";
 import kullanıcılar from "./işleyiciler/kullanıcılar";
 import belirteçler from "./işleyiciler/belirteçler";
 import kontroller from "./işleyiciler/kontroller";
+import indeks from './işleyiciler/indeks';
 
 /**
  * İstekler için yönlendirici tanımlama
@@ -16,12 +17,13 @@ import kontroller from "./işleyiciler/kontroller";
  * * Gerekli Modüller: *işleyiciler.js*
  */
 const yönlendirme = {
+  '': indeks,
   bulunamadi: bulunamadı,
   ornek: örnek,
   durt: dürt,
-  kullanicilar: kullanıcılar,
-  belirtecler: belirteçler,
-  kontroller: kontroller
+  'api/kullanicilar': kullanıcılar,
+  'api/belirtecler': belirteçler,
+  'api/kontroller': kontroller
 };
 
 /**

@@ -167,18 +167,38 @@ sunucu.birleşikSunucu = (istek, yanıt) => {
 
         // İşleyiciyi ayarlıyoruz.
         işleyiciAyarla(kırpılmışYol, seçilmişİşleyici => {
-            seçilmişİşleyici(veri, (durumKodu, yükler) => {
+            seçilmişİşleyici(veri, (durumKodu, yükler, içerikTipi) => {
                 // Durum kodunu kullan veya varsayılanı ele al
-                durumKodu = typeof durumKodu === "number" ? durumKodu : 200;
+                durumKodu = typeof durumKodu === "number"
+                    ? durumKodu
+                    : 200;
 
-                // Yükleri kullan yada varsayılanı ele al
-                yükler = typeof yükler === "object" ? yükler : {};
+                // İçerik tipini kontrol etme
+                içerikTipi = typeof (içerikTipi) == 'string'
+                    ? içerikTipi
+                    : 'json';
 
-                // Yükleri dizgi"ye çevirme
-                const yükDizgisi = JSON.stringify(yükler);
 
-                // Döndürülen sonucun içeriğinin JSON olduğunu belirliyoruz.
-                yanıt.setHeader("Content-type", "application/json");
+                let yükDizgisi = '';
+
+                // İçerik tipine göre yanıtın türünü belirleme
+                if (içerikTipi == 'json') {
+                    // Yanıt türünü JSON yapma
+                    yanıt.setHeader('Content-Type', 'application/json');
+                    // Eğer verilen yükler geçerli ise onları kullanma
+                    yükler = typeof (yükler) == 'object'
+                        ? yükler
+                        : {};
+                    // JSON'u dizgiye çevirme
+                    yükDizgisi = JSON.stringify(yükler);
+                } else if (içerikTipi == 'html') {
+                    // Yanıt türünü HTML yapma
+                    yanıt.setHeader('Content-Type', 'text/html');
+                    // Eğer yükler geçerli ise onları kullanma
+                    yükDizgisi = typeof (yükler) == 'string'
+                        ? yükler
+                        : '';
+                }
 
                 // Sonucu döndürme
                 yanıt.writeHead(durumKodu);
@@ -186,11 +206,11 @@ sunucu.birleşikSunucu = (istek, yanıt) => {
 
                 // İşlem yanıtı olumlu ise yeşil, değilse kırmızı yazma
                 if (durumKodu == 202) {
-                    hataAyıkla("\x1b[32m%s\x1b[0m",`${metot} /${kırpılmışYol} ${durumKodu}`);
+                    hataAyıkla("\x1b[32m%s\x1b[0m", `${metot} /${kırpılmışYol} ${durumKodu}`);
                 } else {
-                    hataAyıkla("\x1b[31m%s\x1b[0m",`${metot} /${kırpılmışYol} ${durumKodu}`);
+                    hataAyıkla("\x1b[31m%s\x1b[0m", `${metot} /${kırpılmışYol} ${durumKodu}`);
                 }
-                
+
             });
         });
     });

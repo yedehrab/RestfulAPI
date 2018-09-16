@@ -14,6 +14,7 @@ import { stringify } from "querystring";
 import { request } from "https";
 import { join as yolaKat } from 'path';
 import { readFile as dosyayıOku } from 'fs';
+import { evrenselKalıplar } from './yapılandırma';
 
 /**
  * Şifreleme metodu
@@ -143,11 +144,13 @@ export function twilioSMSGönder(telefonNo, mesaj, geriCagirma) {
 /**
  * GUI için gereken HTML kalıplarını geri cağırır
  * @param {string} kalıpIsmi Kalıbı alınacak GUI'nin adı
+ * @param {object} veri Ek anahtar verisi
+ * * Örneğin: *{başlık.konu} için veri[baslık.konu]* 
  * @param {function (string | boolean , string): void} geriCagirma İşlemler bittiği zaman verilen yanıt
  ** arg0: *İşlem sırasında oluşan hatanın açıklaması (hata yoksa false)*
  ** arg0: *İstenen sitenin kalıbı*
  */
-export function kalıpAl(kalıpIsmi, geriCagirma) {
+export function kalıpAl(kalıpIsmi, veri, geriCagirma) {
   // Kalıp ismini kotrol etme
   kalıpIsmi = typeof (kalıpIsmi) == 'string' && kalıpAl.length > 0
     ? kalıpIsmi
@@ -155,10 +158,10 @@ export function kalıpAl(kalıpIsmi, geriCagirma) {
 
   if (kalıpIsmi) {
     var kalıpDizini = yolaKat(__dirname, '/../kalıplar/');
-
     dosyayıOku(`${kalıpDizini}${kalıpIsmi}.html`, 'utf8', (hata, dizgi) => {
       if (!hata && dizgi && dizgi.length > 0) {
-        geriCagirma(false, dizgi);
+        // Şekillendirilmiş dizgiyi geri çağırma
+        geriCagirma(false, iliştir(dizgi, veri));
       } else {
         geriCagirma('Kalıp bulunamadı :(');
       }
@@ -166,4 +169,75 @@ export function kalıpAl(kalıpIsmi, geriCagirma) {
   } else {
     geriCagirma('Geçerli bir kalıp ismi girilmedi :(');
   }
+}
+
+/**
+ * GUI için gereken HTML kalıplarını alt ve üst bilgi ile geri cağırır
+ * @param {string} kalıpIsmi Kalıbı alınacak GUI'nin adı
+ * @param {object} veri Ek anahtar verisi
+ * * Örneğin: *{başlık.konu} için veri[baslık.konu]* 
+ * @param {function (string | boolean , string): void} geriCagirma İşlemler bittiği zaman verilen yanıt
+ ** arg0: *İşlem sırasında oluşan hatanın açıklaması (hata yoksa false)*
+ ** arg0: *İstenen sitenin kalıbı*
+ */
+export function evrenselKalıplarıAl(dizgi, veri, geriCagirma) {
+  // Verileri kontrol etme
+  dizgi = typeof (dizgi) == 'string' && dizgi.length > 0
+    ? dizgi
+    : '';
+  veri = typeof (veri) == 'object' && veri != null
+    ? veri
+    : {};
+
+  kalıpAl('_üstbilgi', veri, (hata, üstDizgi) => {
+    if (!hata && üstDizgi) {
+      // Alt bilgiyi alma
+      kalıpAl('_altbilgi', veri, (hata, altDizgi) => {
+        if (!hata && altDizgi) {
+          const tamDizgi = üstDizgi + altDizgi;
+          geriCagirma(false, tamDizgi);
+        } else {
+          geriCagirma('Altbilgi kalıbı bulunamadı :(');
+        }
+      });
+    } else {
+      geriCagirma('Üstbilgi kalıbı bulunamadı :(');
+    }
+  });
+}
+
+/**
+ * Verilen dizgiyi ve veri objesini alıp, içindeki tüm anahtarlara uygun kelimeleri yerleştirir.
+ * @param {stirng} dizgi Site kalıbı
+ * @param {object} veri Ek anahtar verisi 
+ */
+export function iliştir(dizgi, veri) {
+  // Verileri kontrol etme
+  dizgi = typeof (dizgi) == 'string' && dizgi.length > 0
+    ? dizgi
+    : '';
+  veri = typeof (veri) == 'object' && veri !== null
+    ? veri
+    : {};
+
+  // Yapılandırma dosyasındaki anahtar değerleri alıyoruz.
+  for (let anahtarİsmi in evrenselKalıplar) { 
+    if (evrenselKalıplar.hasOwnProperty(anahtarİsmi)) {
+      // Anahtarları veri objelerine kayıt ediyoruz
+      veri[`evrensel.${anahtarİsmi}`] = evrenselKalıplar[anahtarİsmi];
+    }
+  }
+
+  // Her bir anahtar değeri için uygun değerleri yazıyoruz.
+  for (let anahtar in veri) {
+    if (veri.hasOwnProperty(anahtar) && typeof (veri[anahtar]) == 'string') {
+      const eskiDizgi = `{${anahtar}}`;
+      const yeniDizgi = veri[anahtar];
+
+      // Eski dzigiyi yenisiyle değiştiriyoruz.
+      dizgi = dizgi.replace(eskiDizgi, yeniDizgi);
+    }
+  }
+
+  return dizgi;
 }

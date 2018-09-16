@@ -26,6 +26,12 @@ ortamlar.iskelet = {
     telefon: "+14582092684",
     accountSid: "ACbffe0500c3a5c8816a7b960eada3b654",
     authToken: "2343de26f1219f836a1964316f5c82f6"
+  },
+  evrenselKalıplar: {
+    uygulamaİsmi: "Yemreak",
+    şirketİsmi: "Öğrenci, Inc",
+    kuruluşYılı: "2018",
+    anaUrl: "https://localhost:3000"
   }
 };
 
@@ -44,6 +50,12 @@ ortamlar.üretim = {
     telefon: "+14582092684",
     accountSid: "ACbffe0500c3a5c8816a7b960eada3b654",
     authToken: "2343de26f1219f836a1964316f5c82f6"
+  },
+  evrenselKalıplar: {
+    uygulamaİsmi: "Yemreak",
+    şirketİsmi: "Öğrenci, Inc",
+    kuruluşYılı: "2018",
+    anaUrl: "https://localhost:5000"
   }
 };
 
@@ -74,5 +86,6 @@ export const {
   şifrelemeGizliliği,
   kimlikUzunluğu,
   enFazlaKontrol,
-  twilio
+  twilio,
+  evrenselKalıplar
 } = aktarılacakOrtam;

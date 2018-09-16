@@ -1,0 +1,40 @@
+<html>
+
+<head>
+    <!-- Genel ayarlar -->
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="tr"/>
+    <base href="{evrensel.anaUrl}" />
+
+    <!-- Site içeriği hakkında bilgi (meta tag) -->
+    <title> {başlık.konu} | {evrensel.uygulamaİsmi} </title>
+    <meta name="description" content="{başlık.açıklama}"/>
+
+    <!-- Statik kaynaklar -->
+    <link type="image/x-icon" rel="icon" href="favicon.ico"/>
+    <script type="text/javascript" charset="utf-8" src="genel/uygulama.js"> </script>
+    <link rel="stylesheed" type="text/css" href="genel/uygulama.css"/>
+     
+</head>
+
+<body class="{vücut.sınıf}">
+    <!-- Sayfa kapsayıcısı (Altbilgi.html'de kapatılır.)-->
+    <div class="kapsayıcı">
+        <!-- Üst Bilgi -->
+        <div class="üstbilgi">
+            <!-- Logo -->
+            <a class="logo" href="/"></a>
+            
+            <!-- Yönlendirme -->
+            <ul class="menü">
+                <li>
+                    <a href="/"> Anasayfa </a>
+                </li>
+                <li>
+                    <a href="/"> Kayıt Ol </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Sayfanın içeriği (Altbilgi.html'de kapatılır.-->
+        <div class="içerik">

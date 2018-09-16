@@ -1,4 +1,4 @@
-# Version 2 1
+# Version 2.2
 
 ---------
 
@@ -8,26 +8,23 @@
 
 ### Değişiklikler
 
-* Yapı değişikliği ve güncelleme
+* Yapı değişikliği ve güncelleme (yönelendirici şekillendirildi)
 
-* Raporlama özelliği
+* GUI ekleme işlemleri
 
-  * Sıkıştırılmış raporlarama
+* HTML / CSS / JS için ilk adımlar
 
-* Hata ayıklama özelliği (debug)
-
-  * Kullanma şekli:
-    ```bash
-    SET NODE_DEBUG=<dosya ismi>
-    ```
-  * Örnek kullanım
-    ```bash
-    SET NODE_DEBUG=sunucu
-    ```
-
-* Renkli konsol çıktıları
+  * Üstbilgi (Header)
+  * Vücud / İçerik (Body)
+  * Altbilgi (Footer)
 
 ### Scriptler
+
+```bash
+  SET NODE_DEBUG=<dosya ismi>
+```
+
+> Debug modunu açma (işçiler, sunucu vs. için)
 
 ```bash
 npm run start
