@@ -41,7 +41,7 @@ const genel = (veri, geriCagirma) => {
                     } else if (istenenVarlıkİsmi.indexOf('.ico') > -1) {
                         içerikTürü = 'favico';
                     }
-                    
+                                        
                     geriCagirma(200, veri, içerikTürü);
                 } else {
                     hataAyıkla(hata);
