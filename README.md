@@ -11,6 +11,16 @@
   * Belirteçler: Kullanıcı sisteme giriş yaptığı zaman, oluşturulur. Kullanıcının giriş yapmış olduğunu ispatlar.
 
 ## Genel Notlar
+
+* Kalıplar;
+  > Kalıplardaki formların metotları işleyicilerin uygun metotlarına hitap eder.
+
+  * Her yeni kalıp **yönlendirici** ile işleyiciye bağlanmalıdır.
+
+  * **input id**'leri ile işleyicilerin aldıkları veri'nin objeleri aynı isimde olmak zorundadır.
+
+  * **form id**'leri ile genel/uygulama.js(formResponseProcessor) deki formId'si aynı olmak zorundadır.
+
 * Kontroller:
   > Bir sitenin aktif veya pasif olduğunu kontrol etmemize yarar. (google aktif, wikipedi pasif (kapalı, yanıt vemiyor))
 

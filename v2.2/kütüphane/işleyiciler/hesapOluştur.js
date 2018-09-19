@@ -10,10 +10,10 @@ import {
 import { debuglog as hataKaydı } from 'util'
 
 // Hata ayıklama modundaki (debug mode) mesajları göstermek için kullanılacak 
-const hataAyıkla = hataKaydı('indeks');
+const hataAyıkla = hataKaydı('hesapOluştur');
 
 /**
- * Örnek: localhost:3000/indeks yazıldığında bu fonksiyon çalışır.
+ * Örnek: localhost:3000/hesap/olustur yazıldığında bu fonksiyon çalışır.
  *
  * Not: ornek, yönlendirici "nin bir objesidir.
  *
@@ -23,17 +23,18 @@ const hataAyıkla = hataKaydı('indeks');
  ** arg0: HTTP yanıtı veya tanımsızlık
  ** arg1: İçerik tipi (Content-type) [http, json vs.]
  */
-const indeks = (veri, geriCagirma) => {
-    if (veri.metot.toLowerCase() == 'get') {
+const hesapOluştur = (veri, geriCagirma) => {
+    // Sadece GET metodunda çalışmalı
+    if (veri.metot == 'get') {
         // Araya sıkıştırılacak kalıp verileri oluşturuyoruz (_üstBilgi.html için)
         const kalıpVerisi = {
-            'başlık.konu': "Güncel İzleme - Basit",
-            'başlık.açıklama': "Ücretsiz HTTP / HTTPS sayfa izleme",
-            'vücut.sınıf': "indeks"
+            'başlık.konu': "Hesap - Oluştur",
+            'başlık.açıklama': "Ücretsiz kayıt ol (:",
+            'vücut.sınıf': "hesapOluştur"
         }
 
         // Sayfa kalıbını alma
-        sayfaKalıbınıAl('indeks', kalıpVerisi, (hata, dizgi) => {
+        sayfaKalıbınıAl('hesapOluştur', kalıpVerisi, (hata, dizgi) => {
             if (!hata && dizgi) {
                 evrenselKalıplarıAl(dizgi, kalıpVerisi, (hata, dizgi) => {
                     if (!hata && dizgi) {
@@ -56,4 +57,4 @@ const indeks = (veri, geriCagirma) => {
     }
 }
 
-export default indeks;
+export default hesapOluştur;

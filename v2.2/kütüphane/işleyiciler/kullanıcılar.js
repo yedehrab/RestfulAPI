@@ -177,7 +177,7 @@ metotlar.get = (veri, geriCagirma) => {
 /**
  * Kullanıcı verileri güncelleme
  * * Not: *Sadece kimliği onaylanmış kişiler, kendi bilgilerini değiştirebilir. (Diğerlerine erişemez)*
- * * Kullanım şekli: *Yükler ile kullanılır (Body içindeki JSON verileri) (localhost:3000/kullanicilar)*
+ * * Kullanım şekli: *Yükler ile kullanılır (Bzody içindeki JSON verileri) (localhost:3000/kullanicilar)*
  * @param {object} veri Index.js"te tanımlanan veri objesi. İstekle gelir.
  * @param {function(number, object):void} geriCagirma İşlemler bittiği zaman verilen yanıt
  ** arg0: HTTP varsayılan durum kodları

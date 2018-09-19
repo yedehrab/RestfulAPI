@@ -11,6 +11,8 @@ import kontroller from "./işleyiciler/kontroller";
 import indeks from './işleyiciler/indeks';
 import sekmeİkonu from './işleyiciler/sekme-ikonu';
 import genel from './işleyiciler/genel';
+import hesapOluştur from './işleyiciler/hesapOluştur';
+import oturumOluştur from './işleyiciler/oturumOluştur';
 import { debuglog as hataKaydı } from 'util';
 
 // Hata ayıklama modundaki (debug mode) mesajları göstermek için kullanılacak 
@@ -27,6 +29,8 @@ const yönlendirme = {
   bulunamadi: bulunamadı,
   ornek: örnek,
   durt: dürt,
+  'oturum/olustur': oturumOluştur,
+  'hesap/olustur': hesapOluştur,
   'api/kullanicilar': kullanıcılar,
   'api/belirtecler': belirteçler,
   'api/kontroller': kontroller,
