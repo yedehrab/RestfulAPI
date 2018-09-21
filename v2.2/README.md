@@ -8,6 +8,10 @@
 
 ### Değişiklikler
 
+* Genel işlemler
+  * Hesap oluşturma
+  * Oturum oluşturma
+
 * Yapı değişikliği ve güncelleme (yönelendirici şekillendirildi)
 
 * GUI ekleme işlemleri

@@ -63,3 +63,8 @@
   > Örnek: *localhost:300/ornek* url'si altında header içindeki veriler.
   > { "key": "belirtec", "value": "0542502495040" }
 -----
+
+## Ek notlar
+
+* xhr.setRequestHeader
+  > İsim değeri varsayılan değerdir, **türkçeleştirilemez**. (token, Content-Type)
