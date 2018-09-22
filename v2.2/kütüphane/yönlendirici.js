@@ -13,6 +13,7 @@ import sekmeİkonu from './işleyiciler/sekme-ikonu';
 import genel from './işleyiciler/genel';
 import hesapOluştur from './işleyiciler/hesapOluştur';
 import oturumOluştur from './işleyiciler/oturumOluştur';
+import oturumSil from './işleyiciler/oturumSil';
 import { debuglog as hataKaydı } from 'util';
 
 // Hata ayıklama modundaki (debug mode) mesajları göstermek için kullanılacak 
@@ -30,6 +31,7 @@ const yönlendirme = {
   ornek: örnek,
   durt: dürt,
   'oturum/olustur': oturumOluştur,
+  'oturum/sil': oturumSil,
   'hesap/olustur': hesapOluştur,
   'api/kullanicilar': kullanıcılar,
   'api/belirtecler': belirteçler,

@@ -24,23 +24,23 @@ body,p,h1,h2,h3,h4,h5,h6,div,span,üstbilgi,altbilgi,img,a,a:hover,a:active,a:vi
   /* Main color palette */
   .üstbilgi{
     background-color: #fff;
-    border-width: 0 0 1px 0;
-    border-style: solid;
-    border-color: #fff;
-    box-shadow: 0 -25px 11px 20px #000;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 20px 0;
-    min-width: 1200px;
+  border-width: 0 0 1px 0;
+  border-style: solid;
+  border-color: #fff;
+  box-shadow: 0 -25px 11px 20px #000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px 0;
+  min-width: 1200px;
   }
   
   .üstbilgi ul{
     list-style-type: none;
-    text-align: right;
-    padding: 0 75px;
-    float: right;
+  text-align: right;
+  padding: 0 75px;
+  float: right;
   }
   
   .üstbilgi ul li{
@@ -52,6 +52,18 @@ body,p,h1,h2,h3,h4,h5,h6,div,span,üstbilgi,altbilgi,img,a,a:hover,a:active,a:vi
     text-transform: uppercase;
     font-weight: 900 !important;
     font-size: 11px;
+  }
+
+  .üstbilgi ul li.loggedIn{
+    display: none;
+  }
+  
+  body.loggedIn .üstbilgi ul li.loggedIn{
+    display: inline-block;
+  }
+  
+  body.loggedIn .üstbilgi ul li.loggedOut{
+    display: none;
   }
   
   .üstbilgi .logo{
@@ -141,6 +153,10 @@ body.indeks .blurb{
   background-color: #217844 !important;
 }
 
+.cta.red{
+  background-color: #c83737 !important;
+}
+
 /* Form Styling for Account Creation page and others */
 .formWrapper{
   margin: 0 auto;
@@ -162,11 +178,33 @@ body.indeks .blurb{
   border-style: solid;
 }
 
+.formSuccess{
+  display: none;
+  background-color: #217844;
+  font-style: italic;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin: 0 0 15px 0;
+  text-align: center;
+  border-color: #35c06d;
+  border-width: 2px;
+  border-style: solid;
+}
+
+hr {
+  margin: 30px 0;
+}
+
 input {
   border-width: 1px;
   border-radius: 2px;
   padding: 7px 1%;
   width: 100%;
+}
+
+input.disabled{
+  background-color: #efefef;
 }
 
 .inputWrapper{

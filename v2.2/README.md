@@ -11,6 +11,7 @@
 * Genel işlemler
   * Hesap oluşturma
   * Oturum oluşturma
+  * Oturum silme
 
 * Yapı değişikliği ve güncelleme (yönelendirici şekillendirildi)
 

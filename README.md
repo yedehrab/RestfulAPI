@@ -55,16 +55,18 @@
 
 * Başlıklar
   > Kullanıcı giriş yaptığında, sayfalar arası gezinirken değişmeyen bilgiler.
-  
+ 
   > Kontrol işlemleri için kullanılır. (belirteçler)
 
   > Türkçe karakter **içeremezler**. (Postman'da hata veriyor.)
 
   > Örnek: *localhost:300/ornek* url'si altında header içindeki veriler.
   > { "key": "belirtec", "value": "0542502495040" }
------
 
 ## Ek notlar
 
 * xhr.setRequestHeader
+
   > İsim değeri varsayılan değerdir, **türkçeleştirilemez**. (token, Content-Type)
+
+ -----
