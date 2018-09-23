@@ -21,7 +21,7 @@
 
 - GUI ekleme işlemleri
 
-- HTML / CSS / JS için ilk adımlar
+- HTML / CSS / JS için tüm adımlar yapıldı
 
   - Üstbilgi (Header)
   - Vücud / İçerik (Body)
