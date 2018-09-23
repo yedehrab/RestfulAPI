@@ -1,6 +1,6 @@
 # Version 3.0
 
----------
+---
 
 ## Sorunlu özellikler
 
@@ -8,21 +8,24 @@
 
 ### Değişiklikler
 
-* Genel işlemler
-  * Hesap oluşturma
-  * Oturum oluşturma
-  * Oturum silme
-  
+> Tam fonksiyonel GUI'li API
 
-* Yapı değişikliği ve güncelleme (yönelendirici şekillendirildi)
+- Genel işlemler
 
-* GUI ekleme işlemleri
+  - Hesap & Oturum & Kontrol
+    - oluşturma
+    - silme
+    - güncelleme
 
-* HTML / CSS / JS için ilk adımlar
+- Yapı değişikliği ve güncelleme (yönelendirici şekillendirildi)
 
-  * Üstbilgi (Header)
-  * Vücud / İçerik (Body)
-  * Altbilgi (Footer)
+- GUI ekleme işlemleri
+
+- HTML / CSS / JS için ilk adımlar
+
+  - Üstbilgi (Header)
+  - Vücud / İçerik (Body)
+  - Altbilgi (Footer)
 
 ### Scriptler
 
