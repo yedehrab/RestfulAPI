@@ -57,6 +57,10 @@ body,p,h1,h2,h3,h4,h5,h6,div,span,üstbilgi,altbilgi,img,a,a:hover,a:active,a:vi
   .üstbilgi ul li.loggedIn{
     display: none;
   }
+
+  .header ul li.loggedIn{
+    display: none;
+  }
   
   body.loggedIn .üstbilgi ul li.loggedIn{
     display: inline-block;
@@ -153,9 +157,6 @@ body.indeks .blurb{
   background-color: #217844 !important;
 }
 
-.cta.red{
-  background-color: #c83737 !important;
-}
 
 /* Form Styling for Account Creation page and others */
 .formWrapper{

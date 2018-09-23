@@ -67,6 +67,6 @@
 
 * xhr.setRequestHeader
 
-  > İsim değeri varsayılan değerdir, **türkçeleştirilemez**. (token, Content-Type)
+  > İsim değeri api varsayılan değerlerindendir, **türkçe karakter içeremez**. (belirtec [token yerine türkçe yapmıştım], Content-Type)
 
  -----

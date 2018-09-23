@@ -47,10 +47,11 @@ uygulama.istemci.istek = (
   geriCagirma = typeof geriCagirma == "function" ? geriCagirma : false;
 
   // Gönderilen her bir sorgu dizgisi parametresini yola ekliyoruz
-  let istekUrl = `${yol}?`;
+  let istekUrl = yol;
   let sayıcı = 0;
 
   for (let sorguAnahtarı in sorguDizgisiObjesi) {
+    istekUrl += "?";
     sayıcı++;
 
     // ?
@@ -75,7 +76,10 @@ uygulama.istemci.istek = (
 
   // Eğer zaten oturum beliteci varsa, bunları başlıklara ekliyoruz (varsayılan isim olur 'belirteç' olmaz) (Kimliğe dikkat et)
   if (uygulama.yapılandırma.oturumBelirteci) {
-    xhr.setRequestHeader("token", uygulama.yapılandırma.oturumBelirteci.kimlik);
+    xhr.setRequestHeader(
+      "belirtec",
+      uygulama.yapılandırma.oturumBelirteci.kimlik
+    );
   }
 
   // İstek geri geldiğinde, yanıtı ele alıyoruz
@@ -84,6 +88,9 @@ uygulama.istemci.istek = (
     if (xhr.readyState == XMLHttpRequest.DONE) {
       const durumKodu = xhr.status;
       const döndürülenYanıt = xhr.responseText;
+
+      // Sonucu ekrana basma
+      console.log("Döndürülen Yanıt:", döndürülenYanıt);
 
       // Eğer gerekli sie geri çğaırma
       if (geriCagirma) {
@@ -99,7 +106,7 @@ uygulama.istemci.istek = (
 
   // Yükleri JSON olarak gönderme
   const yükDizgisi = JSON.stringify(yukler);
-  console.log(yükDizgisi);
+  console.log("Yükler: ", yükDizgisi);
   xhr.send(yükDizgisi);
 };
 
@@ -135,7 +142,7 @@ uygulama.logUserOut = function() {
     queryStringObject,
     undefined,
     function(statusCode, responsePayload) {
-      // Set the app.config token as false
+      // Set the uygulama.config token as false
       uygulama.setSessionToken(false);
 
       // Send the user to the logged out page
@@ -145,63 +152,84 @@ uygulama.logUserOut = function() {
 };
 
 // Form'u bağlama
-uygulama.bindForms = function() {
+uygulama.formlarıBağla = function() {
   if (document.querySelector("form")) {
-    document.querySelector("form").addEventListener("submit", function(e) {
-      // Stop it from submitting
-      e.preventDefault();
-      var formId = this.id;
-      var path = this.action;
-      var method = this.method.toUpperCase();
+    const tümFormlar = document.querySelectorAll("form");
 
-      // Hide the error message (if it's currently shown due to a previous error)
-      document.querySelector("#" + formId + " .formError").style.display =
-        "hidden";
+    // Her bir formu işleme
+    for (const form of tümFormlar) {
+      form.addEventListener("submit", hata => {
+        // Stop it from submitting
+        hata.preventDefault();
 
-      // Turn the inputs into a payload
-      var payload = {};
-      var elements = this.elements;
-      for (var i = 0; i < elements.length; i++) {
-        if (elements[i].type !== "submit") {
-          var valueOfElement =
-            elements[i].type == "checkbox"
-              ? elements[i].checked
-              : elements[i].value;
-          payload[elements[i].name] = valueOfElement;
-        }
-      }
+        // Form bilgilerini alma
+        const formNo = form.id;
+        const yol = form.action;
+        let metot = form.method.toUpperCase();
+        let yükler = {};
+        const öğeler = form.elements;
 
-      // Call the API
-      uygulama.istemci.istek(
-        undefined,
-        path,
-        method,
-        undefined,
-        payload,
-        function(statusCode, responsePayload) {
-          // Display an error on the form if needed
-          if (statusCode !== 200) {
-            // Try to get the error from the api, or set a default error message
-            var error =
-              typeof responsePayload.bilgi == "string"
-                ? responsePayload.bilgi
-                : "Bilinmeyen bir hata oluştu, lütfen tekrar deneyin :(";
+        // Form öğelerindeki verileri, yüklere ekleme
+        for (const öğe of öğeler) {
+          if (öğe.type !== "submit") {
+            const öğeDeğeri = öğe.type == "checkbox" ? öğe.checked : öğe.value;
 
-            // Set the formError field with the error text
-            document.querySelector(
-              "#" + formId + " .formError"
-            ).innerHTML = error;
-
-            // Show (unhide) the form error field on the form
-            document.querySelector("#" + formId + " .formError").style.display =
-              "block";
-          } else {
-            // If successful, send to form response processor
-            uygulama.formResponseProcessor(formId, payload, responsePayload);
+            if (öğe.name == "_method") {
+              metot = öğeDeğeri;
+            } else {
+              yükler[öğe.name] = öğeDeğeri;
+            }
           }
         }
-      );
-    });
+
+        // Hide the error message (if it's currently shown due to a previous error)
+        document.querySelector("#" + formNo + " .formError").style.display =
+          "none";
+
+        // Hide the success message (if it's currently shown due to a previous error)
+        if (document.querySelector("#" + formNo + " .formSuccess")) {
+          document.querySelector("#" + formNo + " .formSuccess").style.display =
+            "none";
+        }
+
+        // Call the API
+        uygulama.istemci.istek(
+          undefined,
+          yol,
+          metot,
+          undefined,
+          yükler,
+          function(durumKodu, yanıtYükleri) {
+            // Eğer gerekliyse formda hata gösterme
+            if (durumKodu !== 200) {
+              if (durumKodu == 403) {
+                // Kullanıcı oturumunu kapatma
+                uygulama.logUserOut();
+              } else {
+                // Varsa API tarafından belirlenen hatayı gösterme yoksa varsayılan hata mesajını gösterme
+                var hata =
+                  typeof yanıtYükleri.bilgi == "string"
+                    ? yanıtYükleri.bilgi
+                    : "Bilinmeyen bir hata oluştu, lütfen tekrar deneyin :(";
+
+                // FormError alanına hata mesajını yazma
+                document.querySelector(
+                  "#" + formNo + " .formError"
+                ).innerHTML = hata;
+
+                // FormError alanını görünür kılmak
+                document.querySelector(
+                  "#" + formNo + " .formError"
+                ).style.display = "block";
+              }
+            } else {
+              // If successful, send to form response processor
+              uygulama.formResponseProcessor(formNo, yükler, yanıtYükleri);
+            }
+          }
+        );
+      });
+    }
   }
 };
 
@@ -245,9 +273,16 @@ uygulama.formResponseProcessor = function(
     );
   }
   // If login was successful, set the token in localstorage and redirect the user
-  if (formId == "oturumOluştur") {
+  else if (formId == "oturumOluştur") {
     uygulama.setSessionToken(responsePayload);
-    window.location = "/checks/all";
+    window.location = "/kontroller/hepsi";
+  }
+
+  // If forms saved successfully and they have success messages, show them
+  var formsWithSuccessMessages = ["hesapDüzenleKimlik", "hesapDüzenleŞifre"];
+  if (formsWithSuccessMessages.indexOf(formId) > -1) {
+    document.querySelector("#" + formId + " .formSuccess").style.display =
+      "block";
   }
 };
 
@@ -301,7 +336,7 @@ uygulama.renewToken = function(callback) {
   if (currentToken) {
     // Update the token with a new expiration
     var payload = {
-      kimlik: currentToken.id,
+      kimlik: currentToken.kimlik,
       süreUzatma: true
     };
     uygulama.istemci.istek(
@@ -314,7 +349,7 @@ uygulama.renewToken = function(callback) {
         // Display an error on the form if needed
         if (statusCode == 200) {
           // Get the new token details
-          var queryStringObject = { kimlik: currentToken.id };
+          var queryStringObject = { kimlik: currentToken.kimlik };
           uygulama.istemci.istek(
             undefined,
             "api/belirtecler",
@@ -344,12 +379,71 @@ uygulama.renewToken = function(callback) {
   }
 };
 
+// Load data on the page
+uygulama.loadDataOnPage = function() {
+  // Get the current page from the body class
+  var bodyClasses = document.querySelector("body").classList;
+  var primaryClass = typeof bodyClasses[0] == "string" ? bodyClasses[0] : false;
+
+  // Logic for account settings page
+  if (primaryClass == "hesapDüzenle") {
+    uygulama.loadAccountEditPage();
+  }
+};
+
+// Load the account edit page specifically
+uygulama.loadAccountEditPage = function() {
+  // Get the phone number from the current token, or log the user out if none is there
+  var phone =
+    typeof uygulama.yapılandırma.oturumBelirteci.telefonNo == "string"
+      ? uygulama.yapılandırma.oturumBelirteci.telefonNo
+      : false;
+  if (phone) {
+    // Fetch the user data
+    var queryStringObject = {
+      telefonNo: phone
+    };
+    uygulama.istemci.istek(
+      undefined,
+      "api/kullanicilar",
+      "GET",
+      queryStringObject,
+      undefined,
+      function(statusCode, responsePayload) {
+        if (statusCode == 200) {
+          // Put the data into the forms as values where needed
+          document.querySelector("#hesapDüzenleKimlik .firstNameInput").value =
+            responsePayload.isim;
+          document.querySelector("#hesapDüzenleKimlik .lastNameInput").value =
+            responsePayload.soyİsim;
+          document.querySelector(
+            "#hesapDüzenleKimlik .displayPhoneInput"
+          ).value = responsePayload.telefonNo;
+
+          // Put the hidden phone field into both forms
+          var hiddenPhoneInputs = document.querySelectorAll(
+            "input.hiddenPhoneNumberInput"
+          );
+          for (var i = 0; i < hiddenPhoneInputs.length; i++) {
+            hiddenPhoneInputs[i].value = responsePayload.telefonNo;
+          }
+        } else {
+          // If the request comes back as something other than 200, log the user our (on the assumption that the api is temporarily down or the users token is bad)
+          uygulama.logUserOut();
+        }
+      }
+    );
+  } else {
+    uygulama.logUserOut();
+  }
+};
+
 // Loop to renew token often
 uygulama.tokenRenewalLoop = function() {
   setInterval(function() {
     uygulama.renewToken(function(err) {
       if (!err) {
-        console.log("Token renewed successfully @ " + Date.now());
+        console.log("Oturum belirteci başarıyla yenilendi :) @ " + Date.now());
       }
     });
   }, 1000 * 60);
@@ -358,7 +452,7 @@ uygulama.tokenRenewalLoop = function() {
 // Init (bootstrapping)
 uygulama.init = function() {
   // Bind all form submissions
-  uygulama.bindForms();
+  uygulama.formlarıBağla();
 
   // Bind logout logout button
   uygulama.bindLogoutButton();
@@ -368,6 +462,9 @@ uygulama.init = function() {
 
   // Renew token
   uygulama.tokenRenewalLoop();
+
+  // Sayfadaki verileri yükleme
+  uygulama.loadDataOnPage();
 };
 
 // Call the init processes after the window loads

@@ -14,6 +14,7 @@ import genel from './işleyiciler/genel';
 import hesapOluştur from './işleyiciler/hesapOluştur';
 import oturumOluştur from './işleyiciler/oturumOluştur';
 import oturumSil from './işleyiciler/oturumSil';
+import hesapDüzenle from './işleyiciler/hesapDüzenle';
 import { debuglog as hataKaydı } from 'util';
 
 // Hata ayıklama modundaki (debug mode) mesajları göstermek için kullanılacak 
@@ -33,6 +34,7 @@ const yönlendirme = {
   'oturum/olustur': oturumOluştur,
   'oturum/sil': oturumSil,
   'hesap/olustur': hesapOluştur,
+  'hesap/duzenle': hesapDüzenle,
   'api/kullanicilar': kullanıcılar,
   'api/belirtecler': belirteçler,
   'api/kontroller': kontroller,

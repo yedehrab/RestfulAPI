@@ -105,7 +105,7 @@ metotlar.post = (veri, geriCagirma) => {
 
           oluştur("kullanıcılar", telefonNo, kullanıcıObjesi, hata => {
             if (!hata) {
-              geriCagirma(200, { bilgi: "Kullanıcı oluşturuldu :)"});
+              geriCagirma(200, { bilgi: "Kullanıcı oluşturuldu :)" });
             } else {
               geriCagirma(500, { bilgi: "Kullanıcı oluşturulamadı :(" });
             }
@@ -199,12 +199,12 @@ metotlar.put = (veri, geriCagirma) => {
       : false;
   // Soyad alma, 0 karakterden fazla olmalı
   var soyİsim =
-    typeof veri.yükler.soyİsim == "string" && veri.yükler.isim.trim().length > 0
+    typeof veri.yükler.soyİsim == "string" && veri.yükler.soyİsim.trim().length > 0
       ? veri.yükler.soyİsim.trim()
       : false;
   // Şifre alma
   var şifre =
-    typeof veri.yükler.şifre == "string" && veri.yükler.isim.trim().length > 0
+    typeof veri.yükler.şifre == "string" && veri.yükler.şifre.trim().length > 0
       ? veri.yükler.şifre.trim()
       : false;
 

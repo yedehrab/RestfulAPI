@@ -10,10 +10,10 @@ import {
 import { debuglog as hataKaydı } from "util";
 
 // Hata ayıklama modundaki (debug mode) mesajları göstermek için kullanılacak
-const hataAyıkla = hataKaydı("oturumSil");
+const hataAyıkla = hataKaydı("hesapDüzenle");
 
 /**
- * Örnek: localhost:3000/oturum/aç yazıldığında bu fonksiyon çalışır.
+ * Örnek: localhost:3000/hesap/olustur yazıldığında bu fonksiyon çalışır.
  *
  * Not: ornek, yönlendirici "nin bir objesidir.
  *
@@ -23,18 +23,17 @@ const hataAyıkla = hataKaydı("oturumSil");
  ** arg0: HTTP yanıtı veya tanımsızlık
  ** arg1: İçerik tipi (Content-type) [http, json vs.]
  */
-const oturumSil = (veri, geriCagirma) => {
+const hesapDüzenle = (veri, geriCagirma) => {
   // Sadece GET metodunda çalışmalı
   if (veri.metot == "get") {
     // Araya sıkıştırılacak kalıp verileri oluşturuyoruz (_üstBilgi.html için)
     const kalıpVerisi = {
-      "başlık.konu": "Oturum - Silindi",
-      "başlık.açıklama": "Gitmene üzüldük, tekrar bekliyoruz :(",
-      "vücut.sınıf": "oturumSil"
+      "başlık.konu": "Hesap - Düzenle",
+      "vücut.sınıf": "hesapDüzenle"
     };
 
     // Sayfa kalıbını alma
-    sayfaKalıbınıAl("oturumSil", kalıpVerisi, (hata, dizgi) => {
+    sayfaKalıbınıAl("hesapDüzenle", kalıpVerisi, (hata, dizgi) => {
       if (!hata && dizgi) {
         evrenselKalıplarıAl(dizgi, kalıpVerisi, (hata, dizgi) => {
           if (!hata && dizgi) {
@@ -56,4 +55,4 @@ const oturumSil = (veri, geriCagirma) => {
   }
 };
 
-export default oturumSil;
+export default hesapDüzenle;
