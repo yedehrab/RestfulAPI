@@ -3,6 +3,18 @@
 > API tasarımı
 > ES6 yazım kurallarıyla yazılmıştır.
 
+## Gerekli paketlerin kurulumu
+
+```CMD
+npm install -g babel-cli babel-register
+```
+
+> ---
+> Global olarak babel consol komutlarını ve işleyicisini ekler.
+> * babel-cli: Konsoldan "babel" komutlarına izin verir.
+> * babel-register: npm üzerinden require ile babel modüllerine erişimi sağlar.
+> ---
+
 ## Kod Hakkında Notlar
 
 - İşleyiciler
