@@ -81,7 +81,7 @@ export function oku(dizin, dosya, geriCagirma) {
     if (!hata && veri) {
       // Eğer hata yoksa obje olarak döndürüyoruz. (string değil) [ileride delete ile silme yapabilmek için]
       const veriObjesi = jsonuObjeyeDönüştür(veri);
-      geriCagirma(hata, veriObjesi);
+      geriCagirma(hata, veriObjesi);  
     } else {
       geriCagirma(hata, veri);
     }

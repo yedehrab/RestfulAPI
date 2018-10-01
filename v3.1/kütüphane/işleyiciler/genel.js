@@ -29,7 +29,7 @@ const genel = (veri, geriCagirma) => {
             // İstenen varlığı alma
             statikVarlıklarıAl(istenenVarlıkİsmi, (hata, veri) => {
                 if (!hata && veri) {
-                    // İçerik türünü belirleme (eğer belirli değişse yazı yapma)
+                    // Uzantı ile içerik türünü belirleme (eğer belirli değişse yazı yapma)
                     let içerikTürü = 'plain';
 
                     if (istenenVarlıkİsmi.indexOf('.css') > -1) {

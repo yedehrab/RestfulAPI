@@ -1,13 +1,11 @@
 /**
  * Girilen URL'e göre doğru sayfaya yönlendirme işlemi
  */
-
-// Genel işleyiciler
-import kullanıcılar from "./işleyiciler/kullanıcılar";
-import belirteçler from "./işleyiciler/belirteçler";
-import kontroller from "./işleyiciler/kontroller";
-import sekmeİkonu from "./işleyiciler/sekme-ikonu";
-import genel from "./işleyiciler/genel";
+import kullanıcılar from './işleyiciler/kullanıcılar';
+import belirteçler from './işleyiciler/belirteçler';
+import kontroller from './işleyiciler/kontroller';
+import sekmeİkonu from './işleyiciler/sekme-ikonu';
+import genel from './işleyiciler/genel';
 
 // Kalıp İşleyicileri
 import indeks from "./işleyiciler/kalıpİşleyiciler/indeks";

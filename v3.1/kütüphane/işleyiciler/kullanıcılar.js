@@ -22,7 +22,6 @@ import { şifreleme } from "./../yardımcılar";
  ** arg0: HTTP varsayılan durum kodları
  ** arg1: Ek bilgiler, açıklamalar
  */
-
 const kullanıcılar = (veri, geriCagirma) => {
   var uygunMetotlar = ["post", "get", "put", "delete"];
 
@@ -228,7 +227,7 @@ metotlar.put = (veri, geriCagirma) => {
               }
               if (şifre) {
                 kullanıcıVerisi.gizlenmişŞifre = şifreleme(şifre);
-              }
+              } 
 
               güncelle("kullanıcılar", telefonNo, kullanıcıVerisi, hata => {
                 if (!hata) {

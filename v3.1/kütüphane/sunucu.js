@@ -45,7 +45,9 @@ import {
 import {
     join as yoluKat
 } from "path";
-import { debuglog as hataKaydı } from 'util'
+import {
+    debuglog as hataKaydı
+} from 'util'
 
 // Hata ayıklama modundaki (debug mode) mesajları göstermek için kullanılacak 
 const hataAyıkla = hataKaydı('sunucu');
@@ -169,14 +171,14 @@ sunucu.birleşikSunucu = (istek, yanıt) => {
         işleyiciAyarla(kırpılmışYol, seçilmişİşleyici => {
             seçilmişİşleyici(veri, (durumKodu, yükler, içerikTipi) => {
                 // Durum kodunu kullan veya varsayılanı ele al
-                durumKodu = typeof durumKodu === "number"
-                    ? durumKodu
-                    : 200;
+                durumKodu = typeof durumKodu === "number" ?
+                    durumKodu :
+                    200;
 
                 // İçerik tipini kontrol etme
-                içerikTipi = typeof (içerikTipi) == 'string'
-                    ? içerikTipi
-                    : 'json';
+                içerikTipi = typeof (içerikTipi) == 'string' ?
+                    içerikTipi :
+                    'json';
 
 
                 let yükDizgisi = '';
@@ -186,53 +188,53 @@ sunucu.birleşikSunucu = (istek, yanıt) => {
                     // Yanıt türünü JSON yapma
                     yanıt.setHeader('Content-Type', 'application/json');
                     // Eğer verilen yükler geçerli ise onları kullanma
-                    yükler = typeof (yükler) == 'object'
-                        ? yükler
-                        : {};
+                    yükler = typeof (yükler) == 'object' ?
+                        yükler : {};
 
                     // JSON'u dizgiye çevirme
                     yükDizgisi = JSON.stringify(yükler);
                 } else if (içerikTipi == 'html') {
-                    // Yanıt türünü ayarlama (HTML dışındaki türler için undefined olmama koşulu istenir. Aksi takdirde çalışmaz.)                    yanıt.setHeader('Content-Type', 'text/html');
+                    // Yanıt türünü ayarlama (HTML dışındaki türler için undefined olmama koşulu istenir. Aksi takdirde çalışmaz.)     
+                    yanıt.setHeader('Content-Type', 'text/html');
                     // Eğer yükler geçerli ise onları kullanma
-                    yükDizgisi = typeof (yükler) == 'string'
-                        ? yükler
-                        : '';
+                    yükDizgisi = typeof (yükler) == 'string' ?
+                        yükler :
+                        '';
                 } else if (içerikTipi == 'favicon') {
                     // Yanıt türünü ayarlama (HTML dışındaki türler için undefined olmama koşulu istenir. Aksi takdirde çalışmaz.)
                     yanıt.setHeader('Content-Type', 'image/x-icon');
                     // Eğer yükler geçerli ise onları kullanma
-                    yükDizgisi = typeof (yükler) !== 'undefined'
-                        ? yükler
-                        : '';
+                    yükDizgisi = typeof (yükler) !== 'undefined' ?
+                        yükler :
+                        '';
                 } else if (içerikTipi == 'css') {
                     // Yanıt türünü ayarlama (HTML dışındaki türler için undefined olmama koşulu istenir. Aksi takdirde çalışmaz.)                    yanıt.setHeader('Content-Type', 'text/html');
                     yanıt.setHeader('Content-Type', 'text/css');
                     // Eğer yükler geçerli ise onları kullanma
-                    yükDizgisi = typeof (yükler) !== 'undefined'
-                        ? yükler
-                        : '';
+                    yükDizgisi = typeof (yükler) !== 'undefined' ?
+                        yükler :
+                        '';
                 } else if (içerikTipi == 'png') {
                     // Yanıt türünü ayarlama (HTML dışındaki türler için undefined olmama koşulu istenir. Aksi takdirde çalışmaz.)                    yanıt.setHeader('Content-Type', 'text/html');
-                    yanıt.setHeader('Content-Type', 'iamge/png');
+                    yanıt.setHeader('Content-Type', 'image/png');
                     // Eğer yükler geçerli ise onları kullanma
-                    yükDizgisi = typeof (yükler) !== 'undefined'
-                        ? yükler
-                        : '';
+                    yükDizgisi = typeof (yükler) !== 'undefined' ?
+                        yükler :
+                        '';
                 } else if (içerikTipi == 'jpg') {
                     // Yanıt türünü ayarlama (HTML dışındaki türler için undefined olmama koşulu istenir. Aksi takdirde çalışmaz.)                    yanıt.setHeader('Content-Type', 'text/html');
-                    yanıt.setHeader('Content-Type', 'iamge/jpg');
+                    yanıt.setHeader('Content-Type', 'image/jpg');
                     // Eğer yükler geçerli ise onları kullanma
-                    yükDizgisi = typeof (yükler) !== 'undefined'
-                        ? yükler
-                        : '';
+                    yükDizgisi = typeof (yükler) !== 'undefined' ?
+                        yükler :
+                        '';
                 } else if (içerikTipi == 'plain') {
                     // Yanıt türünü ayarlama (HTML dışındaki türler için undefined olmama koşulu istenir. Aksi takdirde çalışmaz.)                    yanıt.setHeader('Content-Type', 'text/html');
                     yanıt.setHeader('Content-Type', 'text/plain');
                     // Eğer yükler geçerli ise onları kullanma
-                    yükDizgisi = typeof (yükler) !== 'undefined'
-                        ? yükler
-                        : '';
+                    yükDizgisi = typeof (yükler) !== 'undefined' ?
+                        yükler :
+                        '';
                 }
 
                 // Sonucu döndürme

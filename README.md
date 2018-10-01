@@ -9,6 +9,29 @@
   - Kullanıcılar: Kullanıcı işlemleri için kullanılır
   - Belirteçler: Kullanıcı sisteme giriş yaptığı zaman, oluşturulur. Kullanıcının giriş yapmış olduğunu ispatlar.
 
+- Genel İşleyicis
+
+  - sekme-ikonu.ico: Üstbilgi kalıbında, link ile bu uzantı çağırılıyor (localhost:3000/sekme-ikonu.ico)
+  - uygulama.css: Üstbilgi kalıbında, script ile bu uzantı çağırılıyor (localhost:3000/genel/uygulama.css)
+  - uygulama.css: Üstbilgi kalıbında, link ile bu uzantı çağırılıyor (localhost:3000/genel/uygulama.js)
+
+> Genel objelerin yüklenmesi
+
+  ```HTML
+   <!-- Statik kaynaklar -->
+  <link type="image/x-icon" rel="icon" href="sekme-ikonu.ico">
+  <script type="text/javascript" charset="utf-8" src="genel/uygulama.js"></script>
+  <link rel="stylesheet" type="text/css" href="genel/uygulama.css" />
+  ```
+
+  > Genel İşleyicisi adres çubuğundaki 'genel' kısmını kaldırdıktan sonra, istenen sayfa açılabilir. (replace)
+
+  ```Javascript
+  // İstenen varlık ismini alıyoruz
+  var istenenVarlıkİsmi = veri.kırpılmışYol
+  .replace('genel/', '').trim();
+  ```
+
 ## Genel Notlar
 
 - Kalıplar;

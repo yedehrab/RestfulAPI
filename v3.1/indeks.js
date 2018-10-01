@@ -1,6 +1,7 @@
+/* beautify preserve:start */
 import { başlat as sunucuyuBaşat } from "./kütüphane/sunucu";
 import { başlat as işçileriBaşlat } from './kütüphane/işçiler';
-
+/* beautify preserve:end */
 
 const uygulama = {};
 
