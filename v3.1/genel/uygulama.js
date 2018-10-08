@@ -35,14 +35,13 @@ uygulama.istemci.istek = (
   yol = typeof yol == "string" ? yol : "/";
   // HTTP istekeri için büyük harflerle metotlar yazılır
   metot =
-    typeof metot == "string" &&
-    ["POST", "GET", "PUT", "DELETE"].indexOf(metot.toUpperCase()) > -1
-      ? metot.toUpperCase()
-      : "GET";
+    typeof metot == "string" && ["POST", "GET", "PUT", "DELETE"].indexOf(metot.toUpperCase()) > -1 ?
+    metot.toUpperCase() :
+    "GET";
   sorguDizgisiObjesi =
-    typeof sorguDizgisiObjesi == "object" && sorguDizgisiObjesi !== null
-      ? sorguDizgisiObjesi
-      : {};
+    typeof sorguDizgisiObjesi == "object" && sorguDizgisiObjesi !== null ?
+    sorguDizgisiObjesi :
+    {};
   yukler = typeof yukler == "object" && yukler !== null ? yukler : {};
   geriCagirma = typeof geriCagirma == "function" ? geriCagirma : false;
 
@@ -111,10 +110,10 @@ uygulama.istemci.istek = (
 };
 
 // Bind the logout button
-uygulama.bindLogoutButton = function() {
+uygulama.bindLogoutButton = function () {
   document
     .getElementById("logoutButton")
-    .addEventListener("click", function(e) {
+    .addEventListener("click", function (e) {
       // Stop it from redirecting anywhere
       e.preventDefault();
 
@@ -124,12 +123,12 @@ uygulama.bindLogoutButton = function() {
 };
 
 // Log the user out then redirect them
-uygulama.logUserOut = function() {
+uygulama.logUserOut = function () {
   // Get the current token id
   var tokenId =
-    typeof uygulama.yapılandırma.oturumBelirteci.kimlik == "string"
-      ? uygulama.yapılandırma.oturumBelirteci.kimlik
-      : false;
+    typeof uygulama.yapılandırma.oturumBelirteci.kimlik == "string" ?
+    uygulama.yapılandırma.oturumBelirteci.kimlik :
+    false;
 
   // Send the current token to the tokens endpoint to delete it
   var queryStringObject = {
@@ -141,7 +140,7 @@ uygulama.logUserOut = function() {
     "DELETE",
     queryStringObject,
     undefined,
-    function(statusCode, responsePayload) {
+    function (statusCode, responsePayload) {
       // Set the uygulama.config token as false
       uygulama.setSessionToken(false);
 
@@ -152,7 +151,7 @@ uygulama.logUserOut = function() {
 };
 
 // Form'u bağlama
-uygulama.formlarıBağla = function() {
+uygulama.formlarıBağla = function () {
   if (document.querySelector("form")) {
     const tümFormlar = document.querySelectorAll("form");
 
@@ -175,17 +174,17 @@ uygulama.formlarıBağla = function() {
             // Öğenin sınıflarını alma (Sınıf, veri tipi belirlemek için gerekli)
             const öğeSınıfı =
               typeof öğe.classList.value == "string" &&
-              öğe.classList.value.length > 0
-                ? öğe.classList.value
-                : "";
+              öğe.classList.value.length > 0 ?
+              öğe.classList.value :
+              "";
 
             // Öğe tipini belirleyip, değeri atama
             const öğeDeğeri =
-              öğe.type == "checkbox" && öğeSınıfı.indexOf("multiselect") == -1
-                ? öğe.checked
-                : öğeSınıfı.indexOf("intval") == -1
-                  ? öğe.value
-                  : parseInt(öğe.value);
+              öğe.type == "checkbox" && öğeSınıfı.indexOf("multiselect") == -1 ?
+              öğe.checked :
+              öğeSınıfı.indexOf("intval") == -1 ?
+              öğe.value :
+              parseInt(öğe.value);
 
             let öğeİsmi = öğe.name;
 
@@ -206,9 +205,9 @@ uygulama.formlarıBağla = function() {
                 if (öğe.checked) {
                   yükler[öğeİsmi] =
                     typeof yükler[öğeİsmi] == "object" &&
-                    yükler[öğeİsmi] instanceof Array
-                      ? yükler[öğeİsmi]
-                      : [];
+                    yükler[öğeİsmi] instanceof Array ?
+                    yükler[öğeİsmi] :
+                    [];
                   yükler[öğeİsmi].push(öğeDeğeri);
                 }
               } else {
@@ -238,7 +237,7 @@ uygulama.formlarıBağla = function() {
           metot,
           sorguDizgisiObjesi,
           yükler,
-          function(durumKodu, yanıtYükleri) {
+          function (durumKodu, yanıtYükleri) {
             // Eğer gerekliyse formda hata gösterme
             if (durumKodu !== 200) {
               if (durumKodu == 403) {
@@ -247,9 +246,9 @@ uygulama.formlarıBağla = function() {
               } else {
                 // Varsa API tarafından belirlenen hatayı gösterme yoksa varsayılan hata mesajını gösterme
                 var hata =
-                  typeof yanıtYükleri.bilgi == "string"
-                    ? yanıtYükleri.bilgi
-                    : "Bilinmeyen bir hata oluştu, lütfen tekrar deneyin :(";
+                  typeof yanıtYükleri.bilgi == "string" ?
+                  yanıtYükleri.bilgi :
+                  "Bilinmeyen bir hata oluştu, lütfen tekrar deneyin :(";
 
                 // FormError alanına hata mesajını yazma
                 document.querySelector(
@@ -273,7 +272,7 @@ uygulama.formlarıBağla = function() {
 };
 
 // Form response processor
-uygulama.formResponseProcessor = function(
+uygulama.formResponseProcessor = function (
   formId,
   requestPayload,
   responsePayload
@@ -293,7 +292,7 @@ uygulama.formResponseProcessor = function(
       "POST",
       undefined,
       newPayload,
-      function(newStatusCode, newResponsePayload) {
+      function (newStatusCode, newResponsePayload) {
         // Display an error on the form if needed
         if (newStatusCode !== 200) {
           // Set the formError field with the error text
@@ -337,7 +336,7 @@ uygulama.formResponseProcessor = function(
 };
 
 // Get the session token from localstorage and set it in the uygulama.yapılandırma object
-uygulama.getSessionToken = function() {
+uygulama.getSessionToken = function () {
   var tokenString = localStorage.getItem("token");
   if (typeof tokenString == "string") {
     try {
@@ -356,7 +355,7 @@ uygulama.getSessionToken = function() {
 };
 
 // Set (or remove) the loggedIn class from the body
-uygulama.setLoggedInClass = function(add) {
+uygulama.setLoggedInClass = function (add) {
   var target = document.querySelector("body");
   if (add) {
     target.classList.add("loggedIn");
@@ -366,7 +365,7 @@ uygulama.setLoggedInClass = function(add) {
 };
 
 // Set the session token in the uygulama.yapılandırma object as well as localstorage
-uygulama.setSessionToken = function(token) {
+uygulama.setSessionToken = function (token) {
   uygulama.yapılandırma.oturumBelirteci = token;
   var tokenString = JSON.stringify(token);
   localStorage.setItem("token", tokenString);
@@ -378,11 +377,11 @@ uygulama.setSessionToken = function(token) {
 };
 
 // Renew the token
-uygulama.renewToken = function(callback) {
+uygulama.renewToken = function (callback) {
   var currentToken =
-    typeof uygulama.yapılandırma.oturumBelirteci == "object"
-      ? uygulama.yapılandırma.oturumBelirteci
-      : false;
+    typeof uygulama.yapılandırma.oturumBelirteci == "object" ?
+    uygulama.yapılandırma.oturumBelirteci :
+    false;
   if (currentToken) {
     // Update the token with a new expiration
     var payload = {
@@ -395,18 +394,20 @@ uygulama.renewToken = function(callback) {
       "PUT",
       undefined,
       payload,
-      function(statusCode, responsePayload) {
+      function (statusCode, responsePayload) {
         // Display an error on the form if needed
         if (statusCode == 200) {
           // Get the new token details
-          var queryStringObject = { kimlik: currentToken.kimlik };
+          var queryStringObject = {
+            kimlik: currentToken.kimlik
+          };
           uygulama.istemci.istek(
             undefined,
             "api/belirtecler",
             "GET",
             queryStringObject,
             undefined,
-            function(statusCode, responsePayload) {
+            function (statusCode, responsePayload) {
               // Display an error on the form if needed
               if (statusCode == 200) {
                 uygulama.setSessionToken(responsePayload);
@@ -430,7 +431,7 @@ uygulama.renewToken = function(callback) {
 };
 
 // Load data on the page
-uygulama.loadDataOnPage = function() {
+uygulama.loadDataOnPage = function () {
   // Get the current page from the body class
   var bodyClasses = document.querySelector("body").classList;
   var primaryClass = typeof bodyClasses[0] == "string" ? bodyClasses[0] : false;
@@ -447,12 +448,12 @@ uygulama.loadDataOnPage = function() {
 };
 
 // Load the account edit page specifically
-uygulama.loadAccountEditPage = function() {
+uygulama.loadAccountEditPage = function () {
   // Get the telefonNo number from the current token, or log the user out if none is there
   var telefonNo =
-    typeof uygulama.yapılandırma.oturumBelirteci.telefonNo == "string"
-      ? uygulama.yapılandırma.oturumBelirteci.telefonNo
-      : false;
+    typeof uygulama.yapılandırma.oturumBelirteci.telefonNo == "string" ?
+    uygulama.yapılandırma.oturumBelirteci.telefonNo :
+    false;
   if (telefonNo) {
     // Fetch the user data
     var queryStringObject = {
@@ -464,7 +465,7 @@ uygulama.loadAccountEditPage = function() {
       "GET",
       queryStringObject,
       undefined,
-      function(statusCode, responsePayload) {
+      function (statusCode, responsePayload) {
         if (statusCode == 200) {
           // Put the data into the forms as values where needed
           document.querySelector("#hesapDüzenleKimlik .firstNameInput").value =
@@ -494,12 +495,12 @@ uygulama.loadAccountEditPage = function() {
 };
 
 // Load the dashboard page specifically
-uygulama.loadChecksListPage = function() {
+uygulama.loadChecksListPage = function () {
   // Get the telefonNo number from the current token, or log the user out if none is there
   var telefonNo =
-    typeof uygulama.yapılandırma.oturumBelirteci.telefonNo == "string"
-      ? uygulama.yapılandırma.oturumBelirteci.telefonNo
-      : false;
+    typeof uygulama.yapılandırma.oturumBelirteci.telefonNo == "string" ?
+    uygulama.yapılandırma.oturumBelirteci.telefonNo :
+    false;
   if (telefonNo) {
     // Fetch the user data
     var queryStringObject = {
@@ -511,18 +512,18 @@ uygulama.loadChecksListPage = function() {
       "GET",
       queryStringObject,
       undefined,
-      function(statusCode, responsePayload) {
+      function (statusCode, responsePayload) {
         if (statusCode == 200) {
           // Determine how many checks the user has
           const allChecks =
             typeof responsePayload.kontrolKimlikleri == "object" &&
             responsePayload.kontrolKimlikleri instanceof Array &&
-            responsePayload.kontrolKimlikleri.length > 0
-              ? responsePayload.kontrolKimlikleri
-              : [];
+            responsePayload.kontrolKimlikleri.length > 0 ?
+            responsePayload.kontrolKimlikleri :
+            [];
           if (allChecks.length > 0) {
             // Show each created check as a new row in the table
-            allChecks.forEach(function(checkId) {
+            allChecks.forEach(function (checkId) {
               // Get the data for the check
               const newQueryStringObject = {
                 kimlik: checkId
@@ -533,7 +534,7 @@ uygulama.loadChecksListPage = function() {
                 "GET",
                 newQueryStringObject,
                 undefined,
-                function(statusCode, responsePayload) {
+                function (statusCode, responsePayload) {
                   if (statusCode == 200) {
                     var checkData = responsePayload;
                     // Make the check data into a table row
@@ -549,9 +550,9 @@ uygulama.loadChecksListPage = function() {
                     td1.innerHTML = responsePayload.protokol + "://";
                     td2.innerHTML = responsePayload.url;
                     var state =
-                      typeof responsePayload.durum == "string"
-                        ? responsePayload.durum
-                        : "unknown";
+                      typeof responsePayload.durum == "string" ?
+                      responsePayload.durum :
+                      "unknown";
                     td3.innerHTML = state;
                     td4.innerHTML =
                       '<a href="/kontrol/duzenle?id=' +
@@ -588,13 +589,13 @@ uygulama.loadChecksListPage = function() {
 };
 
 // Load the checks edit page specifically
-uygulama.loadChecksEditPage = function() {
+uygulama.loadChecksEditPage = function () {
   // Get the check id from the query string, if none is found then redirect back to dashboard
   var id =
     typeof window.location.href.split("=")[1] == "string" &&
-    window.location.href.split("=")[1].length > 0
-      ? window.location.href.split("=")[1]
-      : false;
+    window.location.href.split("=")[1].length > 0 ?
+    window.location.href.split("=")[1] :
+    false;
   if (id) {
     // Fetch the check data
     var queryStringObject = {
@@ -606,7 +607,7 @@ uygulama.loadChecksEditPage = function() {
       "GET",
       queryStringObject,
       undefined,
-      function(statusCode, responsePayload) {
+      function (statusCode, responsePayload) {
         if (statusCode == 200) {
           // Put the hidden id field into both forms
           var hiddenIdInputs = document.querySelectorAll("input.hiddenIdInput");
@@ -651,9 +652,9 @@ uygulama.loadChecksEditPage = function() {
 };
 
 // Loop to renew token often
-uygulama.tokenRenewalLoop = function() {
-  setInterval(function() {
-    uygulama.renewToken(function(err) {
+uygulama.tokenRenewalLoop = function () {
+  setInterval(function () {
+    uygulama.renewToken(function (err) {
       if (!err) {
         console.log("Oturum belirteci başarıyla yenilendi :) @ " + Date.now());
       }
@@ -662,7 +663,7 @@ uygulama.tokenRenewalLoop = function() {
 };
 
 // Init (bootstrapping)
-uygulama.init = function() {
+uygulama.init = function () {
   // Bind all form submissions
   uygulama.formlarıBağla();
 
@@ -680,6 +681,6 @@ uygulama.init = function() {
 };
 
 // Call the init processes after the window loads
-window.onload = function() {
+window.onload = function () {
   uygulama.init();
 };

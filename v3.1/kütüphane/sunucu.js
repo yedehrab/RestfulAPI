@@ -180,7 +180,6 @@ sunucu.birleşikSunucu = (istek, yanıt) => {
                     içerikTipi :
                     'json';
 
-
                 let yükDizgisi = '';
 
                 // İçerik tipine göre yanıtın türünü belirleme
