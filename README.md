@@ -113,4 +113,4 @@ npm install -g babel-cli babel-register
   ***
 ## Yazar
 
-Yunus Emre ~ [yedehrab(https://github.com/yedehrab)
+Yunus Emre ~ [yedehrab](https://github.com/yedehrab)
