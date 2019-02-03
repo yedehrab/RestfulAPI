@@ -111,3 +111,6 @@ npm install -g babel-cli babel-register
   > İsim değeri api varsayılan değerlerindendir, **türkçe karakter içeremez**. (belirtec [token yerine türkçe yapmıştım], Content-Type)
 
   ***
+## Yazar
+
+Yunus Emre ~ [yedehrab(https://github.com/yedehrab)
